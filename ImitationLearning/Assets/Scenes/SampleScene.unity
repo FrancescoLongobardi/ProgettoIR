@@ -139,6 +139,7 @@ GameObject:
   - component: {fileID: 100689656}
   - component: {fileID: 100689655}
   - component: {fileID: 100689654}
+  - component: {fileID: 100689657}
   m_Layer: 0
   m_Name: Agent
   m_TagString: Untagged
@@ -217,7 +218,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 100689648}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.296, y: 0.58, z: -2.451}
+  m_LocalPosition: {x: 2.978, y: 0.8, z: -4.61}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -270,6 +271,7 @@ MonoBehaviour:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
   MaxStep: 0
+  door: {fileID: 930661059}
 --- !u!114 &100689656
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -293,13 +295,39 @@ MonoBehaviour:
     VectorActionSpaceType: 1
     hasUpgradedBrainParametersWithActionSpec: 1
   m_Model: {fileID: 0}
-  m_InferenceDevice: 0
-  m_BehaviorType: 1
+  m_InferenceDevice: 1
+  m_BehaviorType: 0
   m_BehaviorName: My Behavior
   TeamId: 0
   m_UseChildSensors: 1
   m_UseChildActuators: 1
   m_ObservableAttributeHandling: 0
+--- !u!114 &100689657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100689648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bb6b867a41448888c1cd4f99643ad71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SensorName: RayPerceptionSensor
+  m_DetectableTags: []
+  m_RaysPerDirection: 15
+  m_MaxRayDegrees: 165
+  m_SphereCastRadius: 0.14
+  m_RayLength: 12
+  m_RayLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967291
+  m_ObservationStacks: 1
+  rayHitColor: {r: 0.08679283, g: 1, b: 0, a: 1}
+  rayMissColor: {r: 0.990566, g: 0.09174645, b: 0, a: 1}
+  m_StartVerticalOffset: 0.1
+  m_EndVerticalOffset: 0.1
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -532,7 +560,7 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -886,7 +914,7 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -1040,7 +1068,7 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
