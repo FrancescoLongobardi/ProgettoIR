@@ -51,6 +51,7 @@ GameObject:
   - component: {fileID: 5145801999279379593}
   - component: {fileID: 5145801999279379592}
   - component: {fileID: 5145801999279379591}
+  - component: {fileID: 4077494202123000894}
   m_Layer: 0
   m_Name: Agent
   m_TagString: Untagged
@@ -174,9 +175,9 @@ MonoBehaviour:
     VectorActionDescriptions: []
     VectorActionSpaceType: 1
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 5022602860645237092, guid: 345a28a1b6fb5fc4887f3ce4717ea94f, type: 3}
+  m_Model: {fileID: 0}
   m_InferenceDevice: 1
-  m_BehaviorType: 2
+  m_BehaviorType: 0
   m_BehaviorName: EnterTheDoor
   TeamId: 0
   m_UseChildSensors: 1
@@ -239,6 +240,22 @@ MonoBehaviour:
   rayMissColor: {r: 0.990566, g: 0.09174645, b: 0, a: 1}
   m_StartVerticalOffset: 0.1
   m_EndVerticalOffset: 0.1
+--- !u!114 &4077494202123000894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5145801999279379598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2902496c0120472b90269f94a0aec7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Record: 0
+  NumStepsToRecord: 0
+  DemonstrationName: EnterDoorDemo
+  DemonstrationDirectory: Demos
 --- !u!1 &5145801999427171004
 GameObject:
   m_ObjectHideFlags: 0

@@ -16,6 +16,10 @@ public class MoveToGoalAgent : Agent
         //Time.timeScale = 3f;
     }
 
+    public override void CollectObservations(VectorSensor sensor){
+        sensor.AddObservation(transform.position);
+
+    }
 
     public override void OnEpisodeBegin(){
         float pos_x_pl = UnityEngine.Random.Range(-9.0f,9.0f);

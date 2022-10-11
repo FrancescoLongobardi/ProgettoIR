@@ -1,0 +1,29 @@
+{
+    "EnterTheDoor": {
+        "checkpoints": [
+            {
+                "steps": 41231,
+                "file_path": "results\\EnterImit\\EnterTheDoor\\EnterTheDoor-41231.onnx",
+                "reward": -5.625074863433838,
+                "creation_time": 1665498403.9963403,
+                "auxillary_file_paths": [
+                    "results\\EnterImit\\EnterTheDoor\\EnterTheDoor-41231.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 41231,
+            "file_path": "results\\EnterImit\\EnterTheDoor.onnx",
+            "reward": -5.625074863433838,
+            "creation_time": 1665498403.9963403,
+            "auxillary_file_paths": [
+                "results\\EnterImit\\EnterTheDoor\\EnterTheDoor-41231.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.29.0",
+        "torch_version": "1.12.1+cpu"
+    }
+}
