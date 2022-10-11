@@ -1,0 +1,47 @@
+{
+    "EnterTheDoor": {
+        "checkpoints": [
+            {
+                "steps": 499955,
+                "file_path": "results\\door1\\EnterTheDoor\\EnterTheDoor-499955.onnx",
+                "reward": -0.5600747831046262,
+                "creation_time": 1665490491.4176085,
+                "auxillary_file_paths": [
+                    "results\\door1\\EnterTheDoor\\EnterTheDoor-499955.pt"
+                ]
+            },
+            {
+                "steps": 999991,
+                "file_path": "results\\door1\\EnterTheDoor\\EnterTheDoor-999991.onnx",
+                "reward": 0.039926901265612214,
+                "creation_time": 1665492488.8937864,
+                "auxillary_file_paths": [
+                    "results\\door1\\EnterTheDoor\\EnterTheDoor-999991.pt"
+                ]
+            },
+            {
+                "steps": 1030574,
+                "file_path": "results\\door1\\EnterTheDoor\\EnterTheDoor-1030574.onnx",
+                "reward": -0.09046408171376223,
+                "creation_time": 1665492763.6990201,
+                "auxillary_file_paths": [
+                    "results\\door1\\EnterTheDoor\\EnterTheDoor-1030574.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 1030574,
+            "file_path": "results\\door1\\EnterTheDoor.onnx",
+            "reward": -0.09046408171376223,
+            "creation_time": 1665492763.6990201,
+            "auxillary_file_paths": [
+                "results\\door1\\EnterTheDoor\\EnterTheDoor-1030574.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.29.0",
+        "torch_version": "1.9.1+cu111"
+    }
+}
