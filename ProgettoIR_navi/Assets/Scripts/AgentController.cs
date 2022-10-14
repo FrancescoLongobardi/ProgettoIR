@@ -26,30 +26,26 @@ public class AgentController : MonoBehaviour
         _direction = (enemies.transform.position - cannon_base.transform.position).normalized;
         _direction.y = 0f;
         _lookRotation = Quaternion.LookRotation(_direction, Vector3.up);
-        cannon_base.transform.rotation = Quaternion.Slerp(cannon_base.transform.rotation, _lookRotation, Time.deltaTime * cannon_base.GetComponent<CannonBaseController>().rotationSpeed);
+        cannon_base.transform.localRotation = Quaternion.Slerp(cannon_base.transform.localRotation, _lookRotation, Time.deltaTime * cannon_base.GetComponent<CannonBaseController>().rotationSpeed);
 
         _direction_cannon = (enemies.transform.position - cannon.transform.position).normalized;
         Debug.DrawRay(cannon.transform.position, _direction_cannon*5f, Color.green);
-        _direction_cannon.x = 0f;
-        _direction_cannon.y = 0f;
-        //_lookRotation_cannon = Quaternion.LookRotation(_direction_cannon, Vector3.right);
-        Debug.Log(_lookRotation_cannon.eulerAngles);
-        //cannon.transform.LookAt(enemies.transform, Vector3.right);
-        _lookRotation_cannon = Quaternion.FromToRotation(Vector3.forward, Vector3.down) * Quaternion.LookRotation(_direction_cannon, Vector3.right);
-        cannon.transform.localRotation = Quaternion.Slerp(cannon.transform.localRotation, _lookRotation_cannon , Time.deltaTime * cannon_base.GetComponent<CannonBaseController>().rotationSpeed);            
-
+        _lookRotation_cannon = Quaternion.LookRotation(_direction_cannon, Vector3.right);
+        cannon.transform.localRotation =  Quaternion.Euler(cannon.transform.localRotation.eulerAngles.x, cannon.transform.localRotation.eulerAngles.y, 90 + _lookRotation_cannon.eulerAngles.x);
         float? highAngle = 0f;
         float? lowAngle = 0f;
-            
-        /*CalculateAngleToHitTarget(out highAngle, out lowAngle, enemies.transform.position);
+
+        /*  
+        CalculateAngleToHitTarget(out highAngle, out lowAngle, enemies.transform.position);
         if(highAngle != null){
             float angle = (float)highAngle;
-            GameObject.Find("Cannon").transform.localEulerAngles = new Vector3(0f, 90f, angle);
+            cannon.transform.localEulerAngles = new Vector3(0f, 90f, angle);
             //transform.eulerAngles = new Vector3(0f, transform.rotation.eulerAngles.y, 0f);
-        }*/
-        
-
-
+        }
+        */
+        float angle = 0.5f * (Mathf.Asin((Physics.gravity.y * Vector3.Distance(ball_spawner.transform.position, enemies.transform.position)) / (ball_spawner.speed * ball_spawner.speed)) * Mathf.Rad2Deg);
+        if(!float.IsNaN(angle))
+            cannon.transform.localEulerAngles = new Vector3(0f, 90f, 90 + angle);
     }
 
     void CalculateAngleToHitTarget(out float? theta1, out float? theta2, Vector3 enemypos)
@@ -57,7 +53,7 @@ public class AgentController : MonoBehaviour
         //Initial speed
         float v = ball_spawner.speed;
 
-        Vector3 targetVec = enemypos - cannon.transform.position;
+        Vector3 targetVec = enemypos - ball_spawner.transform.position;
 
         //Vertical distance
         float y = targetVec.y;
