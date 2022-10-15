@@ -4,18 +4,15 @@ using UnityEngine;
 
 public class CannonBaseController : MonoBehaviour
 {
-
+    private GameObject cannon;
     public float horizontalInput;
     public float rotationSpeed = 30f;
-    static float h;
+    private const float max_left = -115f;
+    private const float max_right = -65f;
     // Start is called before the first frame update
 
-    void Awake()
-    {
-        //Can use a less precise h to speed up calculations
-        //Or a more precise to get a more accurate result
-        //But lower is not always better because of rounding errors
-        h = Time.fixedDeltaTime * 1f;
+    void Start(){
+        cannon = GameObject.Find("Cannon");
     }
 
     // Update is called once per frame
@@ -25,7 +22,25 @@ public class CannonBaseController : MonoBehaviour
         transform.Rotate(Vector3.up, horizontalInput * Time.deltaTime * rotationSpeed);
     }
 
-    void LookWithSlerp(Quaternion lookRotation){
-        //TODO: Quaternion.Slerp ma si deve fermare se sta ruotando verso il basso o verso l'alto
+    public void LookWithSlerp(GameObject enemy){
+        Vector3 direction = (enemy.transform.position - transform.position).normalized;
+        direction.y = 0f;
+        Quaternion _lookRotation = Quaternion.LookRotation(direction, Vector3.up);
+        float rotation_angle = (_lookRotation.eulerAngles.y > 180f) ? _lookRotation.eulerAngles.y -360f : _lookRotation.eulerAngles.y;
+        float possible_rotation = rotation_angle;
+        if (possible_rotation >= max_left && possible_rotation <= max_right)
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, _lookRotation, Time.deltaTime * rotationSpeed);
+        else if(possible_rotation > max_right){
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(0f, max_right, 0f), Time.deltaTime * rotationSpeed);
+        }
+        else if(possible_rotation < max_left){
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(0f, max_left, 0f), Time.deltaTime * rotationSpeed);
+        }
+
+        cannon.GetComponent<CannonController>().LookWithSlerp(enemy);
+    }
+
+    public void Shoot(){
+        cannon.GetComponent<CannonController>().Shoot();
     }
 }
