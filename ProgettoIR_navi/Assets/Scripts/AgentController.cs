@@ -47,6 +47,28 @@ public class AgentController : Agent
 
         transform.localPosition += new Vector3(0f, 0f, move_z) * Time.deltaTime * speed;
         transform.Rotate(Vector3.up, steer_y * rotation_speed * Time.deltaTime);
+        // Per la dimostrazione questi metodi sono chiamati nell'euristica, per il training decommentare
+        //cannon.rotateCannon(cannon_elev);
+        //cannon_base.rotateCannonBase(cannon_base_rot);
+        if(actions.DiscreteActions[0] == 1)
+            cannon_base.Shoot();
+    }
+
+    public override void Heuristic(in ActionBuffers actionsOut)
+    {
+        ActionSegment<float> continous_action = actionsOut.ContinuousActions;
+        ActionSegment<int> discrete_action = actionsOut.DiscreteActions;
+
+        continous_action[0] = 0;
+        continous_action[1] = 0;
+        continous_action[2] = cannon.CalculateInputForAimbot(enemy_spawner.enemies[0]);
+        continous_action[3] = cannon_base.CalculateInputForAimbot(enemy_spawner.enemies[0]);
+        if(cannon.CheckRotationCompleted() && cannon_base.CheckRotationCompleted())
+            discrete_action[0] = 1;
+        else
+            discrete_action[0] = -1;
+        
+
     }
 
     public void enemy_miss(float min_dist){
