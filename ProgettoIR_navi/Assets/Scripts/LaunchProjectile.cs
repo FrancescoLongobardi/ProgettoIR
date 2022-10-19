@@ -22,13 +22,14 @@ public class LaunchProjectile : MonoBehaviour
         launched.GetComponent<Rigidbody>().velocity = transform.up * speed;*/        
     }
 
-    public void Shoot(){
+    public GameObject Shoot(){
         if(is_available==false)
-            return;
+            return null;
         
         GameObject launched = Instantiate(projectile, transform.position, transform.rotation);
         launched.GetComponent<Rigidbody>().velocity = transform.up * speed;
         StartCoroutine(ShootCooldown()); 
+        return launched;
     }
 
     private IEnumerator StartCooldown(){

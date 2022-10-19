@@ -16,6 +16,11 @@ public class Projectile : MonoBehaviour
         }
     }
 
+    void Construct(Object[] parametersConstruct){
+        enemy_spawner = (EnemySpawnerController) parametersConstruct[1];
+        agent = (AgentController) parametersConstruct[0];
+    }
+
     void OnCollisionEnter(Collision other)
     {   
         if(other.gameObject.tag == "water"){
@@ -25,12 +30,13 @@ public class Projectile : MonoBehaviour
         }
         else if(other.gameObject.tag == "enemy"){
             agent.enemy_hit();
+            enemy_spawner.RemoveEnemyFromList(other.gameObject);
         }
     }
 
     float find_nearest_enemy(Vector3 contact_point){
         float min = float.MaxValue;
-        for(int i = 0; i < enemy_spawner.enemies.Length; i++){
+        for(int i = 0; i < enemy_spawner.enemies.Count; i++){
             float dist = Vector3.Distance(enemy_spawner.enemies[i].transform.position, contact_point);
             if(dist < min)
                 min = dist;

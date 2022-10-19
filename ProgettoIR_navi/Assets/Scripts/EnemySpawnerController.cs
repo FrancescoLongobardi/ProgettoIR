@@ -5,10 +5,10 @@ using UnityEngine;
 public class EnemySpawnerController : MonoBehaviour
 {
 
-    public GameObject[] enemies;
+    public List<GameObject> enemies;
     public GameObject plane;
     public GameObject enemy_prefab;
-    private int n_enemies = 1;
+    private int n_enemies = 1; //TODO vedere se si può cancellare
     private float min_x, max_x, min_z, max_z;
     private const float min_distance = 5f;
     private float boundary_limit_x = 1;
@@ -21,7 +21,7 @@ public class EnemySpawnerController : MonoBehaviour
         min_z = -1 * plane.transform.localScale.z * (bounds.z / 2) + boundary_limit_z;
         max_x = plane.transform.localScale.x * (bounds.x / 2) - boundary_limit_x;
         max_z = plane.transform.localScale.z * (bounds.z / 2) - boundary_limit_z;
-        enemies = new GameObject[n_enemies];
+        enemies = new List<GameObject>();
         SpawnEnemies();
         spawned = true;
     }
@@ -32,15 +32,22 @@ public class EnemySpawnerController : MonoBehaviour
         
     }
     
+    public void RemoveEnemyFromList(GameObject enemy){
+        enemies.Remove(enemy);
+        Destroy(enemy);
+    }
+
     private void SpawnEnemies(){
         bool ok_coords = false;
         float pos_x, pos_z;
         for(int i = 0; i < n_enemies; i++){
             Vector3 enemy_pos = Vector3.zero;
+            Vector3 enemy_rot = Vector3.zero;
             while(!ok_coords){
                 pos_x = Random.Range(min_x, max_x);
                 pos_z = Random.Range(min_z, max_z);
                 enemy_pos = new Vector3(pos_x, plane.transform.localPosition.y + 0.51f, pos_z);
+                enemy_rot = new Vector3(0f, Random.Range(0f,360f), 0f);
                 bool ok_enemy = true;
                 for(int j = 0; j < i; j++){
                     Debug.Log("Distanza: " + Vector3.Distance(enemy_pos, enemies[j].transform.position));
@@ -53,7 +60,7 @@ public class EnemySpawnerController : MonoBehaviour
                     ok_coords = true;
                 
             }
-            enemies[i] = Instantiate(enemy_prefab, enemy_pos, Quaternion.identity);
+            enemies.Add(Instantiate(enemy_prefab, enemy_pos, Quaternion.Euler(enemy_rot)));
             ok_coords = false;
         }
 

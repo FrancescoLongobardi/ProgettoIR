@@ -40,7 +40,7 @@ public class CannonBaseController : MonoBehaviour
         cannon.GetComponent<CannonController>().LookWithSlerp(enemy);
     }
 
-    public void Shoot(){
-        cannon.GetComponent<CannonController>().Shoot();
+    public GameObject Shoot(){
+        return cannon.GetComponent<CannonController>().Shoot();
     }
 }

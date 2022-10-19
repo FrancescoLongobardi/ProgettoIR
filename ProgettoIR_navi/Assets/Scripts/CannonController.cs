@@ -28,8 +28,8 @@ public class CannonController : MonoBehaviour
 
     }
 
-    public void Shoot(){
-        ball_spawner_script.Shoot();
+    public GameObject Shoot(){
+        return ball_spawner_script.Shoot();
     }
 
     public void LookWithSlerp(GameObject enemy){
@@ -38,9 +38,18 @@ public class CannonController : MonoBehaviour
         
         if(!float.IsNaN(angle)){
             float possible_angle = 90f+angle;
-            angle = Mathf.Clamp(-possible_angle, -min_elevation, -max_elevation);
-            transform.localEulerAngles = new Vector3(0f, 90f, -angle);
+            float fixed_angle = Mathf.Clamp(-possible_angle, -min_elevation, -max_elevation);
+            transform.localEulerAngles = new Vector3(0f, 90f, -fixed_angle);
         }
+    }
+
+    public void rotateCannon(float elevate){
+        float angle = transform.localEulerAngles.z + elevate * rotationSpeed * Time.deltaTime;
+        //float possible_angle = 90f+angle;
+        if (angle >= max_elevation && angle <= min_elevation){
+            transform.Rotate(Vector3.forward, elevate * rotationSpeed * Time.deltaTime);
+        }
+
     }
 
     public float GetShootingCooldownLeft(){
