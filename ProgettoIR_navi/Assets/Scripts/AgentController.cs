@@ -12,12 +12,15 @@ public class AgentController : Agent
     private CannonController cannon;
     private float speed = 8f;
     private float rotation_speed = 5f;
+    private Vector3 cannon_starting_pos;
+    private Quaternion cannon_base_starting_rot;
 
     public override void Initialize()
     {
         cannon_base = GameObject.Find("CannonBase").GetComponent<CannonBaseController>();
         cannon = GameObject.Find("Cannon").GetComponent<CannonController>();
-        
+        cannon_starting_pos = cannon.transform.position;
+        cannon_base_starting_rot = cannon_base.transform.rotation;
     }
 
 
@@ -101,9 +104,11 @@ public class AgentController : Agent
     void Update()
     {   
         //Quaternion randAng = Quaternion.Euler(0, Random.Range(-45,45), 0);
-
-        Quaternion randAng = cannon.transform.rotation * Quaternion.Euler(0, 0, 0);
-        Debug.DrawRay(cannon.transform.position, Vector3.up, Color.green);
+        Quaternion max_right = cannon_base_starting_rot * Quaternion.Euler(0, 25, 0);
+        Quaternion max_left = cannon_base_starting_rot * Quaternion.Euler(0, -25, 0);
+        Vector3 max_dist = Vector3.forward * -cannon.GetMaxDistance();
+        Debug.DrawRay(cannon_starting_pos, max_right * max_dist, Color.green);
+        Debug.DrawRay(cannon_starting_pos, max_left * max_dist, Color.green);
     }
 
 
