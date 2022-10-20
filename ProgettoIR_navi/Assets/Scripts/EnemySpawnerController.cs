@@ -10,6 +10,7 @@ public class EnemySpawnerController : MonoBehaviour
     public GameObject enemy_prefab;
     private int n_enemies = 1; //TODO vedere se si può cancellare
     private float min_x, max_x, min_z, max_z;
+    private float min_x_demonstration, max_x_demonstration, min_z_demonstration, max_z_demonstration;
     private const float min_distance = 5f;
     private float boundary_limit_x = 1;
     private float boundary_limit_z = 3;
@@ -63,7 +64,6 @@ public class EnemySpawnerController : MonoBehaviour
             enemies.Add(Instantiate(enemy_prefab, enemy_pos, Quaternion.Euler(enemy_rot)));
             ok_coords = false;
         }
-
         /*
         for(int i = 0; i < n_enemies; i++){
             for(int j = 0; j < n_enemies; j++){
@@ -71,5 +71,9 @@ public class EnemySpawnerController : MonoBehaviour
             }
         }
         */
+    }
+
+    public void SpawnEnemyForDemonstration(float max_distance, Vector3 cannon_pos){
+        
     }
 }

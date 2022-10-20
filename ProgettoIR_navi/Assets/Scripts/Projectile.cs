@@ -29,8 +29,8 @@ public class Projectile : MonoBehaviour
             Destroy(gameObject); 
         }
         else if(other.gameObject.tag == "enemy"){
+            //enemy_spawner.RemoveEnemyFromList(other.gameObject);
             agent.enemy_hit();
-            enemy_spawner.RemoveEnemyFromList(other.gameObject);
         }
     }
 

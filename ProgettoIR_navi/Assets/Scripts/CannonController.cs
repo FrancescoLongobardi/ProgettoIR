@@ -54,6 +54,10 @@ public class CannonController : MonoBehaviour
             transform.localEulerAngles = new Vector3(0f, 90f, max_elevation);
     }
 
+    public float GetMaxDistance(){
+        return (ball_spawner_script.speed * ball_spawner_script.speed)/ Physics.gravity.y;
+    }
+
     public float CalculateInputForAimbot(GameObject enemy){
         LaunchProjectile ball_spawner_script = ball_spawner.GetComponent<LaunchProjectile>();
         float angle = 0.5f * (Mathf.Asin((Physics.gravity.y * Vector3.Distance(ball_spawner.transform.position, enemy.transform.position)) / (ball_spawner_script.speed * ball_spawner_script.speed)) * Mathf.Rad2Deg);
@@ -63,18 +67,35 @@ public class CannonController : MonoBehaviour
             float possible_angle = 90f+angle;
             target_angle = possible_angle;
             //float fixed_angle = -Mathf.Clamp(-possible_angle, -min_elevation, -max_elevation);
-            rot_input = Mathf.Sign(possible_angle - transform.localEulerAngles.z);
+            if(Mathf.Abs(possible_angle - transform.localEulerAngles.z) >= Time.deltaTime*rotationSpeed)
+                rot_input = Mathf.Sign(possible_angle - transform.localEulerAngles.z);
+            //rot_input = Mathf.Sign(possible_angle - transform.localEulerAngles.z);
         }
+        else
+            target_angle = transform.localEulerAngles.z;
         
         return rot_input;
     }
 
     public bool CheckRotationCompleted(){
-        return transform.localEulerAngles.z == target_angle || transform.localEulerAngles.z == min_elevation || transform.localEulerAngles.z == max_elevation;
+        return transform.localEulerAngles.z == target_angle ||
+               (target_angle < max_elevation && transform.localEulerAngles.z == max_elevation) ||
+               (target_angle > min_elevation && transform.localEulerAngles.z == min_elevation);
     }
 
     public void rotateCannon(float elevate){
         float angle = transform.localEulerAngles.z + elevate * rotationSpeed * Time.deltaTime;
+    
+        if(elevate == 0){
+            if(target_angle > min_elevation)
+                transform.localEulerAngles = new Vector3(0f, 90f, min_elevation);
+            else if(target_angle < max_elevation)
+                transform.localEulerAngles = new Vector3(0f, 90f, max_elevation);
+            else
+                transform.localEulerAngles = new Vector3(0f, 90f, target_angle);
+            
+            return;
+        }
         //float possible_angle = 90f+angle;
         if (angle >= max_elevation && angle <= min_elevation){
             transform.Rotate(Vector3.forward, elevate * rotationSpeed * Time.deltaTime);

@@ -20,6 +20,7 @@ public class AgentController : Agent
         
     }
 
+
     public override void CollectObservations(VectorSensor sensor){
         sensor.AddObservation(transform.localPosition);
         sensor.AddObservation(cannon.GetShootingCooldownLeft());
@@ -47,11 +48,10 @@ public class AgentController : Agent
 
         transform.localPosition += new Vector3(0f, 0f, move_z) * Time.deltaTime * speed;
         transform.Rotate(Vector3.up, steer_y * rotation_speed * Time.deltaTime);
-        // Per la dimostrazione questi metodi sono chiamati nell'euristica, per il training decommentare
-        //cannon.rotateCannon(cannon_elev);
-        //cannon_base.rotateCannonBase(cannon_base_rot);
+        cannon_base.rotateCannonBase(cannon_base_rot);
+        cannon.rotateCannon(cannon_elev);
         if(actions.DiscreteActions[0] == 1)
-            cannon_base.Shoot();
+            FireProjectile();
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
@@ -71,27 +71,7 @@ public class AgentController : Agent
 
     }
 
-    public void enemy_miss(float min_dist){
-        AddReward(-0.01f * min_dist);
-    }
-    public void enemy_hit(){
-        AddReward(1.0f);
-        if(enemy_spawner.enemies.Count == 0)
-            EndEpisode();
-    }
-
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {   
-        
-        GameObject enemies = enemy_spawner.enemies[0];
-       
-        cannon_base.LookWithSlerp(enemies);
-        
+    void FireProjectile(){
         GameObject proj = cannon_base.Shoot();
         
         if(proj != null){
@@ -101,6 +81,29 @@ public class AgentController : Agent
 
             proj.SendMessage("Construct", parametersConstruct);
         }
+    }
+
+    public void enemy_miss(float min_dist){
+        AddReward(-0.01f * min_dist);
+    }
+    public void enemy_hit(){
+        AddReward(1.0f);
+        //Debug.Log(enemy_spawner.enemies.Count);
+        //if(enemy_spawner.enemies.Count == 0)
+        //    EndEpisode();
+    }
+
+    void Start()
+    {
+        
+    }
+
+    void Update()
+    {   
+        //Quaternion randAng = Quaternion.Euler(0, Random.Range(-45,45), 0);
+
+        Quaternion randAng = cannon.transform.rotation * Quaternion.Euler(0, 0, 0);
+        Debug.DrawRay(cannon.transform.position, Vector3.up, Color.green);
     }
 
 

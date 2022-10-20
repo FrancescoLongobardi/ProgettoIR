@@ -31,9 +31,9 @@ public class CannonBaseController : MonoBehaviour
         
         float possible_rotation = rotation_angle;
         float local_y_angle = (transform.localEulerAngles.y > 180f) ? transform.localEulerAngles.y - 360f : transform.localEulerAngles.y;
-        Debug.Log(possible_rotation);
+        //Debug.Log(possible_rotation);
         float rot_input = Mathf.Sign(possible_rotation - local_y_angle);
-        Debug.Log(rot_input);
+        //Debug.Log(rot_input);
         
         float next_angle =  local_y_angle + rotationSpeed * Time.deltaTime * rot_input;
 
@@ -53,9 +53,19 @@ public class CannonBaseController : MonoBehaviour
     public void rotateCannonBase(float rot_input){
         float local_y_angle = (transform.localEulerAngles.y > 180f) ? transform.localEulerAngles.y - 360f : transform.localEulerAngles.y;
         
-        float next_angle =  local_y_angle + rotationSpeed * Time.deltaTime * rot_input;
+        if(rot_input == 0){
+            if(target_angle > max_right)
+                transform.localEulerAngles = new Vector3(0f, max_right, 0f);
+            else if(target_angle < max_left)
+                transform.localEulerAngles = new Vector3(0f, max_left, 0f);
+            else
+                transform.localEulerAngles = new Vector3(0f, target_angle, 0f);
+            
+            return;
+        }
 
-        if (next_angle >= max_left && next_angle <= max_right)
+        float next_angle =  local_y_angle + rotationSpeed * Time.deltaTime * rot_input;
+        if(next_angle >= max_left && next_angle <= max_right)
             transform.Rotate(Vector3.up, rot_input * rotationSpeed * Time.deltaTime);
         else if(next_angle > max_right){
             transform.localEulerAngles = new Vector3(0f, max_right, 0f);
@@ -72,8 +82,11 @@ public class CannonBaseController : MonoBehaviour
         float possible_rotation = (_lookRotation.eulerAngles.y > 180f) ? _lookRotation.eulerAngles.y -360f : _lookRotation.eulerAngles.y;
         target_angle = possible_rotation;
         float local_y_angle = (transform.localEulerAngles.y > 180f) ? transform.localEulerAngles.y - 360f : transform.localEulerAngles.y;
-        float rot_input = Mathf.Sign(possible_rotation - local_y_angle);
-
+        
+        float rot_input = 0;
+        if(Mathf.Abs(possible_rotation - local_y_angle) >= Time.deltaTime*rotationSpeed)
+            rot_input = Mathf.Sign(possible_rotation - local_y_angle);
+        
         return rot_input;
     }
 
@@ -82,7 +95,9 @@ public class CannonBaseController : MonoBehaviour
     }
 
     public bool CheckRotationCompleted(){
-        return GetLocalYAngle() == target_angle || GetLocalYAngle() == max_left || GetLocalYAngle() == max_right;
+        return GetLocalYAngle() == target_angle ||
+               (target_angle < max_left && GetLocalYAngle() == max_left) ||
+               (target_angle > max_right && GetLocalYAngle() == max_right);
     }
 
     public GameObject Shoot(){
