@@ -6,7 +6,7 @@ public class CannonBaseController : MonoBehaviour
 {
     private GameObject cannon;
     public float horizontalInput;
-    public float rotationSpeed = 30f;
+    public float rotationSpeed = 10f;
     private const float max_left = -115f;
     private const float max_right = -65f;
     // Start is called before the first frame update
@@ -53,12 +53,18 @@ public class CannonBaseController : MonoBehaviour
     public void rotateCannonBase(float rot_input){
         float local_y_angle = (transform.localEulerAngles.y > 180f) ? transform.localEulerAngles.y - 360f : transform.localEulerAngles.y;
         
+        if (Mathf.Abs(GetLocalYAngle() - target_angle) < 0.01f){
+            //Debug.Log("<color=green>Equal angles cannon base, RETURN </color>");
+            return;
+        }
+
         if(rot_input == 0){
+            //Debug.Log("<color=red> Diff angles cannon base</color>"+ target_angle+ " "+ GetLocalYAngle());
             if(target_angle > max_right)
                 transform.localEulerAngles = new Vector3(0f, max_right, 0f);
             else if(target_angle < max_left)
                 transform.localEulerAngles = new Vector3(0f, max_left, 0f);
-            else
+            else if (target_angle >= max_left && target_angle <= max_right)
                 transform.localEulerAngles = new Vector3(0f, target_angle, 0f);
             
             return;
@@ -95,7 +101,7 @@ public class CannonBaseController : MonoBehaviour
     }
 
     public bool CheckRotationCompleted(){
-        return GetLocalYAngle() == target_angle ||
+        return Mathf.Abs(GetLocalYAngle() - target_angle) < 0.01f ||
                (target_angle < max_left && GetLocalYAngle() == max_left) ||
                (target_angle > max_right && GetLocalYAngle() == max_right);
     }

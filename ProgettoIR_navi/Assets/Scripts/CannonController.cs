@@ -9,7 +9,7 @@ public class CannonController : MonoBehaviour
     private const float max_elevation = 45f;
     private const float min_elevation = 100f;
     public bool rot_completed = false;
-    public float rotationSpeed = 30f;
+    public float rotationSpeed = 10f;
     private LaunchProjectile ball_spawner_script;
     private float target_angle = float.NaN;
 
@@ -78,20 +78,26 @@ public class CannonController : MonoBehaviour
     }
 
     public bool CheckRotationCompleted(){
-        return transform.localEulerAngles.z == target_angle ||
+        return Mathf.Abs(transform.localEulerAngles.z - target_angle) < 0.01f ||
                (target_angle < max_elevation && transform.localEulerAngles.z == max_elevation) ||
                (target_angle > min_elevation && transform.localEulerAngles.z == min_elevation);
     }
 
     public void rotateCannon(float elevate){
         float angle = transform.localEulerAngles.z + elevate * rotationSpeed * Time.deltaTime;
-    
+
+        if (Mathf.Abs(transform.localEulerAngles.z - target_angle) < 0.01f){
+            //Debug.Log("<color=green>Equal angles cannon, RETURN </color>");
+            return;
+        }
+
         if(elevate == 0){
+            //Debug.Log("<color=red> Diff angles cannon</color>"+ target_angle+ " "+ transform.localEulerAngles.y);
             if(target_angle > min_elevation)
                 transform.localEulerAngles = new Vector3(0f, 90f, min_elevation);
             else if(target_angle < max_elevation)
                 transform.localEulerAngles = new Vector3(0f, 90f, max_elevation);
-            else
+            else if (target_angle <= min_elevation && target_angle >= max_elevation)
                 transform.localEulerAngles = new Vector3(0f, 90f, target_angle);
             
             return;

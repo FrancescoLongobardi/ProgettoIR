@@ -1267,10 +1267,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2902496c0120472b90269f94a0aec7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Record: 0
+  Record: 1
   NumStepsToRecord: 0
-  DemonstrationName: 
-  DemonstrationDirectory: 
+  DemonstrationName: AimbotRec1
+  DemonstrationDirectory: DemosIR
 --- !u!114 &1417117985
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1283,7 +1283,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a5c9d521e5ef4759a8246a07d52221e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DecisionPeriod: 5
+  DecisionPeriod: 1
   TakeActionsBetweenDecisions: 0
 --- !u!1 &1594478270
 GameObject:

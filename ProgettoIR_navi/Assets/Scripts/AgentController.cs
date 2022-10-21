@@ -23,6 +23,20 @@ public class AgentController : Agent
         cannon_base_starting_rot = cannon_base.transform.rotation;
     }
 
+    public override void OnEpisodeBegin(){
+        RandomAgentPosition();
+        cannon_base.transform.localEulerAngles = new Vector3(0f, -90f, 0f);
+        cannon.transform.localEulerAngles = new Vector3(0f, 90f, 90f);
+        enemy_spawner.SpawnForDemonstration(cannon.transform.position, cannon_base.transform.rotation, cannon.GetMaxDistance());
+    }
+
+
+    void RandomAgentPosition(){
+        float min_x = 5f, max_x = 32f, min_z = -26.5f, max_z = 25; 
+        float pos_x = Random.Range(min_x, max_x);
+        float pos_z = Random.Range(min_z, max_z);
+        transform.localPosition = new Vector3(pos_x, 0.51f, pos_z);
+    }
 
     public override void CollectObservations(VectorSensor sensor){
         sensor.AddObservation(transform.localPosition);
@@ -61,15 +75,18 @@ public class AgentController : Agent
     {
         ActionSegment<float> continous_action = actionsOut.ContinuousActions;
         ActionSegment<int> discrete_action = actionsOut.DiscreteActions;
-
         continous_action[0] = 0;
         continous_action[1] = 0;
         continous_action[2] = cannon.CalculateInputForAimbot(enemy_spawner.enemies[0]);
         continous_action[3] = cannon_base.CalculateInputForAimbot(enemy_spawner.enemies[0]);
-        if(cannon.CheckRotationCompleted() && cannon_base.CheckRotationCompleted())
+        if(cannon.CheckRotationCompleted() && cannon_base.CheckRotationCompleted()){
             discrete_action[0] = 1;
-        else
+        }
+        else{
+            Debug.Log(cannon.CheckRotationCompleted()+ " "+ cannon_base.CheckRotationCompleted());
             discrete_action[0] = -1;
+
+        }
         
 
     }
@@ -92,8 +109,8 @@ public class AgentController : Agent
     public void enemy_hit(){
         AddReward(1.0f);
         //Debug.Log(enemy_spawner.enemies.Count);
-        //if(enemy_spawner.enemies.Count == 0)
-        //    EndEpisode();
+        if(enemy_spawner.enemies.Count == 0)
+            EndEpisode();
     }
 
     void Start()
@@ -107,8 +124,8 @@ public class AgentController : Agent
         Quaternion max_right = cannon_base_starting_rot * Quaternion.Euler(0, 25, 0);
         Quaternion max_left = cannon_base_starting_rot * Quaternion.Euler(0, -25, 0);
         Vector3 max_dist = Vector3.forward * -cannon.GetMaxDistance();
-        Debug.DrawRay(cannon_starting_pos, max_right * max_dist, Color.green);
-        Debug.DrawRay(cannon_starting_pos, max_left * max_dist, Color.green);
+        Debug.DrawRay(cannon.transform.position, max_right * max_dist, Color.green);
+        Debug.DrawRay(cannon.transform.position, max_left * max_dist, Color.green);
     }
 
 

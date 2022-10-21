@@ -17,6 +17,10 @@ public class EnemySpawnerController : MonoBehaviour
     public bool spawned = false;
 
     void Start(){
+        
+    }
+
+    void SpawnForTraining(){
         Vector3 bounds = plane.GetComponent<MeshRenderer>().localBounds.size;
         min_x = -1 * plane.transform.localScale.x * (bounds.x / 2) + boundary_limit_x;
         min_z = -1 * plane.transform.localScale.z * (bounds.z / 2) + boundary_limit_z;
@@ -27,6 +31,18 @@ public class EnemySpawnerController : MonoBehaviour
         spawned = true;
     }
 
+    //Hard-codato -25 e 25: max left e max right
+    public void SpawnForDemonstration(Vector3 cannonPosition, Quaternion cannon_base_rotation, float cannonMaxRange){
+        Quaternion randAng = Quaternion.Euler(0, Random.Range(-24f, 24f), 0);
+        randAng = cannon_base_rotation * randAng;
+        float randomRange = Random.Range(5f, -cannonMaxRange);
+        Vector3 spawnPos = cannonPosition + randAng * Vector3.forward * randomRange;
+        spawnPos.y = 0.6f; //Over the plane
+        //Debug.Log(spawnPos);
+        Vector3 enemy_rot = new Vector3(0f, Random.Range(0f,360f), 0f);
+        enemies.Add(Instantiate(enemy_prefab, spawnPos, Quaternion.Euler(enemy_rot)));
+    }
+    
     void Update()
     {      
         
@@ -73,7 +89,4 @@ public class EnemySpawnerController : MonoBehaviour
         */
     }
 
-    public void SpawnEnemyForDemonstration(float max_distance, Vector3 cannon_pos){
-        
-    }
 }
