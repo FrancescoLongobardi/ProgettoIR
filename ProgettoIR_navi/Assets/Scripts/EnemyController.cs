@@ -10,14 +10,14 @@ public class EnemyController : MonoBehaviour
     void Start()
     {
         int[] dirs = {1, -1};
-        speed = Random.Range(8f, 12f);
+        speed = Random.Range(4f, 7f);
         direction = dirs[Random.Range(0, 2)];
     }
 
     // Update is called once per frame
     void Update()
     {
-        //transform.localPosition += direction * transform.forward * Time.deltaTime * speed;
+        transform.localPosition += direction * transform.forward * Time.deltaTime * speed;
     }
 
     void OnCollisionEnter(Collision other)

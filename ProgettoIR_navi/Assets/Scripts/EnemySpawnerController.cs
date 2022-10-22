@@ -8,24 +8,23 @@ public class EnemySpawnerController : MonoBehaviour
     public List<GameObject> enemies;
     public GameObject plane;
     public GameObject enemy_prefab;
-    private int n_enemies = 1; //TODO vedere se si può cancellare
+    private int n_enemies = 4; //TODO vedere se si può cancellare
     private float min_x, max_x, min_z, max_z;
     private float min_x_demonstration, max_x_demonstration, min_z_demonstration, max_z_demonstration;
     private const float min_distance = 5f;
-    private float boundary_limit_x = 1;
-    private float boundary_limit_z = 3;
+    private float boundary_limit = 3;
     public bool spawned = false;
 
     void Start(){
         
     }
 
-    void SpawnForTraining(){
+    public void SpawnForTraining(){
         Vector3 bounds = plane.GetComponent<MeshRenderer>().localBounds.size;
-        min_x = -1 * plane.transform.localScale.x * (bounds.x / 2) + boundary_limit_x;
-        min_z = -1 * plane.transform.localScale.z * (bounds.z / 2) + boundary_limit_z;
-        max_x = plane.transform.localScale.x * (bounds.x / 2) - boundary_limit_x;
-        max_z = plane.transform.localScale.z * (bounds.z / 2) - boundary_limit_z;
+        min_x = -1 * plane.transform.localScale.x * (bounds.x / 2) + boundary_limit;
+        min_z = -1 * plane.transform.localScale.z * (bounds.z / 2) + boundary_limit;
+        max_x = plane.transform.localScale.x * (bounds.x / 2) - boundary_limit;
+        max_z = plane.transform.localScale.z * (bounds.z / 2) - boundary_limit;
         enemies = new List<GameObject>();
         SpawnEnemies();
         spawned = true;
@@ -67,7 +66,7 @@ public class EnemySpawnerController : MonoBehaviour
                 enemy_rot = new Vector3(0f, Random.Range(0f,360f), 0f);
                 bool ok_enemy = true;
                 for(int j = 0; j < i; j++){
-                    Debug.Log("Distanza: " + Vector3.Distance(enemy_pos, enemies[j].transform.position));
+                    //Debug.Log("Distanza: " + Vector3.Distance(enemy_pos, enemies[j].transform.position));
                     if(Vector3.Distance(enemy_pos, enemies[j].transform.position) < min_distance*2){
                         ok_enemy = false;
                         break;
