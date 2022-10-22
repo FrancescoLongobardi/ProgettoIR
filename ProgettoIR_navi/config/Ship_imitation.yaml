@@ -2,8 +2,8 @@ behaviors:
   ShipTraining:
     trainer_type: ppo
     hyperparameters:
-      batch_size: 2048
-      buffer_size: 20480
+      batch_size: 256
+      buffer_size: 100000
       learning_rate: 0.0002
       beta: 0.003
       epsilon: 0.15
@@ -20,11 +20,11 @@ behaviors:
         gamma: 0.96
         strength: 1.0
       gail:
-        strength: 0.0
-        demo_path: Assets\AimbotRec1.demo
+        strength: 0.2
+        demo_path: Assets\AimbotRec2.demo
     behavioral_cloning:
-      strength: 0.0
-      demo_path: Assets\AimbotRec1.demo
+      strength: 0.1
+      demo_path: Assets\AimbotRec2.demo
     keep_checkpoints: 5
     max_steps: 200000
     time_horizon: 1000

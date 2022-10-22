@@ -76,7 +76,14 @@ public class EnemySpawnerController : MonoBehaviour
                     ok_coords = true;
                 
             }
-            enemies.Add(Instantiate(enemy_prefab, enemy_pos, Quaternion.Euler(enemy_rot)));
+            GameObject enemy = Instantiate(enemy_prefab, enemy_pos, Quaternion.Euler(enemy_rot)); 
+            float[] parameters = new float[4];
+            parameters[0] = min_x;
+            parameters[1] = min_z;
+            parameters[2] = max_x;
+            parameters[3] = max_z;
+            enemy.SendMessage("Construct", parameters);
+            enemies.Add(enemy);
             ok_coords = false;
         }
         /*

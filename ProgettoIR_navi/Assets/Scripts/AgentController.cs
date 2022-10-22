@@ -10,10 +10,12 @@ public class AgentController : Agent
     public EnemySpawnerController enemy_spawner;
     private CannonBaseController cannon_base;
     private CannonController cannon;
+    public GameObject plane;
     private float speed = 8f;
     private float rotation_speed = 5f;
     private Vector3 cannon_starting_pos;
     private Quaternion cannon_base_starting_rot;
+    private float boundary_limit = 3f;
 
     public override void Initialize()
     {
@@ -24,15 +26,26 @@ public class AgentController : Agent
     }
 
     public override void OnEpisodeBegin(){
-        RandomAgentPosition();
+        RandomAgentPositionTraining();
+        //RandomAgentPositionDemonstration();
         cannon_base.transform.localEulerAngles = new Vector3(0f, -90f, 0f);
         cannon.transform.localEulerAngles = new Vector3(0f, 90f, 90f);
         //enemy_spawner.SpawnForDemonstration(cannon.transform.position, cannon_base.transform.rotation, cannon.GetMaxDistance());
         enemy_spawner.SpawnForTraining();
     }
 
+    void RandomAgentPositionTraining(){
+        Vector3 bounds = plane.GetComponent<MeshRenderer>().localBounds.size;
+        float min_x = -1 * plane.transform.localScale.x * (bounds.x / 2) + boundary_limit;
+        float min_z = -1 * plane.transform.localScale.z * (bounds.z / 2) + boundary_limit;
+        float max_x = plane.transform.localScale.x * (bounds.x / 2) - boundary_limit;
+        float max_z = plane.transform.localScale.z * (bounds.z / 2) - boundary_limit;
+        float pos_x = Random.Range(min_x, max_x);
+        float pos_z = Random.Range(min_z, max_z);
+        transform.localPosition = new Vector3(pos_x, 0.51f, pos_z);
+    }
 
-    void RandomAgentPosition(){
+    void RandomAgentPositionDemonstration(){
         float min_x = 5f, max_x = 32f, min_z = -26.5f, max_z = 25; 
         float pos_x = Random.Range(min_x, max_x);
         float pos_z = Random.Range(min_z, max_z);
@@ -110,19 +123,15 @@ public class AgentController : Agent
     public void enemy_hit(){
         AddReward(1.0f);
         //Debug.Log(enemy_spawner.enemies.Count);
-        if(enemy_spawner.enemies.Count == 0)
+        if(enemy_spawner.enemies.Count == 0){
+            GetCumulativeReward();
             EndEpisode();
-    }
-
-    void Start()
-    {
-        
+        }
     }
 
     void Update()
     {   
-        /*
-        //Quaternion randAng = Quaternion.Euler(0, Random.Range(-45,45), 0);
+       /* 
         Quaternion max_right = cannon_base_starting_rot * Quaternion.Euler(0, 25, 0);
         Quaternion max_left = cannon_base_starting_rot * Quaternion.Euler(0, -25, 0);
         Vector3 max_dist = Vector3.forward * -cannon.GetMaxDistance();
