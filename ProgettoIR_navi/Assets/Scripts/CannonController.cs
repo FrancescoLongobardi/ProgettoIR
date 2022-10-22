@@ -60,7 +60,8 @@ public class CannonController : MonoBehaviour
 
     public float CalculateInputForAimbot(GameObject enemy){
         LaunchProjectile ball_spawner_script = ball_spawner.GetComponent<LaunchProjectile>();
-        float angle = 0.5f * (Mathf.Asin((Physics.gravity.y * Vector3.Distance(ball_spawner.transform.position, enemy.transform.position)) / (ball_spawner_script.speed * ball_spawner_script.speed)) * Mathf.Rad2Deg);
+        //float angle = 0.5f * (Mathf.Asin((Physics.gravity.y * Vector3.Distance(ball_spawner.transform.position, enemy.transform.position)) / (ball_spawner_script.speed * ball_spawner_script.speed)) * Mathf.Rad2Deg);
+        float angle = CalculateThrowAngle(ball_spawner.transform.position, enemy.transform.position, ball_spawner_script.speed);
         float rot_input = 0;
 
         if(!float.IsNaN(angle)){
@@ -76,6 +77,31 @@ public class CannonController : MonoBehaviour
         
         return rot_input;
     }
+
+     public static float CalculateThrowAngle(Vector3 from, Vector3 to, float speed)
+     {
+         float xx = to.x - from.x;
+         float xz = to.z - from.z;
+         float x = Mathf.Sqrt(xx * xx + xz * xz);
+         float y = from.y - to.y;
+ 
+         float v = speed;
+         float g = Physics.gravity.y;
+ 
+         float sqrt = (v * v * v * v) - (g * (g * (x * x) + 2 * y * (v * v)));
+ 
+         // Not enough range
+         if (sqrt < 0)
+         {
+             return 0.0f;
+         }
+ 
+         float angle = Mathf.Atan(((v * v) + Mathf.Sqrt(sqrt)) / (g * x));
+         angle = (angle * 360) / (float)(2 * Mathf.PI); // Conversion from radian to degrees
+         angle = 90 + angle; // Idk why but thats needed
+         angle *= -1; // Unity negative is upward, positive is pointing downard
+         return angle;
+     }
 
     public bool CheckRotationCompleted(){
         return Mathf.Abs(transform.localEulerAngles.z - target_angle) < 0.01f ||

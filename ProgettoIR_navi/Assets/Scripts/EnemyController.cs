@@ -24,6 +24,7 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        /*
         Vector3 newPos = transform.localPosition + direction * transform.forward * Time.deltaTime * speed;
         if (newPos.x < min_x || newPos.x > max_x || newPos.z < min_z || newPos.z > max_z){
             direction = -direction;
@@ -32,6 +33,7 @@ public class EnemyController : MonoBehaviour
         else{
             transform.localPosition += direction * transform.forward * Time.deltaTime * speed;
         }
+        */
 
     }
 

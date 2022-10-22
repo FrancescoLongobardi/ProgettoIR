@@ -26,12 +26,12 @@ public class AgentController : Agent
     }
 
     public override void OnEpisodeBegin(){
-        RandomAgentPositionTraining();
-        //RandomAgentPositionDemonstration();
+        //RandomAgentPositionTraining();
+        RandomAgentPositionDemonstration();
         cannon_base.transform.localEulerAngles = new Vector3(0f, -90f, 0f);
         cannon.transform.localEulerAngles = new Vector3(0f, 90f, 90f);
-        //enemy_spawner.SpawnForDemonstration(cannon.transform.position, cannon_base.transform.rotation, cannon.GetMaxDistance());
-        enemy_spawner.SpawnForTraining();
+        enemy_spawner.SpawnForDemonstration(cannon.transform.position, cannon_base.transform.rotation, cannon.GetMaxDistance());
+        //enemy_spawner.SpawnForTraining();
     }
 
     void RandomAgentPositionTraining(){
@@ -131,13 +131,13 @@ public class AgentController : Agent
 
     void Update()
     {   
-       /* 
+       
         Quaternion max_right = cannon_base_starting_rot * Quaternion.Euler(0, 25, 0);
         Quaternion max_left = cannon_base_starting_rot * Quaternion.Euler(0, -25, 0);
         Vector3 max_dist = Vector3.forward * -cannon.GetMaxDistance();
         Debug.DrawRay(cannon.transform.position, max_right * max_dist, Color.green);
         Debug.DrawRay(cannon.transform.position, max_left * max_dist, Color.green);
-        */
+        
     }
 
 
