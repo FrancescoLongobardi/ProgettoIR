@@ -81,11 +81,17 @@ public class CannonBaseController : MonoBehaviour
         }
     }
 
-    public float CalculateInputForAimbot(GameObject enemy){
+    private float Get180Angle(float angle){
+        return (angle > 180f ? angle - 360f : angle); 
+    }
+
+    public float CalculateInputForAimbot(GameObject enemy, float agent_y_rot){
         Vector3 direction = (enemy.transform.position - transform.position).normalized;
         direction.y = 0f;
-        Quaternion _lookRotation = Quaternion.LookRotation(direction, Vector3.up);
-        float possible_rotation = (_lookRotation.eulerAngles.y > 180f) ? _lookRotation.eulerAngles.y -360f : _lookRotation.eulerAngles.y;
+        Quaternion _lookRotation = Quaternion.LookRotation(direction, transform.forward);
+        //Debug.DrawRay(transform.position, transform.forward*10, Color.red);
+        //Debug.DrawRay(transform.position, direction*10, Color.blue);    
+        float possible_rotation = Get180Angle(_lookRotation.eulerAngles.y) - Get180Angle(agent_y_rot);
         target_angle = possible_rotation;
         float local_y_angle = (transform.localEulerAngles.y > 180f) ? transform.localEulerAngles.y - 360f : transform.localEulerAngles.y;
         

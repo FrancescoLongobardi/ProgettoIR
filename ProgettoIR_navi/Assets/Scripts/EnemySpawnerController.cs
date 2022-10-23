@@ -16,26 +16,32 @@ public class EnemySpawnerController : MonoBehaviour
     public bool spawned = false;
 
     void Start(){
-        
-    }
-
-    public void SpawnForTraining(){
         Vector3 bounds = plane.GetComponent<MeshRenderer>().localBounds.size;
         min_x = -1 * plane.transform.localScale.x * (bounds.x / 2) + boundary_limit;
         min_z = -1 * plane.transform.localScale.z * (bounds.z / 2) + boundary_limit;
         max_x = plane.transform.localScale.x * (bounds.x / 2) - boundary_limit;
         max_z = plane.transform.localScale.z * (bounds.z / 2) - boundary_limit;
+    }
+
+    public void SpawnForTraining(){   
         enemies = new List<GameObject>();
         SpawnEnemies();
         spawned = true;
     }
 
-    //Hard-codato -25 e 25: max left e max right
-    public void SpawnForDemonstration(Vector3 cannonPosition, Quaternion cannon_base_rotation, float cannonMaxRange){
-        Quaternion randAng = Quaternion.Euler(0, Random.Range(-24f, 24f), 0);
+    void CheckBounds(ref Vector3 pos){
+        pos.x = Mathf.Clamp(pos.x, min_x, max_x);
+        pos.z = Mathf.Clamp(pos.z, min_z, max_z);
+    }
+
+    public void SpawnForDemonstration(Vector3 cannonPosition, Quaternion cannon_base_rotation, float cannonMaxRange, float angle1, float angle2){
+        Quaternion randAng = Quaternion.Euler(0, Random.Range(angle1, angle2), 0);
         randAng = cannon_base_rotation * randAng;
         float randomRange = Random.Range(5f, -cannonMaxRange);
         Vector3 spawnPos = cannonPosition + randAng * Vector3.forward * randomRange;
+        Debug.Log("Old: " + spawnPos);
+        CheckBounds(ref spawnPos);
+        Debug.Log("New: " + spawnPos);
         spawnPos.y = 0.6f; //Over the plane
         //Debug.Log(spawnPos);
         Vector3 enemy_rot = new Vector3(0f, Random.Range(0f,360f), 0f);
