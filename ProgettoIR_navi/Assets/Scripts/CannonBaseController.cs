@@ -17,12 +17,13 @@ public class CannonBaseController : MonoBehaviour
     }
 
     // Update is called once per frame
+    /*
     void FixedUpdate()
     {
         horizontalInput = Input.GetAxis("Horizontal");
         transform.Rotate(Vector3.up, horizontalInput * Time.deltaTime * rotationSpeed);
     }
-    
+    */
     public void LookWithSlerp(GameObject enemy){
         Vector3 direction = (enemy.transform.position - transform.position).normalized;
         direction.y = 0f;
@@ -96,6 +97,7 @@ public class CannonBaseController : MonoBehaviour
         float local_y_angle = (transform.localEulerAngles.y > 180f) ? transform.localEulerAngles.y - 360f : transform.localEulerAngles.y;
         
         float rot_input = 0;
+        Debug.Log(Mathf.Abs(possible_rotation - local_y_angle) + " " + Time.deltaTime*rotationSpeed);
         if(Mathf.Abs(possible_rotation - local_y_angle) >= Time.deltaTime*rotationSpeed)
             rot_input = Mathf.Sign(possible_rotation - local_y_angle);
         

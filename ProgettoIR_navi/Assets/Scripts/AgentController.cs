@@ -41,6 +41,7 @@ public class AgentController : Agent
         RandomAgentPositionTraining();
         cannon_base.transform.localRotation =  Quaternion.Euler(0f, -90f, 0f);
         cannon.transform.localRotation = Quaternion.Euler(0f, 90f, 90f);
+        Debug.Log(cannon_base.transform.localRotation.eulerAngles);
         //enemy_spawner.SpawnForDemonstration(cannon.transform.position, cannon_base.transform.rotation, cannon.GetMaxDistance(), -180f, 180f);
         enemy_spawner.SpawnForTraining();
         if (Vector3.Distance(cannon_base.transform.position,enemy_spawner.enemies[0].transform.position) > cannon.GetMaxDistance()){
@@ -123,9 +124,13 @@ public class AgentController : Agent
         float cannon_base_rot = actions.ContinuousActions[3];
 
         transform.localPosition += transform.forward * Time.deltaTime * speed * move_z;
+        if(movement_finished && CheckRotationCompleted()){
+            Debug.Log(cannon_base_rot);
+            cannon_base.rotateCannonBase(cannon_base_rot);
+            cannon.rotateCannon(cannon_elev);
+        }
         rotateAgent(steer_y);
-        cannon_base.rotateCannonBase(cannon_base_rot);
-        cannon.rotateCannon(cannon_elev);
+        
         if(actions.DiscreteActions[0] == 1)
             FireProjectile();
     }
