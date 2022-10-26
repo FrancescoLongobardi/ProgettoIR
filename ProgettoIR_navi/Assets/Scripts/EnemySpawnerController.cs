@@ -8,7 +8,7 @@ public class EnemySpawnerController : MonoBehaviour
     public List<GameObject> enemies;
     public GameObject plane;
     public GameObject enemy_prefab;
-    private int n_enemies = 4; //TODO vedere se si può cancellare
+    private int n_enemies = 1; //TODO vedere se si può cancellare
     private float min_x, max_x, min_z, max_z;
     private float min_x_demonstration, max_x_demonstration, min_z_demonstration, max_z_demonstration;
     private const float min_distance = 5f;

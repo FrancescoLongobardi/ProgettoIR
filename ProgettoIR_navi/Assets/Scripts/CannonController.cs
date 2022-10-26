@@ -55,7 +55,7 @@ public class CannonController : MonoBehaviour
     }
 
     public float GetMaxDistance(){
-        return (ball_spawner_script.speed * ball_spawner_script.speed)/ Physics.gravity.y;
+        return (ball_spawner_script.speed * ball_spawner_script.speed)/ -Physics.gravity.y;
     }
 
     public float CalculateInputForAimbot(GameObject enemy){
