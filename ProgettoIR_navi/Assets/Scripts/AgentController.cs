@@ -11,14 +11,15 @@ public class AgentController : Agent
     private CannonBaseController cannon_base;
     private CannonController cannon;
     public GameObject plane;
-    private float speed = 8f;
-    private float rotation_speed = 5f;
+    private float speed = 6f;
+    private float rotation_speed = 7f;
     private Vector3 cannon_starting_pos;
     private Quaternion cannon_base_starting_rot;
     private float boundary_limit = 3f;
     private float target_angle = float.NaN;
     private bool movement_finished = false;
     private float distance_offset = float.NaN;
+    private bool shot = false;
 
     public override void Initialize()
     {
@@ -37,13 +38,16 @@ public class AgentController : Agent
     }
 
     public override void OnEpisodeBegin(){
+        shot = false;
         distance_offset = Random.Range(0f, (cannon.GetMaxDistance()*3)/4);
         RandomAgentPositionTraining();
         cannon_base.transform.localRotation =  Quaternion.Euler(0f, -90f, 0f);
         cannon.transform.localRotation = Quaternion.Euler(0f, 90f, 90f);
-        Debug.Log(cannon_base.transform.localRotation.eulerAngles);
+        //Debug.Log(cannon_base.transform.localRotation.eulerAngles);
         //enemy_spawner.SpawnForDemonstration(cannon.transform.position, cannon_base.transform.rotation, cannon.GetMaxDistance(), -180f, 180f);
         enemy_spawner.SpawnForTraining();
+
+        /*
         if (Vector3.Distance(cannon_base.transform.position,enemy_spawner.enemies[0].transform.position) > cannon.GetMaxDistance()){
             target_angle = MoveTowardsTarget(enemy_spawner.enemies[0].transform.position);
             target_angle = Get360Angle(target_angle)+GetYAngle();
@@ -53,15 +57,16 @@ public class AgentController : Agent
             movement_finished = true;
             float angle = CalculateShipRotationAngle(enemy_spawner.enemies[0]);
             angle = Get360Angle(angle);
-            Debug.Log(angle);
-            Debug.Log("Range: " + (GetYAngle() + angle - 24) + ", " + (GetYAngle() + angle + 24));
+            //Debug.Log(angle);
+            //Debug.Log("Range: " + (GetYAngle() + angle - 24) + ", " + (GetYAngle() + angle + 24));
             target_angle = Random.Range(GetYAngle() + angle - 24, GetYAngle() + angle + 24);
             //Debug.Log(GetYAngle());
-            Debug.Log(target_angle);
+            //Debug.Log(target_angle);
             target_angle = Get360Angle(target_angle);
-            Debug.Log(target_angle);
+            //Debug.Log(target_angle);
             //enemy_spawner.SpawnForTraining();
         }
+        */
 
         
     }
@@ -69,7 +74,7 @@ public class AgentController : Agent
     float Get360Angle(float angle){
         if (angle >360 || angle < -360)
             angle = angle % 360;
-        return (angle < 0)? 180f + Mathf.Abs(angle) : angle;
+        return (angle < 0)? 360f - Mathf.Abs(angle) : angle;
     }
 
     float MoveTowardsTarget(Vector3 enemy_pos){
@@ -124,15 +129,33 @@ public class AgentController : Agent
         float cannon_base_rot = actions.ContinuousActions[3];
 
         transform.localPosition += transform.forward * Time.deltaTime * speed * move_z;
+        /*
+        // Per dimostrazione
         if(movement_finished && CheckRotationCompleted()){
-            Debug.Log(cannon_base_rot);
+            //Debug.Log(cannon_base_rot);
             cannon_base.rotateCannonBase(cannon_base_rot);
             cannon.rotateCannon(cannon_elev);
         }
+        */
+
+        // Per training
+        cannon_base.rotateCannonBase(cannon_base_rot);
+        cannon.rotateCannon(cannon_elev);
         rotateAgent(steer_y);
         
-        if(actions.DiscreteActions[0] == 1)
+        if(actions.DiscreteActions[0] == 1 && !shot){
             FireProjectile();
+            shot = true;
+        }
+        
+        AddReward(-0.001f);
+        AddRewardDistance();
+    }
+
+    private void AddRewardDistance(){
+        float dist = Vector3.Distance(cannon_base.transform.position, enemy_spawner.enemies[0].transform.position);
+        if(dist >= cannon.GetMaxDistance()/4 && dist <= cannon.GetMaxDistance())
+            AddReward(0.005f/dist);
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
@@ -144,7 +167,7 @@ public class AgentController : Agent
         continous_action[2] = 0;
         continous_action[3] = 0;
         //Debug.Log(movement_finished);
-        Debug.Log(CheckRotationCompleted()+ " "+ Get360Angle(GetYAngle()) + " " +Get360Angle(target_angle)+ " "+ Mathf.DeltaAngle(Get360Angle(GetYAngle()), Get360Angle(target_angle)));
+        //Debug.Log(CheckRotationCompleted()+ " "+ Get360Angle(GetYAngle()) + " " +Get360Angle(target_angle)+ " "+ Mathf.DeltaAngle(Get360Angle(GetYAngle()), Get360Angle(target_angle)));
         if(movement_finished == false && CheckRotationCompleted() && Vector3.Distance(cannon_base.transform.position,enemy_spawner.enemies[0].transform.position) > cannon.GetMaxDistance()-distance_offset){
             continous_action[0] = 1;
         }
@@ -188,16 +211,18 @@ public class AgentController : Agent
 
             proj.SendMessage("Construct", parametersConstruct);
         }
+        AddReward(-1.0f);
     }
 
     public void enemy_miss(float min_dist){
         AddReward(-0.01f * min_dist);
     }
     public void enemy_hit(){
-        AddReward(1.0f);
+        AddReward(10.0f);
         //Debug.Log(enemy_spawner.enemies.Count);
         if(enemy_spawner.enemies.Count == 0){
-            GetCumulativeReward();
+            //GetCumulativeReward();
+            Debug.Log(GetCumulativeReward());
             EndEpisode();
         }
     }
@@ -261,9 +286,10 @@ public class AgentController : Agent
 
     public void OnTriggerEnter(Collider other){
         if (other.TryGetComponent<EnemyController>(out EnemyController enemy)){
-            AddReward(-1.0f);
+            AddReward(-10.0f);
             //Debug.Log(GetCumulativeReward());
             Destroy(enemy.gameObject);
+            Debug.Log(GetCumulativeReward());
             EndEpisode();
         }
     }

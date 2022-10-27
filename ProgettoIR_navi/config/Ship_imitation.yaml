@@ -20,12 +20,12 @@ behaviors:
         gamma: 0.96
         strength: 1.0
       gail:
-        strength: 0.2
-        demo_path: Assets\AimbotRec2.demo
+        strength: 0.6
+        demo_path: Assets\AimbotRecMovement.demo
     behavioral_cloning:
-      strength: 0.1
-      demo_path: Assets\AimbotRec2.demo
+      strength: 0.5
+      demo_path: Assets\AimbotRecMovement.demo
     keep_checkpoints: 5
-    max_steps: 200000
+    max_steps: 15000
     time_horizon: 1000
     summary_freq: 20000

@@ -37,11 +37,11 @@ public class EnemySpawnerController : MonoBehaviour
     public void SpawnForDemonstration(Vector3 cannonPosition, Quaternion cannon_base_rotation, float cannonMaxRange, float angle1, float angle2){
         Quaternion randAng = Quaternion.Euler(0, Random.Range(angle1, angle2), 0);
         randAng = cannon_base_rotation * randAng;
-        float randomRange = Random.Range(5f, -cannonMaxRange);
+        float randomRange = Random.Range(5f, cannonMaxRange);
         Vector3 spawnPos = cannonPosition + randAng * Vector3.forward * randomRange;
-        Debug.Log("Old: " + spawnPos);
+        //Debug.Log("Old: " + spawnPos);
         CheckBounds(ref spawnPos);
-        Debug.Log("New: " + spawnPos);
+        //Debug.Log("New: " + spawnPos);
         spawnPos.y = 0.6f; //Over the plane
         //Debug.Log(spawnPos);
         Vector3 enemy_rot = new Vector3(0f, Random.Range(0f,360f), 0f);
