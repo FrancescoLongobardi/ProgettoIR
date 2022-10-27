@@ -1209,7 +1209,7 @@ MonoBehaviour:
     hasUpgradedBrainParametersWithActionSpec: 1
   m_Model: {fileID: 0}
   m_InferenceDevice: 0
-  m_BehaviorType: 1
+  m_BehaviorType: 0
   m_BehaviorName: ShipTraining
   TeamId: 0
   m_UseChildSensors: 1
@@ -1271,7 +1271,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Record: 0
   NumStepsToRecord: 0
-  DemonstrationName: AimbotRec2
+  DemonstrationName: AimbotRec_Movement
   DemonstrationDirectory: DemosIR
 --- !u!114 &1417117985
 MonoBehaviour:
