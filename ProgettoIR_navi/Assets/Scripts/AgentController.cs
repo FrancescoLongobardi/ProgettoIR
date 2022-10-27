@@ -144,7 +144,7 @@ public class AgentController : Agent
         continous_action[2] = 0;
         continous_action[3] = 0;
         //Debug.Log(movement_finished);
-        Debug.Log(CheckRotationCompleted()+ " "+ Get360Angle(GetYAngle()) + " " +Get360Angle(target_angle));
+        Debug.Log(CheckRotationCompleted()+ " "+ Get360Angle(GetYAngle()) + " " +Get360Angle(target_angle)+ " "+ Mathf.DeltaAngle(Get360Angle(GetYAngle()), Get360Angle(target_angle)));
         if(movement_finished == false && CheckRotationCompleted() && Vector3.Distance(cannon_base.transform.position,enemy_spawner.enemies[0].transform.position) > cannon.GetMaxDistance()-distance_offset){
             continous_action[0] = 1;
         }
@@ -204,7 +204,7 @@ public class AgentController : Agent
 
     void Update()
     {   
-       
+        
         Quaternion max_right = cannon_base_starting_rot * Quaternion.Euler(0, 25, 0);
         Quaternion max_left = cannon_base_starting_rot * Quaternion.Euler(0, -25, 0);
         Vector3 max_dist = transform.forward * cannon.GetMaxDistance();
@@ -236,8 +236,10 @@ public class AgentController : Agent
 
     private float CalculateInputForAgentRotation(){
         float rot_input = 0;
-        if(Mathf.Abs(Get360Angle(target_angle) - Get360Angle(GetYAngle())) >= Time.deltaTime*rotation_speed)
-            rot_input = Mathf.Sign(Get360Angle(target_angle) - Get360Angle(GetYAngle()) );
+        //if(Mathf.Abs(Get360Angle(target_angle) - Get360Angle(GetYAngle())) >= Time.deltaTime*rotation_speed)
+        if(Mathf.Abs(Mathf.DeltaAngle(Get360Angle(GetYAngle()), Get360Angle(target_angle))) >= Time.deltaTime*rotation_speed)
+            //rot_input = Mathf.Sign(Get360Angle(target_angle) - Get360Angle(GetYAngle()) );
+            rot_input = Mathf.Sign(Mathf.DeltaAngle(Get360Angle(GetYAngle()), Get360Angle(target_angle)));
         return rot_input;
     }
 
