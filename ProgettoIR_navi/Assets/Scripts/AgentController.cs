@@ -163,7 +163,7 @@ public class AgentController : Agent
 
         if(movement_finished && CheckRotationCompleted()){
             continous_action[2] = cannon.CalculateInputForAimbot(enemy_spawner.enemies[0]);
-            continous_action[3] = cannon_base.CalculateInputForAimbot(enemy_spawner.enemies[0], transform.rotation.eulerAngles.y);
+            continous_action[3] = cannon_base.CalculateInputForAimbot(enemy_spawner.enemies[0], Get180Angle(transform.rotation.eulerAngles.y));
         }
 
         if(cannon.CheckRotationCompleted() && cannon_base.CheckRotationCompleted() && CheckRotationCompleted() && movement_finished){

@@ -82,8 +82,18 @@ public class CannonBaseController : MonoBehaviour
         }
     }
 
+    /*
     private float Get180Angle(float angle){
         return (angle > 180f ? angle - 360f : angle); 
+    }
+    */
+    
+    private float Get180Angle(float angle){
+        if(angle > 180f)
+            return -(180f - (angle - 180f));
+        else if(angle < -180f)
+            return 180f + (angle + 180f);
+        else return angle;
     }
 
     public float CalculateInputForAimbot(GameObject enemy, float agent_y_rot){
@@ -92,12 +102,12 @@ public class CannonBaseController : MonoBehaviour
         Quaternion _lookRotation = Quaternion.LookRotation(direction, transform.forward);
         //Debug.DrawRay(transform.position, transform.forward*10, Color.red);
         //Debug.DrawRay(transform.position, direction*10, Color.blue);    
-        float possible_rotation = Get180Angle(_lookRotation.eulerAngles.y) - Get180Angle(agent_y_rot);
+        float possible_rotation = Get180Angle(Get180Angle(_lookRotation.eulerAngles.y) - agent_y_rot);
         target_angle = possible_rotation;
-        float local_y_angle = (transform.localEulerAngles.y > 180f) ? transform.localEulerAngles.y - 360f : transform.localEulerAngles.y;
+        float local_y_angle = GetLocalYAngle();
         
         float rot_input = 0;
-        Debug.Log(Mathf.Abs(possible_rotation - local_y_angle) + " " + Time.deltaTime*rotationSpeed);
+        Debug.Log(possible_rotation + " " + local_y_angle + " " + Time.deltaTime*rotationSpeed);
         if(Mathf.Abs(possible_rotation - local_y_angle) >= Time.deltaTime*rotationSpeed)
             rot_input = Mathf.Sign(possible_rotation - local_y_angle);
         
@@ -105,7 +115,7 @@ public class CannonBaseController : MonoBehaviour
     }
 
     private float GetLocalYAngle(){
-        return (transform.localEulerAngles.y > 180f) ? transform.localEulerAngles.y - 360f : transform.localEulerAngles.y;
+        return Get180Angle(transform.localEulerAngles.y);
     }
 
     public bool CheckRotationCompleted(){
