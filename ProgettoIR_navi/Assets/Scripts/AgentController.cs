@@ -20,6 +20,7 @@ public class AgentController : Agent
     private bool movement_finished = false;
     private float distance_offset = float.NaN;
     private bool shot = false;
+    private RayPerceptionSensorComponent3D raycast;
 
     public override void Initialize()
     {
@@ -27,6 +28,7 @@ public class AgentController : Agent
         cannon = GameObject.Find("Cannon").GetComponent<CannonController>();
         cannon_starting_pos = cannon.transform.position;
         cannon_base_starting_rot = cannon_base.transform.rotation;
+        raycast = GetComponent<RayPerceptionSensorComponent3D>();
     }
 
     private float Get180Angle(float angle){
@@ -44,10 +46,15 @@ public class AgentController : Agent
         cannon_base.transform.localRotation =  Quaternion.Euler(0f, -90f, 0f);
         cannon.transform.localRotation = Quaternion.Euler(0f, 90f, 90f);
         //Debug.Log(cannon_base.transform.localRotation.eulerAngles);
-        //enemy_spawner.SpawnForDemonstration(cannon.transform.position, cannon_base.transform.rotation, cannon.GetMaxDistance(), -180f, 180f);
-        enemy_spawner.SpawnForTraining();
-
         /*
+        while(!enemy_spawner.spawned){
+            continue;
+        }
+        */
+        enemy_spawner.SpawnForDemonstration(cannon.transform.position, cannon_base.transform.rotation, raycast.RayLength, cannon.GetMaxDistance(), -180f, 180f);
+        //enemy_spawner.SpawnForTraining();
+
+        
         if (Vector3.Distance(cannon_base.transform.position,enemy_spawner.enemies[0].transform.position) > cannon.GetMaxDistance()){
             target_angle = MoveTowardsTarget(enemy_spawner.enemies[0].transform.position);
             target_angle = Get360Angle(target_angle)+GetYAngle();
@@ -66,7 +73,7 @@ public class AgentController : Agent
             //Debug.Log(target_angle);
             //enemy_spawner.SpawnForTraining();
         }
-        */
+        
 
         
     }
@@ -110,7 +117,21 @@ public class AgentController : Agent
         sensor.AddObservation(cannon_base.rotationSpeed);
         sensor.AddObservation(cannon.gameObject.transform.localEulerAngles.z);
         sensor.AddObservation(cannon.rotationSpeed);
+        sensor.AddObservation(enemy_spawner.permanent_enemies[0].transform.position.x + SampleGaussian(0, 1));
+        sensor.AddObservation(enemy_spawner.permanent_enemies[0].transform.position.z + SampleGaussian(0, 1));
     }
+
+    public static float SampleGaussian(float mean, float stddev)
+    {
+            // The method requires sampling from a uniform random of (0,1]
+            // but Random.NextDouble() returns a sample of [0,1).
+            float x1 = 1 - Random.Range(0.0f, 1.0f);
+            float x2 = 1 - Random.Range(0.0f, 1.0f);
+
+            float y1 = Mathf.Sqrt(-2.0f * Mathf.Log(x1)) * Mathf.Cos(2.0f * Mathf.PI * x2);
+            return y1 * stddev + mean;
+    }
+    
     /*
         Vector ContinouousActions:
             0 - forward/backward movement (agent z-axis traslation)
@@ -129,18 +150,18 @@ public class AgentController : Agent
         float cannon_base_rot = actions.ContinuousActions[3];
 
         transform.localPosition += transform.forward * Time.deltaTime * speed * move_z;
-        /*
+        
         // Per dimostrazione
         if(movement_finished && CheckRotationCompleted()){
             //Debug.Log(cannon_base_rot);
             cannon_base.rotateCannonBase(cannon_base_rot);
             cannon.rotateCannon(cannon_elev);
         }
-        */
+        
 
         // Per training
-        cannon_base.rotateCannonBase(cannon_base_rot);
-        cannon.rotateCannon(cannon_elev);
+        //cannon_base.rotateCannonBase(cannon_base_rot);
+        //cannon.rotateCannon(cannon_elev);
         rotateAgent(steer_y);
         
         if(actions.DiscreteActions[0] == 1 && !shot){
@@ -217,8 +238,9 @@ public class AgentController : Agent
     public void enemy_miss(float min_dist){
         AddReward(-0.01f * min_dist);
     }
-    public void enemy_hit(){
+    public void enemy_hit(GameObject other){
         AddReward(10.0f);
+        enemy_spawner.RemoveEnemyFromList(other);
         //Debug.Log(enemy_spawner.enemies.Count);
         if(enemy_spawner.enemies.Count == 0){
             //GetCumulativeReward();
@@ -239,8 +261,10 @@ public class AgentController : Agent
         //CalculateShipRotationAngle(enemy_spawner.enemies[0]);
         //Debug.Log(Get180Angle(transform.localEulerAngles.y));
         Debug.DrawRay(transform.position, transform.forward * 15f, Color.blue);
-        Vector3 direction = (enemy_spawner.enemies[0].transform.position - transform.position).normalized;
-        Debug.DrawRay(transform.position,direction*20f, Color.red);
+        if(enemy_spawner.enemies.Count > 0){
+            Vector3 direction = (enemy_spawner.enemies[0].transform.position - transform.position).normalized;
+            Debug.DrawRay(transform.position,direction*20f, Color.red);
+        }
     }
 
     private float CalculateShipRotationAngle(GameObject enemy){

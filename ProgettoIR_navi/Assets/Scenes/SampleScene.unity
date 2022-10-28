@@ -1198,7 +1198,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 9
+    VectorObservationSize: 11
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 4
@@ -1209,7 +1209,7 @@ MonoBehaviour:
     hasUpgradedBrainParametersWithActionSpec: 1
   m_Model: {fileID: 0}
   m_InferenceDevice: 0
-  m_BehaviorType: 0
+  m_BehaviorType: 1
   m_BehaviorName: ShipTraining
   TeamId: 0
   m_UseChildSensors: 1
@@ -1245,14 +1245,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SensorName: RayPerceptionSensor
   m_DetectableTags: []
-  m_RaysPerDirection: 30
+  m_RaysPerDirection: 35
   m_MaxRayDegrees: 176
   m_SphereCastRadius: 0.54
   m_RayLength: 52
   m_RayLayerMask:
     serializedVersion: 2
     m_Bits: 4294967291
-  m_ObservationStacks: 5
+  m_ObservationStacks: 3
   rayHitColor: {r: 1, g: 0, b: 0, a: 1}
   rayMissColor: {r: 1, g: 1, b: 1, a: 1}
   m_StartVerticalOffset: 0
@@ -1643,6 +1643,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48e3ac17d8e8c01498a844dd04a829cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  permanent_enemies: []
   enemies: []
   plane: {fileID: 1089967576}
   enemy_prefab: {fileID: 1374489750387602235, guid: 645326715c6fe974891f3d2e28aa5781, type: 3}

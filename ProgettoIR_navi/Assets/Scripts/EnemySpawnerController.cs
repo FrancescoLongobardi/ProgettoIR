@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemySpawnerController : MonoBehaviour
 {
 
+    public List<GameObject> permanent_enemies;
     public List<GameObject> enemies;
     public GameObject plane;
     public GameObject enemy_prefab;
@@ -21,12 +22,13 @@ public class EnemySpawnerController : MonoBehaviour
         min_z = -1 * plane.transform.localScale.z * (bounds.z / 2) + boundary_limit;
         max_x = plane.transform.localScale.x * (bounds.x / 2) - boundary_limit;
         max_z = plane.transform.localScale.z * (bounds.z / 2) - boundary_limit;
+        SpawnEnemies();
+        spawned = true;
     }
 
     public void SpawnForTraining(){   
         enemies = new List<GameObject>();
-        SpawnEnemies();
-        spawned = true;
+        RelocateEnemies();
     }
 
     void CheckBounds(ref Vector3 pos){
@@ -34,10 +36,10 @@ public class EnemySpawnerController : MonoBehaviour
         pos.z = Mathf.Clamp(pos.z, min_z, max_z);
     }
 
-    public void SpawnForDemonstration(Vector3 cannonPosition, Quaternion cannon_base_rotation, float cannonMaxRange, float angle1, float angle2){
+    public void SpawnForDemonstration(Vector3 cannonPosition, Quaternion cannon_base_rotation, float raycast_len, float max_range, float angle1, float angle2){
         Quaternion randAng = Quaternion.Euler(0, Random.Range(angle1, angle2), 0);
         randAng = cannon_base_rotation * randAng;
-        float randomRange = Random.Range(5f, cannonMaxRange);
+        float randomRange = Random.Range(max_range, raycast_len);
         Vector3 spawnPos = cannonPosition + randAng * Vector3.forward * randomRange;
         //Debug.Log("Old: " + spawnPos);
         CheckBounds(ref spawnPos);
@@ -45,7 +47,11 @@ public class EnemySpawnerController : MonoBehaviour
         spawnPos.y = 0.6f; //Over the plane
         //Debug.Log(spawnPos);
         Vector3 enemy_rot = new Vector3(0f, Random.Range(0f,360f), 0f);
-        enemies.Add(Instantiate(enemy_prefab, spawnPos, Quaternion.Euler(enemy_rot)));
+        //enemies.Add(Instantiate(enemy_prefab, spawnPos, Quaternion.Euler(enemy_rot))); // TODO: Trovare le coordinate e passare a RelocateEnemies
+        permanent_enemies[0].transform.localPosition = spawnPos;
+        permanent_enemies[0].transform.localRotation = Quaternion.Euler(enemy_rot);
+        permanent_enemies[0].SetActive(true);
+        enemies.Add(permanent_enemies[0]);
     }
     
     void Update()
@@ -55,10 +61,58 @@ public class EnemySpawnerController : MonoBehaviour
     }
     
     public void RemoveEnemyFromList(GameObject enemy){
+        enemy.SetActive(false);
         enemies.Remove(enemy);
-        Destroy(enemy);
     }
 
+    private void SpawnEnemies(){
+        permanent_enemies = new List<GameObject>();
+        for(int i = 0; i < n_enemies; i++){
+            GameObject en = Instantiate(enemy_prefab, new Vector3(0, 0.52f, 0), Quaternion.identity);
+            en.SetActive(false);
+            permanent_enemies.Add(en);
+        }
+    }
+
+    private void RelocateEnemies(){
+        enemies = new List<GameObject>();
+        bool ok_coords = false;
+        float pos_x, pos_z;
+        for(int i = 0; i < n_enemies; i++){
+            Vector3 enemy_pos = Vector3.zero;
+            Vector3 enemy_rot = Vector3.zero;
+            while(!ok_coords){
+                pos_x = Random.Range(min_x, max_x);
+                pos_z = Random.Range(min_z, max_z);
+                enemy_pos = new Vector3(pos_x, plane.transform.localPosition.y + 0.51f, pos_z);
+                enemy_rot = new Vector3(0f, Random.Range(0f,360f), 0f);
+                bool ok_enemy = true;
+                for(int j = 0; j < i; j++){
+                    //Debug.Log("Distanza: " + Vector3.Distance(enemy_pos, enemies[j].transform.position));
+                    if(Vector3.Distance(enemy_pos, enemies[j].transform.position) < min_distance*2){
+                        ok_enemy = false;
+                        break;
+                    }
+                }
+                if(ok_enemy)
+                    ok_coords = true;
+                
+            }
+            permanent_enemies[i].transform.localPosition = enemy_pos;
+            permanent_enemies[i].transform.localRotation = Quaternion.Euler(enemy_rot);
+            float[] parameters = new float[4];
+            parameters[0] = min_x;
+            parameters[1] = min_z;
+            parameters[2] = max_x;
+            parameters[3] = max_z;
+            permanent_enemies[i].SendMessage("Construct", parameters);
+            permanent_enemies[i].SetActive(true);
+            enemies.Add(permanent_enemies[i]);
+            ok_coords = false;
+        }
+    }
+    
+    /*
     private void SpawnEnemies(){
         bool ok_coords = false;
         float pos_x, pos_z;
@@ -92,13 +146,8 @@ public class EnemySpawnerController : MonoBehaviour
             enemies.Add(enemy);
             ok_coords = false;
         }
-        /*
-        for(int i = 0; i < n_enemies; i++){
-            for(int j = 0; j < n_enemies; j++){
-                Debug.Log(Vector3.Distance(enemies[i].transform.position, enemies[j].transform.position));
-            }
-        }
-        */
+        
     }
+    */
 
 }
