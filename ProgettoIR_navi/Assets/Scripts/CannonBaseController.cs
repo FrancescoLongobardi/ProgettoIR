@@ -82,6 +82,19 @@ public class CannonBaseController : MonoBehaviour
         }
     }
 
+    public void rotateCannonBase_training(float rot_input){
+        float local_y_angle = (transform.localEulerAngles.y > 180f) ? transform.localEulerAngles.y - 360f : transform.localEulerAngles.y;
+        float next_angle =  local_y_angle + rotationSpeed * Time.deltaTime * rot_input;
+        if(next_angle >= max_left && next_angle <= max_right)
+            transform.Rotate(Vector3.up, rot_input * rotationSpeed * Time.deltaTime);
+        else if(next_angle > max_right){
+            transform.localEulerAngles = new Vector3(0f, max_right, 0f);
+        }
+        else if(next_angle < max_left){
+            transform.localEulerAngles = new Vector3(0f, max_left, 0f);
+        }
+    }
+
     /*
     private float Get180Angle(float angle){
         return (angle > 180f ? angle - 360f : angle); 

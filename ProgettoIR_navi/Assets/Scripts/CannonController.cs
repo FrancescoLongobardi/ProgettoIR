@@ -140,6 +140,20 @@ public class CannonController : MonoBehaviour
         }
     }
 
+    public void rotateCannon_training(float elevate){
+        float angle = transform.localEulerAngles.z + elevate * rotationSpeed * Time.deltaTime;
+        //float possible_angle = 90f+angle;
+        if (angle >= max_elevation && angle <= min_elevation){
+            transform.Rotate(Vector3.forward, elevate * rotationSpeed * Time.deltaTime);
+        }
+        else if(angle < max_elevation){
+            transform.localEulerAngles = new Vector3(0f, 90f, max_elevation);
+        }
+        else if(angle > min_elevation){
+            transform.localEulerAngles = new Vector3(0f, 90f, min_elevation);
+        }
+    }
+
     public float GetShootingCooldownLeft(){
         return ball_spawner_script.GetShootingCooldownLeft();
     }

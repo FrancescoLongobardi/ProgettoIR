@@ -51,8 +51,8 @@ public class AgentController : Agent
             continue;
         }
         */
-        enemy_spawner.SpawnForDemonstration(cannon.transform.position, cannon_base.transform.rotation, raycast.RayLength, cannon.GetMaxDistance(), -180f, 180f);
-        //enemy_spawner.SpawnForTraining();
+        //enemy_spawner.SpawnForDemonstration(cannon.transform.position, cannon_base.transform.rotation, raycast.RayLength, cannon.GetMaxDistance(), -180f, 180f);
+        enemy_spawner.SpawnForTraining();
 
         
         if (Vector3.Distance(cannon_base.transform.position,enemy_spawner.enemies[0].transform.position) > cannon.GetMaxDistance()){
@@ -152,17 +152,18 @@ public class AgentController : Agent
         transform.localPosition += transform.forward * Time.deltaTime * speed * move_z;
         
         // Per dimostrazione
+        /*
         if(movement_finished && CheckRotationCompleted()){
             //Debug.Log(cannon_base_rot);
             cannon_base.rotateCannonBase(cannon_base_rot);
             cannon.rotateCannon(cannon_elev);
-        }
+        }*/
         
 
         // Per training
-        //cannon_base.rotateCannonBase(cannon_base_rot);
-        //cannon.rotateCannon(cannon_elev);
-        rotateAgent(steer_y);
+        cannon_base.rotateCannonBase_training(cannon_base_rot);
+        cannon.rotateCannon_training(cannon_elev);
+        rotateAgent_training(steer_y);
         
         if(actions.DiscreteActions[0] == 1 && !shot){
             FireProjectile();
@@ -306,6 +307,10 @@ public class AgentController : Agent
             transform.localEulerAngles = new Vector3(0f, target_angle, 0f);
         else
             transform.Rotate(Vector3.up, rot_input * rotation_speed * Time.deltaTime);
+    }
+
+    private void rotateAgent_training(float rot_input){
+        transform.Rotate(Vector3.up, rot_input * rotation_speed * Time.deltaTime);
     }
 
     public void OnTriggerEnter(Collider other){
