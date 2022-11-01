@@ -63,7 +63,7 @@ public class AgentController : Agent
 
         // Per dimostrazione
         
-        if (Vector3.Distance(cannon_base.transform.localPosition,enemy_spawner.enemies[0].transform.localPosition) > cannon.GetMaxDistance()){
+        if (Vector3.Distance(transform.localPosition + cannon_base_offset, enemy_spawner.enemies[0].transform.localPosition) > cannon.GetMaxDistance()){
             target_angle = MoveTowardsTarget(enemy_spawner.enemies[0].transform.localPosition);
             target_angle = Get360Angle(target_angle)+GetYAngle();
             movement_finished = false;
@@ -81,8 +81,6 @@ public class AgentController : Agent
             //Debug.Log(target_angle);
             //enemy_spawner.SpawnForTraining();
         }
-        
-
         
     }
 
@@ -210,11 +208,11 @@ public class AgentController : Agent
         continous_action[3] = 0;
         //Debug.Log(movement_finished);
         //Debug.Log(CheckRotationCompleted()+ " "+ Get360Angle(GetYAngle()) + " " +Get360Angle(target_angle)+ " "+ Mathf.DeltaAngle(Get360Angle(GetYAngle()), Get360Angle(target_angle)));
-        if(movement_finished == false && CheckRotationCompleted() && Vector3.Distance(cannon_base.transform.position,enemy_spawner.enemies[0].transform.position) > cannon.GetMaxDistance()-distance_offset){
+        if(movement_finished == false && CheckRotationCompleted() && Vector3.Distance(transform.localPosition + cannon_base_offset, enemy_spawner.enemies[0].transform.localPosition) > cannon.GetMaxDistance()-distance_offset){
             continous_action[0] = 1;
         }
 
-        if(movement_finished == false && CheckRotationCompleted() && Vector3.Distance(cannon_base.transform.position,enemy_spawner.enemies[0].transform.position) <= cannon.GetMaxDistance()-distance_offset){
+        if(movement_finished == false && CheckRotationCompleted() && Vector3.Distance(transform.localPosition + cannon_base_offset, enemy_spawner.enemies[0].transform.localPosition) <= cannon.GetMaxDistance()-distance_offset){
             continous_action[0] = 0;
             float angle = CalculateShipRotationAngle(enemy_spawner.enemies[0]);
             angle = Get360Angle(angle);

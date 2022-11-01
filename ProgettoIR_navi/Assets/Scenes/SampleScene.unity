@@ -356,6 +356,10 @@ PrefabInstance:
       propertyPath: m_BehaviorType
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1320203154253633580, guid: a14428ec5fda24d478ae574745a9e0ab, type: 3}
+      propertyPath: Record
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6924104805398641119, guid: a14428ec5fda24d478ae574745a9e0ab, type: 3}
       propertyPath: m_Name
       value: Env
