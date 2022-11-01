@@ -51,8 +51,8 @@ public class AgentController : Agent
             continue;
         }
         */
-        //enemy_spawner.SpawnForDemonstration(cannon.transform.position, cannon_base.transform.rotation, raycast.RayLength, cannon.GetMaxDistance(), -180f, 180f);
-        enemy_spawner.SpawnForTraining();
+        enemy_spawner.SpawnForDemonstration(cannon.transform.position, cannon_base.transform.rotation, raycast.RayLength, cannon.GetMaxDistance(), -180f, 180f);
+        //enemy_spawner.SpawnForTraining();
 
         
         if (Vector3.Distance(cannon_base.transform.position,enemy_spawner.enemies[0].transform.position) > cannon.GetMaxDistance()){
@@ -164,10 +164,16 @@ public class AgentController : Agent
         cannon_base.rotateCannonBase_training(cannon_base_rot);
         cannon.rotateCannon_training(cannon_elev);
         rotateAgent_training(steer_y);
-        
+        //per dimostrazione
+        /*
         if(actions.DiscreteActions[0] == 1 && !shot){
             FireProjectile();
             shot = true;
+        }*/
+
+        //per training
+        if(actions.DiscreteActions[0] == 1){
+            FireProjectile();
         }
         
         AddReward(-0.001f);
@@ -252,7 +258,7 @@ public class AgentController : Agent
 
     void Update()
     {   
-        
+        Debug.Log(GetCumulativeReward());
         Quaternion max_right = cannon_base_starting_rot * Quaternion.Euler(0, 25, 0);
         Quaternion max_left = cannon_base_starting_rot * Quaternion.Euler(0, -25, 0);
         Vector3 max_dist = transform.forward * cannon.GetMaxDistance();

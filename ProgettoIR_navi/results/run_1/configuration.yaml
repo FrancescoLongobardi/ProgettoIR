@@ -10,13 +10,13 @@ behaviors:
       epsilon: 0.15
       lambd: 0.93
       num_epoch: 5
-      learning_rate_schedule: constant
-      beta_schedule: constant
-      epsilon_schedule: constant
+      learning_rate_schedule: linear
+      beta_schedule: linear
+      epsilon_schedule: linear
     network_settings:
       normalize: true
-      hidden_units: 256
-      num_layers: 3
+      hidden_units: 2048
+      num_layers: 5
       vis_encode_type: simple
       memory: null
       goal_conditioning_type: hyper
@@ -35,24 +35,24 @@ behaviors:
           deterministic: false
       gail:
         gamma: 0.99
-        strength: 0.1
+        strength: 0.3
         network_settings:
-          normalize: false
-          hidden_units: 128
-          num_layers: 2
+          normalize: true
+          hidden_units: 512
+          num_layers: 4
           vis_encode_type: simple
           memory: null
           goal_conditioning_type: hyper
           deterministic: false
         learning_rate: 0.0003
         encoding_size: null
-        use_actions: false
-        use_vail: false
+        use_actions: true
+        use_vail: true
         demo_path: Assets\AimbotRecMovement.demo
     init_path: null
     keep_checkpoints: 5
     checkpoint_interval: 500000
-    max_steps: 15000
+    max_steps: 700000
     time_horizon: 1000
     summary_freq: 20000
     threaded: false
@@ -60,7 +60,7 @@ behaviors:
     behavioral_cloning:
       demo_path: Assets\AimbotRecMovement.demo
       steps: 0
-      strength: 0.5
+      strength: 0.6
       samples_per_update: 0
       num_epoch: null
       batch_size: null

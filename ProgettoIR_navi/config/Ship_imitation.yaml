@@ -9,23 +9,32 @@ behaviors:
       epsilon: 0.15
       lambd: 0.93
       num_epoch: 5
-      learning_rate_schedule: constant
+      learning_rate_schedule: linear
     network_settings:
       normalize: true
-      hidden_units: 256
-      num_layers: 3
+      hidden_units: 2048
+      num_layers: 5
       vis_encode_type: simple
     reward_signals:
       extrinsic:
         gamma: 0.96
         strength: 1.0
       gail:
-        strength: 0.1
-        demo_path: Assets\AimbotRecMovement.demo
+          gamma:      0.99
+          strength:   0.3
+          network_settings:
+            normalize:        True
+            hidden_units:     512
+            num_layers:       4
+          learning_rate:      0.0003
+          use_actions:        True
+          use_vail:   True
+          demo_path:  Assets\AimbotRecMovement.demo
     behavioral_cloning:
-      strength: 0.5
+      strength: 0.6
       demo_path: Assets\AimbotRecMovement.demo
     keep_checkpoints: 5
     max_steps: 700000
     time_horizon: 1000
     summary_freq: 20000
+
