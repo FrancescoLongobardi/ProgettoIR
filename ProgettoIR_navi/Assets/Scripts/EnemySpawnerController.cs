@@ -15,7 +15,6 @@ public class EnemySpawnerController : MonoBehaviour
     private const float min_distance = 5f;
     private float boundary_limit = 3;
     public bool spawned = false;
-
     void Start(){
         Vector3 bounds = plane.GetComponent<MeshRenderer>().localBounds.size;
         min_x = -1 * plane.transform.localScale.x * (bounds.x / 2) + boundary_limit;
@@ -32,8 +31,10 @@ public class EnemySpawnerController : MonoBehaviour
     }
 
     void CheckBounds(ref Vector3 pos){
+        //Debug.Log("Prima: " + pos);
         pos.x = Mathf.Clamp(pos.x, min_x, max_x);
         pos.z = Mathf.Clamp(pos.z, min_z, max_z);
+        //Debug.Log("Dopo: " + pos);
     }
 
     public void SpawnForDemonstration(Vector3 cannonPosition, Quaternion cannon_base_rotation, float raycast_len, float max_range, float angle1, float angle2){
@@ -68,7 +69,9 @@ public class EnemySpawnerController : MonoBehaviour
     private void SpawnEnemies(){
         permanent_enemies = new List<GameObject>();
         for(int i = 0; i < n_enemies; i++){
-            GameObject en = Instantiate(enemy_prefab, new Vector3(0, 0.52f, 0), Quaternion.identity);
+            GameObject en = Instantiate(enemy_prefab, transform.parent, true);
+            en.transform.localPosition = new Vector3(0, 0.52f, 0);
+            en.transform.localRotation = Quaternion.identity;
             en.SetActive(false);
             permanent_enemies.Add(en);
         }
@@ -89,7 +92,7 @@ public class EnemySpawnerController : MonoBehaviour
                 bool ok_enemy = true;
                 for(int j = 0; j < i; j++){
                     //Debug.Log("Distanza: " + Vector3.Distance(enemy_pos, enemies[j].transform.position));
-                    if(Vector3.Distance(enemy_pos, enemies[j].transform.position) < min_distance*2){
+                    if(Vector3.Distance(enemy_pos, enemies[j].transform.localPosition) < min_distance*2){
                         ok_enemy = false;
                         break;
                     }

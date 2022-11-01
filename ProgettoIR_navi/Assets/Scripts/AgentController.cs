@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
+using UnityEditor;
 
 public class AgentController : Agent
 {   
@@ -21,12 +20,16 @@ public class AgentController : Agent
     private float distance_offset = float.NaN;
     private bool shot = false;
     private RayPerceptionSensorComponent3D raycast;
+    private Vector3 cannon_base_offset = new Vector3(15.423f, 2.206f, 8.611891f); // Offset della cannon base dalla posizione dell'agente
+    private int episodes_count = 0;
+    private int max_episodes = 50;
 
     public override void Initialize()
     {
-        cannon_base = GameObject.Find("CannonBase").GetComponent<CannonBaseController>();
-        cannon = GameObject.Find("Cannon").GetComponent<CannonController>();
-        cannon_starting_pos = cannon.transform.position;
+        GameObject cannon_obj = gameObject.transform.Find("CannonObject").gameObject;
+        cannon_base = cannon_obj.transform.Find("CannonBase").GetComponent<CannonBaseController>();
+        cannon = cannon_base.gameObject.transform.Find("Cannon").GetComponent<CannonController>();
+        cannon_starting_pos = cannon.transform.localPosition;
         cannon_base_starting_rot = cannon_base.transform.rotation;
         raycast = GetComponent<RayPerceptionSensorComponent3D>();
     }
@@ -40,6 +43,10 @@ public class AgentController : Agent
     }
 
     public override void OnEpisodeBegin(){
+        if(episodes_count >= max_episodes)
+            EditorApplication.isPlaying = false;
+        episodes_count++;
+        Debug.Log(episodes_count + " di " + max_episodes);
         shot = false;
         distance_offset = Random.Range(0f, (cannon.GetMaxDistance()*3)/4);
         RandomAgentPositionTraining();
@@ -51,12 +58,13 @@ public class AgentController : Agent
             continue;
         }
         */
-        enemy_spawner.SpawnForDemonstration(cannon.transform.position, cannon_base.transform.rotation, raycast.RayLength, cannon.GetMaxDistance(), -180f, 180f);
+        enemy_spawner.SpawnForDemonstration(transform.localPosition + cannon_base_offset, cannon_base.transform.localRotation, raycast.RayLength, cannon.GetMaxDistance(), -180f, 180f);
         //enemy_spawner.SpawnForTraining();
 
+        // Per dimostrazione
         
-        if (Vector3.Distance(cannon_base.transform.position,enemy_spawner.enemies[0].transform.position) > cannon.GetMaxDistance()){
-            target_angle = MoveTowardsTarget(enemy_spawner.enemies[0].transform.position);
+        if (Vector3.Distance(cannon_base.transform.localPosition,enemy_spawner.enemies[0].transform.localPosition) > cannon.GetMaxDistance()){
+            target_angle = MoveTowardsTarget(enemy_spawner.enemies[0].transform.localPosition);
             target_angle = Get360Angle(target_angle)+GetYAngle();
             movement_finished = false;
         }
@@ -85,7 +93,7 @@ public class AgentController : Agent
     }
 
     float MoveTowardsTarget(Vector3 enemy_pos){
-        Vector3 direction = (enemy_pos - transform.position).normalized;
+        Vector3 direction = (enemy_pos - transform.localPosition).normalized;
         direction.y = 0;
         return Quaternion.FromToRotation(transform.forward, direction).eulerAngles.y;
     }
@@ -117,8 +125,8 @@ public class AgentController : Agent
         sensor.AddObservation(cannon_base.rotationSpeed);
         sensor.AddObservation(cannon.gameObject.transform.localEulerAngles.z);
         sensor.AddObservation(cannon.rotationSpeed);
-        sensor.AddObservation(enemy_spawner.permanent_enemies[0].transform.position.x + SampleGaussian(0, 1));
-        sensor.AddObservation(enemy_spawner.permanent_enemies[0].transform.position.z + SampleGaussian(0, 1));
+        sensor.AddObservation(enemy_spawner.permanent_enemies[0].transform.localPosition.x + SampleGaussian(0, 1));
+        sensor.AddObservation(enemy_spawner.permanent_enemies[0].transform.localPosition.z + SampleGaussian(0, 1));
     }
 
     public static float SampleGaussian(float mean, float stddev)
@@ -152,36 +160,42 @@ public class AgentController : Agent
         transform.localPosition += transform.forward * Time.deltaTime * speed * move_z;
         
         // Per dimostrazione
-        /*
+        
         if(movement_finished && CheckRotationCompleted()){
             //Debug.Log(cannon_base_rot);
             cannon_base.rotateCannonBase(cannon_base_rot);
             cannon.rotateCannon(cannon_elev);
-        }*/
+        }
+        rotateAgent(steer_y);
         
 
         // Per training
+        /*
         cannon_base.rotateCannonBase_training(cannon_base_rot);
         cannon.rotateCannon_training(cannon_elev);
         rotateAgent_training(steer_y);
+        */
+
         //per dimostrazione
-        /*
+        
         if(actions.DiscreteActions[0] == 1 && !shot){
             FireProjectile();
             shot = true;
-        }*/
-
+        }
+        
+        /*
         //per training
         if(actions.DiscreteActions[0] == 1){
             FireProjectile();
         }
-        
-        AddReward(-0.001f);
-        AddRewardDistance();
+        */
+
+        //AddReward(-0.001f);
+        //AddRewardDistance();
     }
 
     private void AddRewardDistance(){
-        float dist = Vector3.Distance(cannon_base.transform.position, enemy_spawner.enemies[0].transform.position);
+        float dist = Vector3.Distance(cannon_base.transform.localPosition, enemy_spawner.enemies[0].transform.localPosition);
         if(dist >= cannon.GetMaxDistance()/4 && dist <= cannon.GetMaxDistance())
             AddReward(0.005f/dist);
     }
@@ -222,11 +236,10 @@ public class AgentController : Agent
         }
         else{
             //Debug.Log(cannon.CheckRotationCompleted()+ " "+ cannon_base.CheckRotationCompleted());
-            discrete_action[0] = -1;
+            discrete_action[0] = 0;
 
         }
         
-    
     }
 
     void FireProjectile(){
@@ -239,14 +252,15 @@ public class AgentController : Agent
 
             proj.SendMessage("Construct", parametersConstruct);
         }
-        AddReward(-1.0f);
+        AddReward(-0.1f);
     }
 
     public void enemy_miss(float min_dist){
-        AddReward(-0.01f * min_dist);
+        float penalty = (-0.01f * min_dist) >= -0.5f ? (-0.01f * min_dist) : -0.5f;
+        AddReward(penalty);
     }
     public void enemy_hit(GameObject other){
-        AddReward(10.0f);
+        AddReward(1.0f);
         enemy_spawner.RemoveEnemyFromList(other);
         //Debug.Log(enemy_spawner.enemies.Count);
         if(enemy_spawner.enemies.Count == 0){
@@ -258,7 +272,8 @@ public class AgentController : Agent
 
     void Update()
     {   
-        Debug.Log(GetCumulativeReward());
+        //Debug.Log(GetCumulativeReward());
+        /*
         Quaternion max_right = cannon_base_starting_rot * Quaternion.Euler(0, 25, 0);
         Quaternion max_left = cannon_base_starting_rot * Quaternion.Euler(0, -25, 0);
         Vector3 max_dist = transform.forward * cannon.GetMaxDistance();
@@ -272,10 +287,11 @@ public class AgentController : Agent
             Vector3 direction = (enemy_spawner.enemies[0].transform.position - transform.position).normalized;
             Debug.DrawRay(transform.position,direction*20f, Color.red);
         }
+        */
     }
 
     private float CalculateShipRotationAngle(GameObject enemy){
-        Vector3 direction = (enemy.transform.position - transform.position).normalized;
+        Vector3 direction = (enemy.transform.localPosition - transform.localPosition).normalized;
         direction.y = 0f;
         //Debug.DrawRay(transform.position, direction*10, Color.green);
         //Debug.DrawRay(transform.position, -transform.right*10, Color.blue);
@@ -321,7 +337,7 @@ public class AgentController : Agent
 
     public void OnTriggerEnter(Collider other){
         if (other.TryGetComponent<EnemyController>(out EnemyController enemy)){
-            AddReward(-10.0f);
+            AddReward(-1.0f);
             //Debug.Log(GetCumulativeReward());
             Destroy(enemy.gameObject);
             Debug.Log(GetCumulativeReward());
