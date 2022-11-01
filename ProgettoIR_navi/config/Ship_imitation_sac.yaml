@@ -13,14 +13,17 @@ behaviors:
       hidden_units: 512
       num_layers: 3
       vis_encode_type: simple
-      conditioning_type: none
+      goal_conditioning_type: none
     reward_signals:
       extrinsic:
         gamma: 0.96
         strength: 1.0
+        network_settings:
+          goal_conditioning_type: none
+          num_layers: 0
     behavioral_cloning:
       strength: 0.5
-      demo_path: Assets\AimbotRecMovemen_new_rewards.demo
+      demo_path: Assets\AimbotRecMovement.demo
     keep_checkpoints: 5
     max_steps: 700000
     time_horizon: 1000

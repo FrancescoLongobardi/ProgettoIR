@@ -20,17 +20,16 @@ public class AgentController : Agent
     private float distance_offset = float.NaN;
     private bool shot = false;
     private RayPerceptionSensorComponent3D raycast;
-    private Vector3 cannon_base_offset = new Vector3(15.423f, 2.206f, 8.611891f); // Offset della cannon base dalla posizione dell'agente
+    private Vector3 cannon_base_offset = new Vector3(-0.3449993f, 0.2330005f, -0.01311016f); // Offset della cannon base dalla posizione dell'agente
     private int episodes_count = 0;
     private int max_episodes = 50;
 
     public override void Initialize()
     {
-        GameObject cannon_obj = gameObject.transform.Find("CannonObject").gameObject;
-        cannon_base = cannon_obj.transform.Find("CannonBase").GetComponent<CannonBaseController>();
+        cannon_base = transform.Find("CannonBase").GetComponent<CannonBaseController>();
         cannon = cannon_base.gameObject.transform.Find("Cannon").GetComponent<CannonController>();
         cannon_starting_pos = cannon.transform.localPosition;
-        cannon_base_starting_rot = cannon_base.transform.rotation;
+        cannon_base_starting_rot = cannon_base.transform.localRotation;
         raycast = GetComponent<RayPerceptionSensorComponent3D>();
     }
 
@@ -46,7 +45,7 @@ public class AgentController : Agent
         if(episodes_count >= max_episodes)
             EditorApplication.isPlaying = false;
         episodes_count++;
-        Debug.Log(episodes_count + " di " + max_episodes);
+        //Debug.Log(episodes_count + " di " + max_episodes);
         shot = false;
         distance_offset = Random.Range(0f, (cannon.GetMaxDistance()*3)/4);
         RandomAgentPositionTraining();
@@ -62,7 +61,7 @@ public class AgentController : Agent
         //enemy_spawner.SpawnForTraining();
 
         // Per dimostrazione
-        
+        /*
         if (Vector3.Distance(transform.localPosition + cannon_base_offset, enemy_spawner.enemies[0].transform.localPosition) > cannon.GetMaxDistance()){
             target_angle = MoveTowardsTarget(enemy_spawner.enemies[0].transform.localPosition);
             target_angle = Get360Angle(target_angle)+GetYAngle();
@@ -81,7 +80,7 @@ public class AgentController : Agent
             //Debug.Log(target_angle);
             //enemy_spawner.SpawnForTraining();
         }
-        
+        */
     }
 
     float Get360Angle(float angle){
@@ -158,35 +157,35 @@ public class AgentController : Agent
         transform.localPosition += transform.forward * Time.deltaTime * speed * move_z;
         
         // Per dimostrazione
-        
+        /*
         if(movement_finished && CheckRotationCompleted()){
             //Debug.Log(cannon_base_rot);
             cannon_base.rotateCannonBase(cannon_base_rot);
             cannon.rotateCannon(cannon_elev);
         }
         rotateAgent(steer_y);
-        
+        */
 
         // Per training
-        /*
+        
         cannon_base.rotateCannonBase_training(cannon_base_rot);
         cannon.rotateCannon_training(cannon_elev);
         rotateAgent_training(steer_y);
-        */
+        
 
         //per dimostrazione
-        
+        /*
         if(actions.DiscreteActions[0] == 1 && !shot){
             FireProjectile();
             shot = true;
         }
+        */
         
-        /*
         //per training
         if(actions.DiscreteActions[0] == 1){
             FireProjectile();
         }
-        */
+        
 
         //AddReward(-0.001f);
         //AddRewardDistance();
@@ -208,6 +207,7 @@ public class AgentController : Agent
         continous_action[3] = 0;
         //Debug.Log(movement_finished);
         //Debug.Log(CheckRotationCompleted()+ " "+ Get360Angle(GetYAngle()) + " " +Get360Angle(target_angle)+ " "+ Mathf.DeltaAngle(Get360Angle(GetYAngle()), Get360Angle(target_angle)));
+        //Debug.Log(movement_finished + " " + CheckRotationCompleted() + " " + (Vector3.Distance(transform.localPosition + cannon_base_offset, enemy_spawner.enemies[0].transform.localPosition) > cannon.GetMaxDistance()-distance_offset));
         if(movement_finished == false && CheckRotationCompleted() && Vector3.Distance(transform.localPosition + cannon_base_offset, enemy_spawner.enemies[0].transform.localPosition) > cannon.GetMaxDistance()-distance_offset){
             continous_action[0] = 1;
         }
@@ -276,14 +276,14 @@ public class AgentController : Agent
         Quaternion max_left = cannon_base_starting_rot * Quaternion.Euler(0, -25, 0);
         Vector3 max_dist = transform.forward * cannon.GetMaxDistance();
         //Debug.DrawRay(transform.position, transform.forward, Color.blue);
-        Debug.DrawRay(cannon.transform.position, max_right * max_dist, Color.green);
-        Debug.DrawRay(cannon.transform.position, max_left * max_dist, Color.green);
+        Debug.DrawRay(transform.localPosition + cannon_base_offset, max_right * max_dist, Color.green);
+        Debug.DrawRay(transform.localPosition + cannon_base_offset, max_left * max_dist, Color.green);
         //CalculateShipRotationAngle(enemy_spawner.enemies[0]);
         //Debug.Log(Get180Angle(transform.localEulerAngles.y));
-        Debug.DrawRay(transform.position, transform.forward * 15f, Color.blue);
+        Debug.DrawRay(transform.localPosition, transform.forward * 15f, Color.blue);
         if(enemy_spawner.enemies.Count > 0){
-            Vector3 direction = (enemy_spawner.enemies[0].transform.position - transform.position).normalized;
-            Debug.DrawRay(transform.position,direction*20f, Color.red);
+            Vector3 direction = (enemy_spawner.enemies[0].transform.localPosition - transform.localPosition).normalized;
+            Debug.DrawRay(transform.localPosition, direction*20f, Color.red);
         }
         */
     }
