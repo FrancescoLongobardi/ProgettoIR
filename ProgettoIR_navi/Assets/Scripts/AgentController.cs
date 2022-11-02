@@ -59,7 +59,9 @@ public class AgentController : Agent
             continue;
         }
         */
-        enemy_spawner.SpawnForDemonstration(transform.localPosition + cannon_base_offset, cannon_base.transform.localRotation, raycast.RayLength, cannon.GetMaxDistance(), -180f, 180f);
+
+        //raycast.RayLength
+        enemy_spawner.SpawnForDemonstration(transform.localPosition + cannon_base_offset, cannon_base.transform.localRotation,52 , cannon.GetMaxDistance(), -180f, 180f);
         //enemy_spawner.SpawnForTraining();
 
         // Per dimostrazione
@@ -191,6 +193,11 @@ public class AgentController : Agent
 
         //AddReward(-0.001f);
         //AddRewardDistance();
+    }
+
+    void FixedUpdate(){
+        if((Academy.Instance.StepCount % 25000) == 0)
+            EndEpisode();
     }
 
     private void AddRewardDistance(){
@@ -339,7 +346,6 @@ public class AgentController : Agent
         if (other.TryGetComponent<EnemyController>(out EnemyController enemy)){
             AddReward(-1.0f);
             //Debug.Log(GetCumulativeReward());
-            Destroy(enemy.gameObject);
             Debug.Log(GetCumulativeReward());
             EndEpisode();
         }

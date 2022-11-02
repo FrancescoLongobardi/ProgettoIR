@@ -1,14 +1,10 @@
 behaviors:
   ShipTraining:
-    trainer_type: ppo
+    trainer_type: sac
     hyperparameters:
       batch_size: 256
-      buffer_size: 100000
+      buffer_size: 1000000
       learning_rate: 0.0002
-      beta: 0.003
-      epsilon: 0.3
-      lambd: 0.93
-      num_epoch: 4
       learning_rate_schedule: constant
     network_settings:
       normalize: true
@@ -17,9 +13,17 @@ behaviors:
       vis_encode_type: simple
     reward_signals:
       extrinsic:
-        gamma: 0.96
+        gamma: 0.99
         strength: 1.0
     keep_checkpoints: 5
     max_steps: 200000
-    time_horizon: 1000
+    time_horizon: 128
     summary_freq: 20000
+engine_settings:
+  width: 84
+  height: 84
+  quality_level: 5
+  time_scale: 20
+  target_frame_rate: -1
+  capture_frame_rate: 60
+  no_graphics: true
