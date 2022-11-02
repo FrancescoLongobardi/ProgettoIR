@@ -42,9 +42,11 @@ public class AgentController : Agent
     }
 
     public override void OnEpisodeBegin(){
+        /*
         if(episodes_count >= max_episodes)
             EditorApplication.isPlaying = false;
         episodes_count++;
+        */
         //Debug.Log(episodes_count + " di " + max_episodes);
         shot = false;
         distance_offset = Random.Range(0f, (cannon.GetMaxDistance()*3)/4);

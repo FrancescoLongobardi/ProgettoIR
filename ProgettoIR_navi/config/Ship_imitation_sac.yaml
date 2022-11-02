@@ -4,10 +4,11 @@ behaviors:
     threaded: true
     hyperparameters:
       buffer_init_steps: 1000
-      batch_size: 1024
-      buffer_size: 100000
+      batch_size: 256
+      buffer_size: 1000000
       learning_rate: 0.0002
       learning_rate_schedule: constant
+      steps_per_update: 8
     network_settings:
       normalize: true
       hidden_units: 512
@@ -20,7 +21,6 @@ behaviors:
         strength: 1.0
         network_settings:
           goal_conditioning_type: none
-          num_layers: 0
     behavioral_cloning:
       strength: 0.5
       demo_path: Assets\AimbotRecMovement.demo

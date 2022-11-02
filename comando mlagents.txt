@@ -1,0 +1,1 @@
+mlagents-learn config\Ship_imitation_sac.yaml --run-id=SACTraining1 --force
