@@ -23,6 +23,7 @@ public class AgentController : Agent
     private Vector3 cannon_base_offset = new Vector3(-0.3449993f, 0.2330005f, -0.01311016f); // Offset della cannon base dalla posizione dell'agente
     private int episodes_count = 0;
     private int max_episodes = 50;
+    private int max_step_episodes = 25000;
 
     public override void Initialize()
     {
@@ -196,8 +197,12 @@ public class AgentController : Agent
     }
 
     void FixedUpdate(){
-        if((Academy.Instance.StepCount % 25000) == 0)
-            EndEpisode();
+        if(episodes_count > max_step_episodes){
+            episodes_count = 0;
+            EndEpisode();   
+        }
+        else
+            episodes_count++;
     }
 
     private void AddRewardDistance(){
