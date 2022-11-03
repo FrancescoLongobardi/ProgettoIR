@@ -278,6 +278,7 @@ public class AgentController : Agent
         if(enemy_spawner.enemies.Count == 0){
             //GetCumulativeReward();
             Debug.Log(GetCumulativeReward());
+            episodes_count = 0;
             EndEpisode();
         }
     }
@@ -352,6 +353,7 @@ public class AgentController : Agent
             AddReward(-1.0f);
             //Debug.Log(GetCumulativeReward());
             Debug.Log(GetCumulativeReward());
+            episodes_count = 0;
             EndEpisode();
         }
     }
