@@ -362,6 +362,7 @@ public class AgentControllerNoRaycast : Agent
             AddReward(-1.0f);
             //Debug.Log(GetCumulativeReward());
             Debug.Log(GetCumulativeReward());
+            enemy_spawner.RemoveEnemyFromList(other.gameObject);
             episodes_count = 0;
             EndEpisode();
         }
