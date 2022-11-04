@@ -32,6 +32,7 @@ public class AgentControllerNoRaycast : Agent
         cannon_starting_pos = cannon.transform.localPosition;
         cannon_base_starting_rot = cannon_base.transform.localRotation;
         raycast = GetComponent<RayPerceptionSensorComponent3D>();
+        //Time.timeScale = 10F;
     }
 
     private float Get180Angle(float angle){
@@ -43,11 +44,11 @@ public class AgentControllerNoRaycast : Agent
     }
 
     public override void OnEpisodeBegin(){
-        /*
+        
         if(episodes_count >= max_episodes)
             EditorApplication.isPlaying = false;
         episodes_count++;
-        */
+        
         //Debug.Log(episodes_count + " di " + max_episodes);
         shot = false;
         distance_offset = Random.Range(0f, (cannon.GetMaxDistance()*3)/4);
@@ -62,8 +63,8 @@ public class AgentControllerNoRaycast : Agent
         */
 
         //raycast.RayLength
-        enemy_spawner.SpawnForDemonstration(transform.localPosition + cannon_base_offset, cannon_base.transform.localRotation,100 , cannon.GetMaxDistance(), -180f, 180f);
-        //enemy_spawner.SpawnForTraining();
+        //enemy_spawner.SpawnForDemonstration(transform.localPosition + cannon_base_offset, cannon_base.transform.localRotation, 100, cannon.GetMaxDistance(), -180f, 180f);
+        enemy_spawner.SpawnForTraining();
 
         // Per dimostrazione
         
@@ -122,7 +123,7 @@ public class AgentControllerNoRaycast : Agent
     public override void CollectObservations(VectorSensor sensor){
         sensor.AddObservation(transform.localPosition);
         sensor.AddObservation(transform.localEulerAngles.y);
-        //sensor.AddObservation(cannon.GetShootingCooldownLeft());
+        sensor.AddObservation(cannon.GetShootingCooldownLeft());
         sensor.AddObservation(cannon_base.gameObject.transform.localEulerAngles.y);
         //sensor.AddObservation(cannon_base.rotationSpeed);
         sensor.AddObservation(cannon.gameObject.transform.localEulerAngles.z);
@@ -199,6 +200,7 @@ public class AgentControllerNoRaycast : Agent
     }
 
     void FixedUpdate(){
+        //Debug.Log(episodes_count);
         if(episodes_count > max_step_episodes){
             episodes_count = 0;
             EndEpisode();   
@@ -303,7 +305,7 @@ public class AgentControllerNoRaycast : Agent
             Debug.DrawRay(transform.localPosition, direction*20f, Color.red);
         }
         */
-        Debug.Log(SampleGaussian(0, 1)  +  "  "  + SampleGaussian(0, 0.4f));
+        //Debug.Log(SampleGaussian(0, 1)  +  "  "  + SampleGaussian(0, 0.4f));
     }
 
     private float CalculateShipRotationAngle(GameObject enemy){

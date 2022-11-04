@@ -308,13 +308,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2121996412356810917, guid: 1805d2e9aa5fdca4c9f1da05c48f08ad, type: 3}
+      propertyPath: enemy_prefab
+      value: 
+      objectReference: {fileID: 1374489750387602235, guid: 645326715c6fe974891f3d2e28aa5781, type: 3}
     - target: {fileID: 2121996412494656560, guid: 1805d2e9aa5fdca4c9f1da05c48f08ad, type: 3}
       propertyPath: Record
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2121996412494656563, guid: 1805d2e9aa5fdca4c9f1da05c48f08ad, type: 3}
+      propertyPath: m_BehaviorType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2121996412494656563, guid: 1805d2e9aa5fdca4c9f1da05c48f08ad, type: 3}
       propertyPath: m_BrainParameters.VectorObservationSize
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2121996412494656575, guid: 1805d2e9aa5fdca4c9f1da05c48f08ad, type: 3}
       propertyPath: m_LocalPosition.y

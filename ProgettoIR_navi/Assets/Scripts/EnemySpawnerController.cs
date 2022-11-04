@@ -26,7 +26,7 @@ public class EnemySpawnerController : MonoBehaviour
     }
 
     public void SpawnForTraining(){   
-        enemies = new List<GameObject>();
+        //enemies = new List<GameObject>();
         RelocateEnemies();
     }
 
@@ -38,6 +38,7 @@ public class EnemySpawnerController : MonoBehaviour
     }
 
     public void SpawnForDemonstration(Vector3 cannonPosition, Quaternion cannon_base_rotation, float raycast_len, float max_range, float angle1, float angle2){
+        Debug.Log(permanent_enemies[0]);
         Quaternion randAng = Quaternion.Euler(0, Random.Range(angle1, angle2), 0);
         randAng = cannon_base_rotation * randAng;
         float randomRange = Random.Range(max_range, raycast_len);
@@ -48,6 +49,7 @@ public class EnemySpawnerController : MonoBehaviour
         spawnPos.y = 0.6f; //Over the plane
         //Debug.Log(spawnPos);
         Vector3 enemy_rot = new Vector3(0f, Random.Range(0f,360f), 0f);
+        Debug.Log(spawnPos);
         //enemies.Add(Instantiate(enemy_prefab, spawnPos, Quaternion.Euler(enemy_rot))); // TODO: Trovare le coordinate e passare a RelocateEnemies
         permanent_enemies[0].transform.localPosition = spawnPos;
         permanent_enemies[0].transform.localRotation = Quaternion.Euler(enemy_rot);
@@ -78,10 +80,11 @@ public class EnemySpawnerController : MonoBehaviour
     }
 
     private void RelocateEnemies(){
-        enemies = new List<GameObject>();
+        //enemies = new List<GameObject>();
         bool ok_coords = false;
         float pos_x, pos_z;
         for(int i = 0; i < n_enemies; i++){
+            Debug.Log(permanent_enemies[i]);
             Vector3 enemy_pos = Vector3.zero;
             Vector3 enemy_rot = Vector3.zero;
             while(!ok_coords){
@@ -108,8 +111,8 @@ public class EnemySpawnerController : MonoBehaviour
             parameters[1] = min_z;
             parameters[2] = max_x;
             parameters[3] = max_z;
-            permanent_enemies[i].SendMessage("Construct", parameters);
             permanent_enemies[i].SetActive(true);
+            permanent_enemies[i].SendMessage("Construct", parameters);
             enemies.Add(permanent_enemies[i]);
             ok_coords = false;
         }
