@@ -23,7 +23,7 @@ public class AgentControllerNoRaycast : Agent
     private Vector3 cannon_base_offset = new Vector3(-0.3449993f, 0.2330005f, -0.01311016f); // Offset della cannon base dalla posizione dell'agente
     private int step_count = 0;
     private int episodes_count = 0;     // Per dimostrazione
-    private int max_episodes = 100;
+    private int max_episodes = 100;     // Per dimostrazione
     private int max_step_episodes = 25000;
     private float z_noise, x_noise, speed_noise;
 
@@ -35,7 +35,7 @@ public class AgentControllerNoRaycast : Agent
         cannon_starting_pos = cannon.transform.localPosition;
         cannon_base_starting_rot = cannon_base.transform.localRotation;
         raycast = GetComponent<RayPerceptionSensorComponent3D>();
-        //Time.timeScale = 10F;
+        //Time.timeScale = 15F;
     }
 
     private float Get180Angle(float angle){
@@ -186,7 +186,7 @@ public class AgentControllerNoRaycast : Agent
         */
 
         //per dimostrazione
-        
+        //Debug.Log(actions.DiscreteActions[0]);
         if(actions.DiscreteActions[0] == 1 && !shot){
             FireProjectile();
             shot = true;
@@ -294,7 +294,7 @@ public class AgentControllerNoRaycast : Agent
     void Update()
     {   
         //Debug.Log(GetCumulativeReward());
-        /*
+        
         Quaternion max_right = cannon_base_starting_rot * Quaternion.Euler(0, 25, 0);
         Quaternion max_left = cannon_base_starting_rot * Quaternion.Euler(0, -25, 0);
         Vector3 max_dist = transform.forward * cannon.GetMaxDistance();
@@ -304,11 +304,13 @@ public class AgentControllerNoRaycast : Agent
         //CalculateShipRotationAngle(enemy_spawner.enemies[0]);
         //Debug.Log(Get180Angle(transform.localEulerAngles.y));
         Debug.DrawRay(transform.localPosition, transform.forward * 15f, Color.blue);
+        
+        //Debug.Log(transform.localPosition);
         if(enemy_spawner.enemies.Count > 0){
             Vector3 direction = (enemy_spawner.enemies[0].transform.localPosition - transform.localPosition).normalized;
             Debug.DrawRay(transform.localPosition, direction*20f, Color.red);
         }
-        */
+        
         //Debug.Log(SampleGaussian(0, 1)  +  "  "  + SampleGaussian(0, 0.4f));
     }
 
