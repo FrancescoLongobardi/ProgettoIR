@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {   
-    private float speed, min_x, min_z, max_x, max_z;
+    private float min_x, min_z, max_x, max_z;
+    public float speed;
     private int direction;
     // Start is called before the first frame update
     void Start()
