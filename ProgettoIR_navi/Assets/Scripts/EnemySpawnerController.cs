@@ -84,7 +84,6 @@ public class EnemySpawnerController : MonoBehaviour
         bool ok_coords = false;
         float pos_x, pos_z;
         for(int i = 0; i < n_enemies; i++){
-            Debug.Log(permanent_enemies[i]);
             Vector3 enemy_pos = Vector3.zero;
             Vector3 enemy_rot = Vector3.zero;
             while(!ok_coords){

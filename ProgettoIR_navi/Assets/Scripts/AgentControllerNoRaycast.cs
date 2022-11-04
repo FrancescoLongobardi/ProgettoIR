@@ -24,6 +24,8 @@ public class AgentControllerNoRaycast : Agent
     private int episodes_count = 0;
     private int max_episodes = 100;
     private int max_step_episodes = 25000;
+    private float z_noise, x_noise, speed_noise;
+
 
     public override void Initialize()
     {
@@ -48,7 +50,9 @@ public class AgentControllerNoRaycast : Agent
         if(episodes_count >= max_episodes)
             EditorApplication.isPlaying = false;
         episodes_count++;
-        
+        x_noise = SampleGaussian(0f, 1f);
+        z_noise = SampleGaussian(0f, 1f);
+        speed_noise = SampleGaussian(0, 0.4f);
         //Debug.Log(episodes_count + " di " + max_episodes);
         shot = false;
         distance_offset = Random.Range(0f, (cannon.GetMaxDistance()*3)/4);
@@ -128,17 +132,17 @@ public class AgentControllerNoRaycast : Agent
         //sensor.AddObservation(cannon_base.rotationSpeed);
         sensor.AddObservation(cannon.gameObject.transform.localEulerAngles.z);
         //sensor.AddObservation(cannon.rotationSpeed);
-        sensor.AddObservation(enemy_spawner.permanent_enemies[0].transform.localPosition.x + SampleGaussian(0, 1));
-        sensor.AddObservation(enemy_spawner.permanent_enemies[0].transform.localPosition.z + SampleGaussian(0, 1));
-        sensor.AddObservation(enemy_spawner.permanent_enemies[0].GetComponent<EnemyController>().speed + SampleGaussian(0, 0.4f));
+        sensor.AddObservation(enemy_spawner.permanent_enemies[0].transform.localPosition.x + x_noise);
+        sensor.AddObservation(enemy_spawner.permanent_enemies[0].transform.localPosition.z + z_noise);
+        sensor.AddObservation(enemy_spawner.permanent_enemies[0].GetComponent<EnemyController>().speed + speed_noise);
     }
 
     public static float SampleGaussian(float mean, float stddev)
     {
             // The method requires sampling from a uniform random of (0,1]
             // but Random.NextDouble() returns a sample of [0,1).
-            float x1 = 1 - Random.Range(0.0f, 1.0f);
-            float x2 = 1 - Random.Range(0.0f, 1.0f);
+            float x1 = 1 - Random.Range(0.0f + float.Epsilon, 1.0f);
+            float x2 = 1 - Random.Range(0.0f + float.Epsilon, 1.0f);
 
             float y1 = Mathf.Sqrt(-2.0f * Mathf.Log(x1)) * Mathf.Cos(2.0f * Mathf.PI * x2);
             return y1 * stddev + mean;
