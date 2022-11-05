@@ -161,10 +161,10 @@ public class AgentControllerNoRaycast : Agent
     */
     public override void OnActionReceived(ActionBuffers actions)
     {
-        float move_z = actions.ContinuousActions[0]; 
-        float steer_y = actions.ContinuousActions[1];
-        float cannon_elev = actions.ContinuousActions[2];
-        float cannon_base_rot = actions.ContinuousActions[3];
+        float move_z = convertActionFromIntToFloat(actions.DiscreteActions[0]); 
+        float steer_y = convertActionFromIntToFloat(actions.DiscreteActions[1]);
+        float cannon_elev = convertActionFromIntToFloat(actions.DiscreteActions[2]);
+        float cannon_base_rot = convertActionFromIntToFloat(actions.DiscreteActions[3]);
 
         transform.localPosition += transform.forward * Time.deltaTime * speed * move_z;
         
@@ -187,7 +187,7 @@ public class AgentControllerNoRaycast : Agent
 
         //per dimostrazione
         //Debug.Log(actions.DiscreteActions[0]);
-        if(actions.DiscreteActions[0] == 1 && !shot){
+        if(actions.DiscreteActions[4] == 1 && !shot){
             FireProjectile();
             shot = true;
         }
@@ -195,7 +195,7 @@ public class AgentControllerNoRaycast : Agent
         
         //per training
         /*
-        if(actions.DiscreteActions[0] == 1){
+        if(actions.DiscreteActions[4] == 1){
             FireProjectile();
         }*/
         
@@ -222,21 +222,21 @@ public class AgentControllerNoRaycast : Agent
 
     public override void Heuristic(in ActionBuffers actionsOut)
     {
-        ActionSegment<float> continous_action = actionsOut.ContinuousActions;
+       // ActionSegment<float> continous_action = actionsOut.ContinuousActions;
         ActionSegment<int> discrete_action = actionsOut.DiscreteActions;
-        continous_action[0] = 0;
-        continous_action[1] = CalculateInputForAgentRotation();
-        continous_action[2] = 0;
-        continous_action[3] = 0;
+        discrete_action[0] = 0;
+        discrete_action[1] = convertActionFromFloatToInt(CalculateInputForAgentRotation());
+        discrete_action[2] = 0;
+        discrete_action[3] = 0;
         //Debug.Log(movement_finished);
         //Debug.Log(CheckRotationCompleted()+ " "+ Get360Angle(GetYAngle()) + " " +Get360Angle(target_angle)+ " "+ Mathf.DeltaAngle(Get360Angle(GetYAngle()), Get360Angle(target_angle)));
         //Debug.Log(movement_finished + " " + CheckRotationCompleted() + " " + (Vector3.Distance(transform.localPosition + cannon_base_offset, enemy_spawner.enemies[0].transform.localPosition) > cannon.GetMaxDistance()-distance_offset));
         if(movement_finished == false && CheckRotationCompleted() && Vector3.Distance(transform.localPosition + cannon_base_offset, enemy_spawner.enemies[0].transform.localPosition) > cannon.GetMaxDistance()-distance_offset){
-            continous_action[0] = 1;
+            discrete_action[0] = 1;
         }
 
         if(movement_finished == false && CheckRotationCompleted() && Vector3.Distance(transform.localPosition + cannon_base_offset, enemy_spawner.enemies[0].transform.localPosition) <= cannon.GetMaxDistance()-distance_offset){
-            continous_action[0] = 0;
+            discrete_action[0] = 0;
             float angle = CalculateShipRotationAngle(enemy_spawner.enemies[0]);
             angle = Get360Angle(angle);
             //Debug.Log(angle);
@@ -244,23 +244,43 @@ public class AgentControllerNoRaycast : Agent
             target_angle = Random.Range(GetYAngle() + angle - 24, GetYAngle() + angle + 24);
             target_angle = Get360Angle(target_angle);
             movement_finished = true;
-            continous_action[1] = CalculateInputForAgentRotation();
+            discrete_action[1] = convertActionFromFloatToInt(CalculateInputForAgentRotation());
         }
 
         if(movement_finished && CheckRotationCompleted()){
-            continous_action[2] = cannon.CalculateInputForAimbot(enemy_spawner.enemies[0]);
-            continous_action[3] = cannon_base.CalculateInputForAimbot(enemy_spawner.enemies[0], Get180Angle(transform.rotation.eulerAngles.y));
+            discrete_action[2] = convertActionFromFloatToInt(cannon.CalculateInputForAimbot(enemy_spawner.enemies[0]));
+            discrete_action[3] = convertActionFromFloatToInt(cannon_base.CalculateInputForAimbot(enemy_spawner.enemies[0], Get180Angle(transform.rotation.eulerAngles.y)));
         }
 
         if(cannon.CheckRotationCompleted() && cannon_base.CheckRotationCompleted() && CheckRotationCompleted() && movement_finished){
-            discrete_action[0] = 1;
+            discrete_action[4] = 1;
         }
         else{
             //Debug.Log(cannon.CheckRotationCompleted()+ " "+ cannon_base.CheckRotationCompleted());
-            discrete_action[0] = 0;
+            discrete_action[4] = 0;
 
         }
         
+    }
+
+    int convertActionFromFloatToInt(float action){
+        if (action == 0f)
+            return 0;
+        else if (action == 1f)
+            return 1;
+        else if (action == -1f)
+            return 2;
+        else return 0;
+    }
+
+    float convertActionFromIntToFloat(int action){
+        if (action ==  0)
+            return 0f;
+        else if (action == 1)
+            return 1f;
+        else if (action == 2)
+            return -1f;
+        else return 0;
     }
 
     void FireProjectile(){
