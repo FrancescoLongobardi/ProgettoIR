@@ -70,10 +70,16 @@ public class CannonBaseController : MonoBehaviour
         float local_y_angle = GetLocalYAngle();
         
         float rot_input = 0;
+
+        if(Mathf.Abs(Mathf.DeltaAngle(GetLocalYAngle(), target_angle)) >= Time.deltaTime * rotationSpeed)
+            //rot_input = Mathf.Sign(Get360Angle(target_angle) - Get360Angle(GetYAngle()) );
+            rot_input = Mathf.Sign(Mathf.DeltaAngle(GetLocalYAngle(), target_angle));
+
+        /*
         //Debug.Log(possible_rotation + " " + local_y_angle + " " + Time.deltaTime*rotationSpeed);
         if(Mathf.Abs(possible_rotation - local_y_angle) >= Time.deltaTime*rotationSpeed)
             rot_input = Mathf.Sign(possible_rotation - local_y_angle);
-        
+        */
         return rot_input;
     }
 
