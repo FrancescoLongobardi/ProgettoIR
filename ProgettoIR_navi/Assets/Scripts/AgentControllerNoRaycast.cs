@@ -47,8 +47,10 @@ public class AgentControllerNoRaycast : Agent
     }
 
     public override void OnEpisodeBegin(){
+        /*
         if(episodes_count >= max_episodes)
             EditorApplication.isPlaying = false;
+        */
         episodes_count++;
         Debug.Log("Episodio " + episodes_count);
         x_noise = SampleGaussian(0f, 1f);
@@ -72,7 +74,7 @@ public class AgentControllerNoRaycast : Agent
         enemy_spawner.SpawnForTraining();
 
         // Per dimostrazione
-        
+        /*
         if (Vector3.Distance(transform.localPosition + cannon_base_offset, enemy_spawner.enemies[0].transform.localPosition) > cannon.GetMaxDistance()){
             target_angle = MoveTowardsTarget(enemy_spawner.enemies[0].transform.localPosition);
             target_angle = Get360Angle(target_angle)+GetYAngle();
@@ -91,7 +93,7 @@ public class AgentControllerNoRaycast : Agent
             //Debug.Log(target_angle);
             //enemy_spawner.SpawnForTraining();
         }
-        
+        */
     }
 
     float Get360Angle(float angle){
@@ -171,35 +173,36 @@ public class AgentControllerNoRaycast : Agent
         transform.localPosition += transform.forward * Time.deltaTime * speed * move_z;
         
         // Per dimostrazione
-        
+        /*
         if(movement_finished && CheckRotationCompleted()){
             //Debug.Log(cannon_base_rot);
             cannon_base.rotateCannonBase(cannon_base_rot);
             cannon.rotateCannon(cannon_elev);
         }
         rotateAgent(steer_y);
-        
+        */
 
         // Per training
-        /*
+        
         cannon_base.rotateCannonBase_training(cannon_base_rot);
         cannon.rotateCannon_training(cannon_elev);
         rotateAgent_training(steer_y);
-        */
+        
 
         //per dimostrazione
         //Debug.Log(actions.DiscreteActions[0]);
+        /*
         if(actions.DiscreteActions[4] == 1 && !shot){
             FireProjectile();
             shot = true;
         }
-        
+        */
         
         //per training
-        /*
+        
         if(actions.DiscreteActions[4] == 1){
             FireProjectile();
-        }*/
+        }
         
 
         //AddReward(-0.001f);
@@ -316,6 +319,7 @@ public class AgentControllerNoRaycast : Agent
 
     void Update()
     {   
+        /*
         //Debug.Log(GetCumulativeReward());
         //Debug.Log(Time.deltaTime);
         Quaternion max_right = cannon_base_starting_rot * Quaternion.Euler(0, 25, 0);
@@ -335,6 +339,7 @@ public class AgentControllerNoRaycast : Agent
         }
         
         //Debug.Log(SampleGaussian(0, 1)  +  "  "  + SampleGaussian(0, 0.4f));
+        */
     }
 
     private float CalculateShipRotationAngle(GameObject enemy){
