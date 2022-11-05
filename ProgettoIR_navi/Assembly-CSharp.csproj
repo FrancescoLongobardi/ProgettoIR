@@ -41,7 +41,6 @@
      <Compile Include="Assets\Scripts\Wall.cs" />
      <Compile Include="Assets\Scripts\EnemyController.cs" />
      <Compile Include="Assets\Scripts\LaunchProjectile.cs" />
-     <Compile Include="Assets\Scripts\AgentControllerNoRaycast.cs" />
      <Compile Include="Assets\Scripts\EnemySpawnerController.cs" />
      <Compile Include="Assets\Scripts\AgentController.cs" />
      <Compile Include="Assets\Scripts\Projectile.cs" />

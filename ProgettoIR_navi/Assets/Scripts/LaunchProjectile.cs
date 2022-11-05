@@ -5,7 +5,7 @@ using UnityEngine;
 public class LaunchProjectile : MonoBehaviour
 {    
     public GameObject projectile;
-    public float speed = 20f;
+    public float speed = 25f;
     public bool is_available=true;
     public float cooldown_cannon = 2f;
     public float shooting_cooldown_left;

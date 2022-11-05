@@ -7,7 +7,7 @@ public class CannonController : MonoBehaviour
     private GameObject ball_spawner;
     public float verticalInput;
     private const float max_elevation = 45f;
-    private const float min_elevation = 100f;
+    private const float min_elevation = 117f;
     public bool rot_completed = false;
     public float rotationSpeed = 10f;
     private LaunchProjectile ball_spawner_script;

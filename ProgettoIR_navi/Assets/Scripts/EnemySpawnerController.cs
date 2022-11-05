@@ -37,20 +37,20 @@ public class EnemySpawnerController : MonoBehaviour
         //Debug.Log("Dopo: " + pos);
     }
 
-    public void SpawnForDemonstration(Vector3 cannonPosition, Quaternion cannon_base_rotation, float raycast_len, float max_range, float angle1, float angle2){
+    public void SpawnForDemonstration(Vector3 cannonPosition, Quaternion cannon_base_rotation, float max_range, float angle1, float angle2){
         Debug.Log(permanent_enemies[0]);
         Quaternion randAng = Quaternion.Euler(0, Random.Range(angle1, angle2), 0);
         randAng = cannon_base_rotation * randAng;
-        float randomRange = Random.Range(max_range, raycast_len);
+        float randomRange = Random.Range(5, max_range);
         Vector3 spawnPos = cannonPosition + randAng * Vector3.forward * randomRange;
         //Debug.Log("Old: " + spawnPos);
         CheckBounds(ref spawnPos);
         //Debug.Log("New: " + spawnPos);
-        //spawnPos.y = 0.6f; //Over the plane
-        spawnPos.y = -0.939f;
+        spawnPos.y = 0.6f; //Over the plane
+        //spawnPos.y = -0.939f;
         //Debug.Log(spawnPos);
         Vector3 enemy_rot = new Vector3(0f, Random.Range(0f,360f), 0f);
-        Debug.Log(spawnPos);
+        //Debug.Log(spawnPos);
         //enemies.Add(Instantiate(enemy_prefab, spawnPos, Quaternion.Euler(enemy_rot))); // TODO: Trovare le coordinate e passare a RelocateEnemies
         permanent_enemies[0].transform.localPosition = spawnPos;
         permanent_enemies[0].transform.localRotation = Quaternion.Euler(enemy_rot);
@@ -73,8 +73,8 @@ public class EnemySpawnerController : MonoBehaviour
         permanent_enemies = new List<GameObject>();
         for(int i = 0; i < n_enemies; i++){
             GameObject en = Instantiate(enemy_prefab, transform.parent, true);
-            //en.transform.localPosition = new Vector3(0, 0.52f, 0);
-            en.transform.localPosition = new Vector3(0, -0.939f, 0);
+            en.transform.localPosition = new Vector3(0, 0.52f, 0);
+            //en.transform.localPosition = new Vector3(0, -0.939f, 0);
             en.transform.localRotation = Quaternion.identity;
             en.SetActive(false);
             permanent_enemies.Add(en);
