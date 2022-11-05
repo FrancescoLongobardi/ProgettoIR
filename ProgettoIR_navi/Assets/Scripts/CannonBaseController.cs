@@ -132,6 +132,7 @@ public class CannonBaseController : MonoBehaviour
     }
 
     public bool CheckRotationCompleted(){
+        //Debug.Log(Mathf.Abs(GetLocalYAngle() - target_angle));
         return Mathf.Abs(GetLocalYAngle() - target_angle) < 0.01f ||
                (target_angle < max_left && GetLocalYAngle() == max_left) ||
                (target_angle > max_right && GetLocalYAngle() == max_right);

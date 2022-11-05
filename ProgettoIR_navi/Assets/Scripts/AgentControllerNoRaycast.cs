@@ -24,7 +24,7 @@ public class AgentControllerNoRaycast : Agent
     private int step_count = 0;
     private int episodes_count = 0;     // Per dimostrazione
     private int max_episodes = 100;     // Per dimostrazione
-    private int max_step_episodes = 25000;
+    private int max_step_episodes = 1000;
     private float z_noise, x_noise, speed_noise;
 
 
@@ -35,7 +35,7 @@ public class AgentControllerNoRaycast : Agent
         cannon_starting_pos = cannon.transform.localPosition;
         cannon_base_starting_rot = cannon_base.transform.localRotation;
         raycast = GetComponent<RayPerceptionSensorComponent3D>();
-        //Time.timeScale = 15F;
+        //Time.timeScale = 30F;
     }
 
     private float Get180Angle(float angle){
@@ -47,10 +47,10 @@ public class AgentControllerNoRaycast : Agent
     }
 
     public override void OnEpisodeBegin(){
-        
         if(episodes_count >= max_episodes)
             EditorApplication.isPlaying = false;
         episodes_count++;
+        Debug.Log("Episodio " + episodes_count);
         x_noise = SampleGaussian(0f, 1f);
         z_noise = SampleGaussian(0f, 1f);
         speed_noise = SampleGaussian(0, 0.4f);
@@ -114,7 +114,8 @@ public class AgentControllerNoRaycast : Agent
         float max_z = plane.transform.localScale.z * (bounds.z / 2) - boundary_limit;
         float pos_x = Random.Range(min_x, max_x);
         float pos_z = Random.Range(min_z, max_z);
-        transform.localPosition = new Vector3(pos_x, 0.51f, pos_z);
+        //transform.localPosition = new Vector3(pos_x, 0.51f, pos_z);
+        transform.localPosition = new Vector3(pos_x, -0.939f, pos_z);
         transform.localEulerAngles = new Vector3(0f, Random.Range(0f,360f), 0f);
     }
 
@@ -122,7 +123,8 @@ public class AgentControllerNoRaycast : Agent
         float min_x = 5f, max_x = 32f, min_z = -26.5f, max_z = 25; 
         float pos_x = Random.Range(min_x, max_x);
         float pos_z = Random.Range(min_z, max_z);
-        transform.localPosition = new Vector3(pos_x, 0.51f, pos_z);
+        //transform.localPosition = new Vector3(pos_x, 0.51f, pos_z);
+        transform.localPosition = new Vector3(pos_x, -0.939f, pos_z);
     }
 
     public override void CollectObservations(VectorSensor sensor){
@@ -207,6 +209,7 @@ public class AgentControllerNoRaycast : Agent
     void FixedUpdate(){
         //Debug.Log(episodes_count);
         if(step_count > max_step_episodes){
+            Debug.Log("Step terminati");
             step_count = 0;
             EndEpisode();   
         }
@@ -251,7 +254,7 @@ public class AgentControllerNoRaycast : Agent
             discrete_action[2] = convertActionFromFloatToInt(cannon.CalculateInputForAimbot(enemy_spawner.enemies[0]));
             discrete_action[3] = convertActionFromFloatToInt(cannon_base.CalculateInputForAimbot(enemy_spawner.enemies[0], Get180Angle(transform.rotation.eulerAngles.y)));
         }
-
+        
         if(cannon.CheckRotationCompleted() && cannon_base.CheckRotationCompleted() && CheckRotationCompleted() && movement_finished){
             discrete_action[4] = 1;
         }
@@ -305,7 +308,7 @@ public class AgentControllerNoRaycast : Agent
         enemy_spawner.RemoveEnemyFromList(other);
         //Debug.Log(enemy_spawner.enemies.Count);
         if(enemy_spawner.enemies.Count == 0){
-            Debug.Log(GetCumulativeReward());
+            //Debug.Log(GetCumulativeReward());
             step_count = 0;
             EndEpisode();
         }
@@ -314,7 +317,7 @@ public class AgentControllerNoRaycast : Agent
     void Update()
     {   
         //Debug.Log(GetCumulativeReward());
-        
+        //Debug.Log(Time.deltaTime);
         Quaternion max_right = cannon_base_starting_rot * Quaternion.Euler(0, 25, 0);
         Quaternion max_left = cannon_base_starting_rot * Quaternion.Euler(0, -25, 0);
         Vector3 max_dist = transform.forward * cannon.GetMaxDistance();
