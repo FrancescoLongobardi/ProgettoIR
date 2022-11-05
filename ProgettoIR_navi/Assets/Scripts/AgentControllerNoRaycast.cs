@@ -24,7 +24,7 @@ public class AgentControllerNoRaycast : Agent
     private int step_count = 0;
     private int episodes_count = 0;     // Per dimostrazione
     private int max_episodes = 100;     // Per dimostrazione
-    private int max_step_episodes = 1000;
+    private int max_step_episodes = 25000;
     private float z_noise, x_noise, speed_noise;
 
 
