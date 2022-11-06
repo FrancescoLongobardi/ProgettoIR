@@ -19,8 +19,8 @@ public class AgentController : Agent
     private Vector3 cannon_base_offset = new Vector3(-0.3449993f, 0.2330005f, -0.01311016f); // Offset della cannon base dalla posizione dell'agente
     private int step_count = 0;
     private int episodes_count = 0;     // Per dimostrazione
-    private int max_episodes = 100;     // Per dimostrazione
-    private int max_step_episodes = 25000;
+    private int max_episodes = 70;     // Per dimostrazione
+    private int max_step_episodes = 15000;
     private float z_noise, x_noise, speed_noise;
 
 
@@ -42,15 +42,16 @@ public class AgentController : Agent
     }
 
     public override void OnEpisodeBegin(){
+        //Per dimostrazione
         /*
         if(episodes_count >= max_episodes)
             EditorApplication.isPlaying = false;
         */
         episodes_count++;
         Debug.Log("Episodio " + episodes_count);
-        x_noise = SampleGaussian(0f, 1f);
-        z_noise = SampleGaussian(0f, 1f);
-        speed_noise = SampleGaussian(0, 0.4f);
+        //x_noise = SampleGaussian(0f, 1f);
+        //z_noise = SampleGaussian(0f, 1f);
+        //speed_noise = SampleGaussian(0, 0.4f);
         //Debug.Log(episodes_count + " di " + max_episodes);
         shot = false;
         distance_offset = Random.Range(0f, (cannon.GetMaxDistance()*3)/4);
@@ -95,16 +96,20 @@ public class AgentController : Agent
     }
 
     public override void CollectObservations(VectorSensor sensor){
-        sensor.AddObservation(transform.localPosition);
+        //Agent position
+        sensor.AddObservation(transform.localPosition.x);
+        sensor.AddObservation(transform.localPosition.z);
+        //Enemy position and speed
+        sensor.AddObservation(enemy_spawner.permanent_enemies[0].transform.localPosition.x /*+ x_noise*/);
+        sensor.AddObservation(enemy_spawner.permanent_enemies[0].transform.localPosition.z /*+ z_noise*/);
+        sensor.AddObservation(enemy_spawner.permanent_enemies[0].GetComponent<EnemyController>().speed /*+ speed_noise*/);
+        //Agent rotations and cooldown
         sensor.AddObservation(transform.localEulerAngles.y);
-        sensor.AddObservation(cannon.GetShootingCooldownLeft());
         sensor.AddObservation(cannon_base.gameObject.transform.localEulerAngles.y);
-        //sensor.AddObservation(cannon_base.rotationSpeed);
         sensor.AddObservation(cannon.gameObject.transform.localEulerAngles.z);
+        sensor.AddObservation(cannon.GetShootingCooldownLeft());
+        //sensor.AddObservation(cannon_base.rotationSpeed);
         //sensor.AddObservation(cannon.rotationSpeed);
-        sensor.AddObservation(enemy_spawner.permanent_enemies[0].transform.localPosition.x + x_noise);
-        sensor.AddObservation(enemy_spawner.permanent_enemies[0].transform.localPosition.z + z_noise);
-        sensor.AddObservation(enemy_spawner.permanent_enemies[0].GetComponent<EnemyController>().speed + speed_noise);
     }
 
     public static float SampleGaussian(float mean, float stddev)
@@ -134,32 +139,32 @@ public class AgentController : Agent
         float cannon_base_rot = convertActionFromIntToFloat(actions.DiscreteActions[1]);
         
         // Per dimostrazione
-        
+        /*
         //Debug.Log(cannon_base_rot);
         cannon_base.rotateCannonBase(cannon_base_rot);
         cannon.rotateCannon(cannon_elev);
-
+        */
         // Per training
-        /*
+          
         cannon_base.rotateCannonBase_training(cannon_base_rot);
         cannon.rotateCannon_training(cannon_elev);
-        */
+        
 
         //per dimostrazione
         //Debug.Log(actions.DiscreteActions[0]);
-        
+        /*
         if(actions.DiscreteActions[2] == 1 && !shot){
             if(FireProjectile())
                 shot = true;
         }
-        
+        */
         
         //per training
-        /*
+        
         if(actions.DiscreteActions[2] == 1){
             FireProjectile();
         }
-        */
+        
 
         //AddReward(-0.001f);
         //AddRewardDistance();
@@ -253,7 +258,7 @@ public class AgentController : Agent
         enemy_spawner.RemoveEnemyFromList(other);
         //Debug.Log(enemy_spawner.enemies.Count);
         if(enemy_spawner.enemies.Count == 0){
-            //Debug.Log(GetCumulativeReward());
+            Debug.Log(GetCumulativeReward());
             step_count = 0;
             EndEpisode();
         }
@@ -291,7 +296,6 @@ public class AgentController : Agent
     public void OnTriggerEnter(Collider other){
         if (other.TryGetComponent<EnemyController>(out EnemyController enemy)){
             AddReward(-1.0f);
-            //Debug.Log(GetCumulativeReward());
             Debug.Log(GetCumulativeReward());
             enemy_spawner.RemoveEnemyFromList(other.gameObject);
             step_count = 0;
