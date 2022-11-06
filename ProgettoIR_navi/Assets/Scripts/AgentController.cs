@@ -20,9 +20,10 @@ public class AgentController : Agent
     private int step_count = 0;
     private int episodes_count = 0;     // Per dimostrazione
     private int max_episodes = 100;     // Per dimostrazione
-    private int max_step_episodes = 15000;
+    private int max_step_episodes = 10000;
     private float z_noise, x_noise, speed_noise;
-
+    private float cannon_base_target_angle;
+    private float cannon_target_angle;
 
     public override void Initialize()
     {
@@ -53,6 +54,9 @@ public class AgentController : Agent
         
         // Per dimostrazione
         //CheckEpisodesCount();
+        
+        cannon_base_target_angle = cannon_base.CalculateAndGetTargetAngle(enemy_spawner.enemies[0], Get180Angle(transform.rotation.eulerAngles.y));
+        cannon_target_angle = cannon.CalculateAndGetTargetAngle(enemy_spawner.enemies[0]);
 
         x_noise = SampleGaussian(0f, 1f);
         z_noise = SampleGaussian(0f, 1f);
@@ -166,11 +170,17 @@ public class AgentController : Agent
         // Per training
         ExecuteActions_Training(cannon_base_rot, cannon_elev, actions.DiscreteActions[2]);
         
-        AddReward(-1/max_step_episodes);
+        //AddReward(-1/max_step_episodes);
+        // TODO: Aggiungere reward positivo in base alla differenza tra l'angolo attuale di cannon_base e cannon e l'angolo giusto
+        float delta_angle_cannon_base = Mathf.Abs(Mathf.DeltaAngle(cannon_base.GetLocalYAngle(), cannon_base_target_angle));
+        float delta_angle_cannon = Mathf.Abs(cannon_target_angle - cannon.transform.localEulerAngles.z);
+        AddReward(0.5f * (180f - delta_angle_cannon_base)/180f);
+        AddReward(0.5f * (45f - delta_angle_cannon)/45f);
+        AddReward(-0.00011f * step_count);
         //AddReward(-0.001f);
         //AddRewardDistance();
     }
-
+    
     void FixedUpdate(){
         //Debug.Log(episodes_count);
         if(step_count > max_step_episodes){
@@ -252,8 +262,16 @@ public class AgentController : Agent
 
     public void enemy_miss(float min_dist){
         float penalty = (-0.01f * min_dist) >= -0.5f ? (-0.01f * min_dist) : -0.5f;
+        if(min_dist < 5f)
+            penalty = -0.01f * min_dist;
+        else if(min_dist >= 5f && min_dist < 10f)
+            penalty = -0.02f * min_dist;
+        else
+            penalty = (-0.03f * min_dist) >= -0.5f ? (-0.03f * min_dist) : -0.5f;
+        
         AddReward(penalty);
     }
+
     public void enemy_hit(GameObject other){
         AddReward(1.0f);
         enemy_spawner.RemoveEnemyFromList(other);

@@ -58,23 +58,30 @@ public class CannonController : MonoBehaviour
         return (ball_spawner_script.speed * ball_spawner_script.speed)/ -Physics.gravity.y;
     }
 
-    public float CalculateInputForAimbot(GameObject enemy){
+    private void CalculateTargetAngle(GameObject enemy){
         LaunchProjectile ball_spawner_script = ball_spawner.GetComponent<LaunchProjectile>();
-        //float angle = 0.5f * (Mathf.Asin((Physics.gravity.y * Vector3.Distance(ball_spawner.transform.position, enemy.transform.position)) / (ball_spawner_script.speed * ball_spawner_script.speed)) * Mathf.Rad2Deg);
         float angle = CalculateThrowAngle(ball_spawner.transform.position, enemy.transform.position, ball_spawner_script.speed);
-        float rot_input = 0;
-
         if(!float.IsNaN(angle)){
             float possible_angle = 90f+angle;
             target_angle = possible_angle;
-            //float fixed_angle = -Mathf.Clamp(-possible_angle, -min_elevation, -max_elevation);
-            if(Mathf.Abs(possible_angle - transform.localEulerAngles.z) >= Time.deltaTime*rotationSpeed)
-                rot_input = Mathf.Sign(possible_angle - transform.localEulerAngles.z);
-            //rot_input = Mathf.Sign(possible_angle - transform.localEulerAngles.z);
         }
         else
             target_angle = transform.localEulerAngles.z;
-        
+    }
+
+    public float CalculateAndGetTargetAngle(GameObject enemy){
+        CalculateTargetAngle(enemy);
+        return target_angle;
+    }
+
+    public float CalculateInputForAimbot(GameObject enemy){
+        //CalculateTargetAngle(enemy);   Perché già chiamata in AgentController all'inizio di ogni episodio
+
+        float rot_input = 0;
+
+        if(Mathf.Abs(target_angle - transform.localEulerAngles.z) >= Time.deltaTime*rotationSpeed)
+                rot_input = Mathf.Sign(target_angle - transform.localEulerAngles.z);
+    
         return rot_input;
     }
 
