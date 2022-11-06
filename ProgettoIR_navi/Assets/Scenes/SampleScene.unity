@@ -352,6 +352,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+<<<<<<< HEAD
     - target: {fileID: 3268731076416396890, guid: a14428ec5fda24d478ae574745a9e0ab, type: 3}
       propertyPath: m_Model
       value: 
@@ -359,10 +360,42 @@ PrefabInstance:
     - target: {fileID: 3268731076416396890, guid: a14428ec5fda24d478ae574745a9e0ab, type: 3}
       propertyPath: m_BehaviorType
       value: 2
+=======
+    - target: {fileID: 1320203154253633559, guid: a14428ec5fda24d478ae574745a9e0ab, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 18.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1320203154253633559, guid: a14428ec5fda24d478ae574745a9e0ab, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 4.12
+      objectReference: {fileID: 0}
+    - target: {fileID: 3268731076416396890, guid: a14428ec5fda24d478ae574745a9e0ab, type: 3}
+      propertyPath: m_Model
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3268731076416396890, guid: a14428ec5fda24d478ae574745a9e0ab, type: 3}
+      propertyPath: m_BehaviorType
+      value: 0
+>>>>>>> 45d08f8f7b091b0f67eed81c3409bfb47fae9f42
       objectReference: {fileID: 0}
     - target: {fileID: 3268731076416396890, guid: a14428ec5fda24d478ae574745a9e0ab, type: 3}
       propertyPath: m_InferenceDevice
       value: 1
+<<<<<<< HEAD
+=======
+      objectReference: {fileID: 0}
+    - target: {fileID: 3268731076416396890, guid: a14428ec5fda24d478ae574745a9e0ab, type: 3}
+      propertyPath: m_BrainParameters.VectorObservationSize
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5312553337528721810, guid: a14428ec5fda24d478ae574745a9e0ab, type: 3}
+      propertyPath: Record
+      value: 0
+>>>>>>> 45d08f8f7b091b0f67eed81c3409bfb47fae9f42
+      objectReference: {fileID: 0}
+    - target: {fileID: 5312553337528721810, guid: a14428ec5fda24d478ae574745a9e0ab, type: 3}
+      propertyPath: DemonstrationName
+      value: AimbotNoMov-noise
       objectReference: {fileID: 0}
     - target: {fileID: 6924104805398641119, guid: a14428ec5fda24d478ae574745a9e0ab, type: 3}
       propertyPath: m_Name
