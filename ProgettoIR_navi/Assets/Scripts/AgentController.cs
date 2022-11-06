@@ -20,7 +20,7 @@ public class AgentController : Agent
     private int step_count = 0;
     private int episodes_count = 0;     // Per dimostrazione
     private int max_episodes = 100;     // Per dimostrazione
-    private int max_step_episodes = 25000;
+    private int max_step_episodes = 15000;
     private float z_noise, x_noise, speed_noise;
 
 
@@ -42,12 +42,16 @@ public class AgentController : Agent
     }
 
     public override void OnEpisodeBegin(){
+        
+        // Per dimostrazione
         /*
         if(episodes_count >= max_episodes)
             EditorApplication.isPlaying = false;
-        */
         episodes_count++;
         Debug.Log("Episodio " + episodes_count);
+        */
+
+
         x_noise = SampleGaussian(0f, 1f);
         z_noise = SampleGaussian(0f, 1f);
         speed_noise = SampleGaussian(0, 0.4f);
@@ -134,33 +138,34 @@ public class AgentController : Agent
         float cannon_base_rot = convertActionFromIntToFloat(actions.DiscreteActions[1]);
         
         // Per dimostrazione
-        
+        /*
         //Debug.Log(cannon_base_rot);
         cannon_base.rotateCannonBase(cannon_base_rot);
         cannon.rotateCannon(cannon_elev);
-
-        // Per training
-        /*
-        cannon_base.rotateCannonBase_training(cannon_base_rot);
-        cannon.rotateCannon_training(cannon_elev);
         */
 
-        //per dimostrazione
-        //Debug.Log(actions.DiscreteActions[0]);
+        // Per training
         
+        cannon_base.rotateCannonBase_training(cannon_base_rot);
+        cannon.rotateCannon_training(cannon_elev);
+        
+
+        // Per dimostrazione
+        /*
+        //Debug.Log(actions.DiscreteActions[0]);
         if(actions.DiscreteActions[2] == 1 && !shot){
             if(FireProjectile())
                 shot = true;
         }
+        */
         
-        
-        //per training
-        /*
+        // Per training
+
         if(actions.DiscreteActions[2] == 1){
             FireProjectile();
         }
-        */
-
+        
+        AddReward(-1/max_step_episodes);
         //AddReward(-0.001f);
         //AddRewardDistance();
     }
