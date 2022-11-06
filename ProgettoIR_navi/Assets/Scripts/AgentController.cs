@@ -41,16 +41,18 @@ public class AgentController : Agent
         else return angle;
     }
 
+    //Per dimostrazione
+    /*
     private void CheckEpisodesCount(){
         if(++episodes_count > max_episodes)
             EditorApplication.isPlaying = false;
         Debug.Log("Episodio " + episodes_count);
     }
-
+    */
     public override void OnEpisodeBegin(){
         
         // Per dimostrazione
-        CheckEpisodesCount();
+        //CheckEpisodesCount();
 
         x_noise = SampleGaussian(0f, 1f);
         z_noise = SampleGaussian(0f, 1f);
@@ -159,10 +161,10 @@ public class AgentController : Agent
         float cannon_base_rot = convertActionFromIntToFloat(actions.DiscreteActions[1]);
         
         // Per dimostrazione
-        ExecuteActions_Demo(cannon_base_rot, cannon_elev, actions.DiscreteActions[2]);
+        //ExecuteActions_Demo(cannon_base_rot, cannon_elev, actions.DiscreteActions[2]);
 
         // Per training
-        //ExecuteActions_Training(cannon_base_rot, cannon_elev, actions.DiscreteActions[2]);
+        ExecuteActions_Training(cannon_base_rot, cannon_elev, actions.DiscreteActions[2]);
         
         AddReward(-1/max_step_episodes);
         //AddReward(-0.001f);
