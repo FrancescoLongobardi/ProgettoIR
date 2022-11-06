@@ -41,15 +41,17 @@ public class AgentController : Agent
         else return angle;
     }
 
-    public override void OnEpisodeBegin(){
-        
-        // Per dimostrazione
-        /*
+    private void CheckEpisodesCount(){
         if(episodes_count >= max_episodes)
             EditorApplication.isPlaying = false;
         episodes_count++;
         Debug.Log("Episodio " + episodes_count);
-        */
+    }
+
+    public override void OnEpisodeBegin(){
+        
+        // Per dimostrazione
+        CheckEpisodesCount();
 
 
         x_noise = SampleGaussian(0f, 1f);
@@ -136,38 +138,33 @@ public class AgentController : Agent
         Vector DiscreteActions:
             0 - shoot/no shoot
     */
+
+    private void ExecuteActions_Demo(float cannon_base_rot, float cannon_elev, int shoot){
+        cannon_base.rotateCannonBase(cannon_base_rot);
+        cannon.rotateCannon(cannon_elev);
+        if(shoot == 1 && !shot){
+            if(FireProjectile())
+                shot = true;
+        }
+    }
+
+    private void ExecuteActions_Training(float cannon_base_rot, float cannon_elev, int shoot){
+        cannon_base.rotateCannonBase_training(cannon_base_rot);
+        cannon.rotateCannon_training(cannon_elev);
+        if(shoot == 1 && !shot)
+            FireProjectile();
+    }
+    
     public override void OnActionReceived(ActionBuffers actions)
     {
         float cannon_elev = convertActionFromIntToFloat(actions.DiscreteActions[0]);
         float cannon_base_rot = convertActionFromIntToFloat(actions.DiscreteActions[1]);
         
         // Per dimostrazione
-        /*
-        //Debug.Log(cannon_base_rot);
-        cannon_base.rotateCannonBase(cannon_base_rot);
-        cannon.rotateCannon(cannon_elev);
-        */
+        ExecuteActions_Demo(cannon_base_rot, cannon_elev, actions.DiscreteActions[2]);
 
         // Per training
-        
-        cannon_base.rotateCannonBase_training(cannon_base_rot);
-        cannon.rotateCannon_training(cannon_elev);
-        
-
-        // Per dimostrazione
-        /*
-        //Debug.Log(actions.DiscreteActions[0]);
-        if(actions.DiscreteActions[2] == 1 && !shot){
-            if(FireProjectile())
-                shot = true;
-        }
-        */
-        
-        // Per training
-
-        if(actions.DiscreteActions[2] == 1){
-            FireProjectile();
-        }
+        //ExecuteActions_Training(cannon_base_rot, cannon_elev, actions.DiscreteActions[2]);
         
         AddReward(-1/max_step_episodes);
         //AddReward(-0.001f);
