@@ -301,7 +301,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!1001 &1022841230
+--- !u!1001 &1005921922
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -353,20 +353,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3268731076416396890, guid: a14428ec5fda24d478ae574745a9e0ab, type: 3}
-      propertyPath: m_Model
-      value: 
-      objectReference: {fileID: 5022602860645237092, guid: 49f8abd7526c202418eb3ec411026bda, type: 3}
-    - target: {fileID: 3268731076416396890, guid: a14428ec5fda24d478ae574745a9e0ab, type: 3}
-      propertyPath: m_BehaviorType
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3268731076416396890, guid: a14428ec5fda24d478ae574745a9e0ab, type: 3}
-      propertyPath: m_InferenceDevice
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5312553337528721810, guid: a14428ec5fda24d478ae574745a9e0ab, type: 3}
-      propertyPath: DemonstrationName
-      value: AimbotNoMov-noise
+      propertyPath: m_BrainParameters.VectorObservationSize
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 6924104805398641119, guid: a14428ec5fda24d478ae574745a9e0ab, type: 3}
       propertyPath: m_Name

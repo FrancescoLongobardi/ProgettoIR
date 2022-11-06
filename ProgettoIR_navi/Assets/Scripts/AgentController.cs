@@ -42,9 +42,8 @@ public class AgentController : Agent
     }
 
     private void CheckEpisodesCount(){
-        if(episodes_count >= max_episodes)
+        if(++episodes_count > max_episodes)
             EditorApplication.isPlaying = false;
-        episodes_count++;
         Debug.Log("Episodio " + episodes_count);
     }
 
@@ -52,7 +51,6 @@ public class AgentController : Agent
         
         // Per dimostrazione
         CheckEpisodesCount();
-
 
         x_noise = SampleGaussian(0f, 1f);
         z_noise = SampleGaussian(0f, 1f);
