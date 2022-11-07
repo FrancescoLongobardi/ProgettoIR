@@ -44,8 +44,6 @@
      <Compile Include="Assets\Scripts\EnemySpawnerController.cs" />
      <Compile Include="Assets\Scripts\AgentController.cs" />
      <Compile Include="Assets\Scripts\Projectile.cs" />
-     <None Include="Assets\rewards2.txt" />
-     <None Include="Assets\rewards.txt" />
     <Reference Include="UnityEngine">
         <HintPath>C:\Program Files\Unity\Hub\Editor\2021.3.12f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>

@@ -18,10 +18,8 @@ public class AgentController : Agent
     public bool shot = false;
     private RayPerceptionSensorComponent3D raycast;
     private Vector3 cannon_base_offset = new Vector3(-0.3449993f, 0.2330005f, -0.01311016f); // Offset della cannon base dalla posizione dell'agente
-    private int step_count = 0;
     private int episodes_count = 0;     // Per dimostrazione
     private int max_episodes = 100;     // Per dimostrazione
-    private int max_step_episodes = 10000;
     private float z_noise, x_noise, speed_noise;
     private float cannon_base_target_angle;
     private float cannon_target_angle;
@@ -34,6 +32,7 @@ public class AgentController : Agent
         cannon_base_starting_rot = cannon_base.transform.localRotation;
         //writer = new StreamWriter("Assets/rewards2.txt", true);
         //Time.timeScale = 30F;
+        //Debug.Log(MaxStep);
     }
 
     private float Get180Angle(float angle){
@@ -52,6 +51,7 @@ public class AgentController : Agent
         Debug.Log("Episodio " + episodes_count);
     }
     */
+
     public override void OnEpisodeBegin(){
         
         // Per dimostrazione
@@ -147,6 +147,7 @@ public class AgentController : Agent
     private void ExecuteActions_Demo(float cannon_base_rot, float cannon_elev, int shoot){
         cannon_base.rotateCannonBase(cannon_base_rot);
         cannon.rotateCannon(cannon_elev);
+        
         if(shoot == 1 && !shot){
             if(FireProjectile())
                 shot = true;
@@ -172,33 +173,16 @@ public class AgentController : Agent
         ExecuteActions_Training(cannon_base_rot, cannon_elev, actions.DiscreteActions[2]);
         
         //AddReward(-1/max_step_episodes);
+        
+        
         float delta_angle_cannon_base = Mathf.Abs(Mathf.DeltaAngle(cannon_base.GetLocalYAngle(), cannon_base_target_angle));
         float delta_angle_cannon = Mathf.Abs(cannon_target_angle - cannon.transform.localEulerAngles.z);
-        //Debug.Log(0.05f * (180f - delta_angle_cannon_base)/180f);
-        //Debug.Log(0.05f * (45f - delta_angle_cannon)/45f);
-        AddReward(0.0005f * (180f - delta_angle_cannon_base)/180f);
-        AddReward(0.0005f * (45f - delta_angle_cannon)/45f);
-        AddReward(-0.0000005f * step_count >= 0.0015f ? 0.0015f : -0.0000005f * step_count);
-        //Debug.Log(GetCumulativeReward());
-        //writer.WriteLine(GetCumulativeReward());
-        //AddReward(-0.001f);
-        //AddRewardDistance();
-        //Debug.Log("Delta angle cannon_base: " + delta_angle_cannon_base);
-        //Debug.Log("Delta angle cannon: " + delta_angle_cannon);
+        AddReward(0.0001f * (180f - delta_angle_cannon_base)/180f);
+        AddReward(0.0001f * (45f - delta_angle_cannon)/45f);
+        //AddReward(-0.0000005f * step_count >= 0.0015f ? 0.0015f : -0.0000005f * step_count);
+        
     }
     
-    void FixedUpdate(){
-        //Debug.Log(episodes_count);
-        if(step_count > max_step_episodes){
-            Debug.Log("Step terminati");
-            step_count = 0;
-            //writer.Close();
-            EndEpisode();   
-        }
-        else
-            step_count++;
-    }
-
     private void AddRewardDistance(){
         float dist = Vector3.Distance(cannon_base.transform.localPosition, enemy_spawner.enemies[0].transform.localPosition);
         if(dist >= cannon.GetMaxDistance()/4 && dist <= cannon.GetMaxDistance())
@@ -260,7 +244,7 @@ public class AgentController : Agent
             parametersConstruct[1] = enemy_spawner;
 
             proj.SendMessage("Construct", parametersConstruct);
-            AddReward(-0.05f);
+            //AddReward(-0.05f);
             return true;
         }
         else
@@ -269,6 +253,7 @@ public class AgentController : Agent
     }
 
     public void enemy_miss(float min_dist){
+        /*
         float penalty = (-0.01f * min_dist) >= -0.5f ? (-0.01f * min_dist) : -0.5f;
         if(min_dist < 5f)
             penalty = -0.01f * min_dist;
@@ -276,8 +261,10 @@ public class AgentController : Agent
             penalty = -0.02f * min_dist;
         else
             penalty = (-0.03f * min_dist) >= -0.5f ? (-0.03f * min_dist) : -0.5f;
-        
-        AddReward(penalty);
+        */
+        AddReward(-1.0f);
+        Debug.Log(GetCumulativeReward());
+        EndEpisode();
     }
 
     public void enemy_hit(GameObject other){
@@ -286,7 +273,6 @@ public class AgentController : Agent
         //Debug.Log(enemy_spawner.enemies.Count);
         if(enemy_spawner.enemies.Count == 0){
             Debug.Log(GetCumulativeReward());
-            step_count = 0;
             EndEpisode();
         }
     }
@@ -294,7 +280,6 @@ public class AgentController : Agent
     void Update()
     {   
         /*
-        //Debug.Log(GetCumulativeReward());
         //Debug.Log(Time.deltaTime);
         Quaternion max_right = cannon_base_starting_rot * Quaternion.Euler(0, 25, 0);
         Quaternion max_left = cannon_base_starting_rot * Quaternion.Euler(0, -25, 0);
@@ -325,7 +310,6 @@ public class AgentController : Agent
             AddReward(-1.0f);
             Debug.Log(GetCumulativeReward());
             enemy_spawner.RemoveEnemyFromList(other.gameObject);
-            step_count = 0;
             EndEpisode();
         }
     }
