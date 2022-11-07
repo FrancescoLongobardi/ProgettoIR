@@ -3,6 +3,7 @@ using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
 using UnityEditor;
+using System.IO;
 
 public class AgentController : Agent
 {   
@@ -24,13 +25,14 @@ public class AgentController : Agent
     private float z_noise, x_noise, speed_noise;
     private float cannon_base_target_angle;
     private float cannon_target_angle;
-
+    //private StreamWriter writer;
     public override void Initialize()
     {
         cannon_base = transform.Find("CannonBase").GetComponent<CannonBaseController>();
         cannon = cannon_base.gameObject.transform.Find("Cannon").GetComponent<CannonController>();
         cannon_starting_pos = cannon.transform.localPosition;
         cannon_base_starting_rot = cannon_base.transform.localRotation;
+        //writer = new StreamWriter("Assets/rewards2.txt", true);
         //Time.timeScale = 30F;
     }
 
@@ -54,9 +56,6 @@ public class AgentController : Agent
         
         // Per dimostrazione
         //CheckEpisodesCount();
-        
-        cannon_base_target_angle = cannon_base.CalculateAndGetTargetAngle(enemy_spawner.enemies[0], Get180Angle(transform.rotation.eulerAngles.y));
-        cannon_target_angle = cannon.CalculateAndGetTargetAngle(enemy_spawner.enemies[0]);
 
         x_noise = SampleGaussian(0f, 1f);
         z_noise = SampleGaussian(0f, 1f);
@@ -76,6 +75,8 @@ public class AgentController : Agent
 
         //raycast.RayLength
         enemy_spawner.SpawnForDemonstration(transform.localPosition + cannon_base_offset, cannon_base.transform.localRotation, cannon.GetMaxDistance(), -180f, 180f);
+        cannon_base_target_angle = cannon_base.CalculateAndGetTargetAngle(enemy_spawner.enemies[0], Get180Angle(transform.rotation.eulerAngles.y));
+        cannon_target_angle = cannon.CalculateAndGetTargetAngle(enemy_spawner.enemies[0]);
         //enemy_spawner.SpawnForTraining();
     }
 
@@ -171,14 +172,19 @@ public class AgentController : Agent
         ExecuteActions_Training(cannon_base_rot, cannon_elev, actions.DiscreteActions[2]);
         
         //AddReward(-1/max_step_episodes);
-        // TODO: Aggiungere reward positivo in base alla differenza tra l'angolo attuale di cannon_base e cannon e l'angolo giusto
         float delta_angle_cannon_base = Mathf.Abs(Mathf.DeltaAngle(cannon_base.GetLocalYAngle(), cannon_base_target_angle));
         float delta_angle_cannon = Mathf.Abs(cannon_target_angle - cannon.transform.localEulerAngles.z);
-        AddReward(0.5f * (180f - delta_angle_cannon_base)/180f);
-        AddReward(0.5f * (45f - delta_angle_cannon)/45f);
-        AddReward(-0.00011f * step_count);
+        //Debug.Log(0.05f * (180f - delta_angle_cannon_base)/180f);
+        //Debug.Log(0.05f * (45f - delta_angle_cannon)/45f);
+        AddReward(0.0005f * (180f - delta_angle_cannon_base)/180f);
+        AddReward(0.0005f * (45f - delta_angle_cannon)/45f);
+        AddReward(-0.0000005f * step_count >= 0.0015f ? 0.0015f : -0.0000005f * step_count);
+        //Debug.Log(GetCumulativeReward());
+        //writer.WriteLine(GetCumulativeReward());
         //AddReward(-0.001f);
         //AddRewardDistance();
+        //Debug.Log("Delta angle cannon_base: " + delta_angle_cannon_base);
+        //Debug.Log("Delta angle cannon: " + delta_angle_cannon);
     }
     
     void FixedUpdate(){
@@ -186,6 +192,7 @@ public class AgentController : Agent
         if(step_count > max_step_episodes){
             Debug.Log("Step terminati");
             step_count = 0;
+            //writer.Close();
             EndEpisode();   
         }
         else
@@ -200,6 +207,7 @@ public class AgentController : Agent
 
     public override void Heuristic(in ActionBuffers actionsOut)
     {
+        
        // ActionSegment<float> continous_action = actionsOut.ContinuousActions;
         ActionSegment<int> discrete_action = actionsOut.DiscreteActions;
         discrete_action[0] = 0;
