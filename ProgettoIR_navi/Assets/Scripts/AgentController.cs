@@ -23,6 +23,8 @@ public class AgentController : Agent
     private float z_noise, x_noise, speed_noise;
     private float cannon_base_target_angle;
     private float cannon_target_angle;
+    private int max_shots = 5;
+    private int num_shots = 0;
     //private StreamWriter writer;
     public override void Initialize()
     {
@@ -49,14 +51,14 @@ public class AgentController : Agent
         if(++episodes_count > max_episodes)
             EditorApplication.isPlaying = false;
         Debug.Log("Episodio " + episodes_count);
-    }
-    */
+    }*/
+    
 
     public override void OnEpisodeBegin(){
         
         // Per dimostrazione
         //CheckEpisodesCount();
-
+        num_shots = 0;
         x_noise = SampleGaussian(0f, 1f);
         z_noise = SampleGaussian(0f, 1f);
         speed_noise = SampleGaussian(0, 0.4f);
@@ -104,17 +106,17 @@ public class AgentController : Agent
         transform.localPosition = new Vector3(pos_x, 0.22f, pos_z);
         transform.localEulerAngles = new Vector3(0f, Random.Range(0f,360f), 0f);
     }
-
+    
     public override void CollectObservations(VectorSensor sensor){
         //Agent position
-        sensor.AddObservation(transform.localPosition.x);
-        sensor.AddObservation(transform.localPosition.z);
+        //sensor.AddObservation(transform.localPosition.x);
+        //sensor.AddObservation(transform.localPosition.z);
         //Enemy position and speed
-        sensor.AddObservation(enemy_spawner.permanent_enemies[0].transform.localPosition.x /*+ x_noise*/);
-        sensor.AddObservation(enemy_spawner.permanent_enemies[0].transform.localPosition.z /*+ z_noise*/);
-        sensor.AddObservation(enemy_spawner.permanent_enemies[0].GetComponent<EnemyController>().speed /*+ speed_noise*/);
+        //sensor.AddObservation(enemy_spawner.permanent_enemies[0].transform.localPosition.x /*+ x_noise*/);
+        //sensor.AddObservation(enemy_spawner.permanent_enemies[0].transform.localPosition.z /*+ z_noise*/);
+        //sensor.AddObservation(enemy_spawner.permanent_enemies[0].GetComponent<EnemyController>().speed /*+ speed_noise*/);
         //Agent rotations and cooldown
-        sensor.AddObservation(transform.localEulerAngles.y);
+        //sensor.AddObservation(transform.localEulerAngles.y);
         sensor.AddObservation(cannon_base.gameObject.transform.localEulerAngles.y);
         sensor.AddObservation(cannon.gameObject.transform.localEulerAngles.z);
         //sensor.AddObservation(cannon.GetShootingCooldownLeft());
@@ -122,7 +124,7 @@ public class AgentController : Agent
         //sensor.AddObservation(cannon_base.rotationSpeed);
         //sensor.AddObservation(cannon.rotationSpeed);
     }
-
+    
     public static float SampleGaussian(float mean, float stddev)
     {
             // The method requires sampling from a uniform random of (0,1]
@@ -158,7 +160,7 @@ public class AgentController : Agent
     private void ExecuteActions_Training(float cannon_base_rot, float cannon_elev, int shoot){
         cannon_base.rotateCannonBase_training(cannon_base_rot);
         cannon.rotateCannon_training(cannon_elev);
-        if(shoot == 1 && !shot)
+        if(shoot == 1)
             FireProjectile();
     }
     
@@ -173,7 +175,7 @@ public class AgentController : Agent
         // Per training
         ExecuteActions_Training(cannon_base_rot, cannon_elev, actions.DiscreteActions[2]);
         
-        //AddReward(-1/max_step_episodes);
+        //AddReward(-1f/MaxStep);
         
         
         float delta_angle_cannon_base = Mathf.Abs(Mathf.DeltaAngle(cannon_base.GetLocalYAngle(), cannon_base_target_angle));
@@ -248,6 +250,7 @@ public class AgentController : Agent
 
             proj.SendMessage("Construct", parametersConstruct);
             //AddReward(-0.05f);
+            num_shots++;
             return true;
         }
         else
@@ -265,18 +268,21 @@ public class AgentController : Agent
         else
             penalty = (-0.03f * min_dist) >= -0.5f ? (-0.03f * min_dist) : -0.5f;
         */
-        AddReward(-1.0f);
-        Debug.Log(GetCumulativeReward());
-        cannon.ResetCooldown();
-        EndEpisode();
+
+        AddReward(-1.0f/max_shots);
+        Debug.Log("Enemy miss at shot "+num_shots+": "+GetCumulativeReward());
+        if(num_shots == max_shots){
+            cannon.ResetCooldown();
+            EndEpisode();
+        }
     }
 
     public void enemy_hit(GameObject other){
-        AddReward(10.0f);
+        AddReward(1.0f);
         enemy_spawner.RemoveEnemyFromList(other);
         //Debug.Log(enemy_spawner.enemies.Count);
         if(enemy_spawner.enemies.Count == 0){
-            Debug.Log(GetCumulativeReward());
+            Debug.Log("Enemy hit at shot "+num_shots+": "+ GetCumulativeReward());
             cannon.ResetCooldown();
             EndEpisode();
         }
@@ -290,7 +296,7 @@ public class AgentController : Agent
             print = print + " " + obs;
         }
         Debug.Log(print);
-        
+        /*
         Vector3 bounds = plane.GetComponent<MeshRenderer>().localBounds.size;
         float min_x = -1 * plane.transform.localScale.x * (bounds.x / 2) + boundary_limit;
         float min_z = -1 * plane.transform.localScale.z * (bounds.z / 2) + boundary_limit;
