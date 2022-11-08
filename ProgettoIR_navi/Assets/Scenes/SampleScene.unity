@@ -368,6 +368,14 @@ PrefabInstance:
       propertyPath: m_InferenceDevice
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5312553337528721810, guid: a14428ec5fda24d478ae574745a9e0ab, type: 3}
+      propertyPath: Record
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5312553337528721810, guid: a14428ec5fda24d478ae574745a9e0ab, type: 3}
+      propertyPath: DemonstrationName
+      value: AimbotNoMov_1
+      objectReference: {fileID: 0}
     - target: {fileID: 6924104805398641119, guid: a14428ec5fda24d478ae574745a9e0ab, type: 3}
       propertyPath: m_Name
       value: Env

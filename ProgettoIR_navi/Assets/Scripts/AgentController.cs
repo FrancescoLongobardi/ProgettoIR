@@ -55,7 +55,7 @@ public class AgentController : Agent
     public override void OnEpisodeBegin(){
         
         // Per dimostrazione
-        //CheckEpisodesCount();
+        CheckEpisodesCount();
 
         x_noise = SampleGaussian(0f, 1f);
         z_noise = SampleGaussian(0f, 1f);
@@ -117,7 +117,8 @@ public class AgentController : Agent
         sensor.AddObservation(transform.localEulerAngles.y);
         sensor.AddObservation(cannon_base.gameObject.transform.localEulerAngles.y);
         sensor.AddObservation(cannon.gameObject.transform.localEulerAngles.z);
-        sensor.AddObservation(cannon.GetShootingCooldownLeft());
+        //sensor.AddObservation(cannon.GetShootingCooldownLeft());
+        
         //sensor.AddObservation(cannon_base.rotationSpeed);
         //sensor.AddObservation(cannon.rotationSpeed);
     }
@@ -283,12 +284,13 @@ public class AgentController : Agent
 
     void Update()
     {   
+        /*
         string print = "";
         foreach (float obs in GetObservations()){
             print = print + " " + obs;
         }
         Debug.Log(print);
-        /*
+        
         Vector3 bounds = plane.GetComponent<MeshRenderer>().localBounds.size;
         float min_x = -1 * plane.transform.localScale.x * (bounds.x / 2) + boundary_limit;
         float min_z = -1 * plane.transform.localScale.z * (bounds.z / 2) + boundary_limit;
