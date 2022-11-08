@@ -13,7 +13,7 @@ public class AgentController : Agent
     public GameObject plane;
     private Vector3 cannon_starting_pos;
     private Quaternion cannon_base_starting_rot;
-    private float boundary_limit = 3f;
+    private float boundary_limit = 8.5f;
     private float distance_offset = float.NaN;
     public bool shot = false;
     private RayPerceptionSensorComponent3D raycast;
@@ -44,18 +44,18 @@ public class AgentController : Agent
     }
 
     //Per dimostrazione
-    /*
+    
     private void CheckEpisodesCount(){
         if(++episodes_count > max_episodes)
             EditorApplication.isPlaying = false;
         Debug.Log("Episodio " + episodes_count);
     }
-    */
+    
 
     public override void OnEpisodeBegin(){
         
         // Per dimostrazione
-        //CheckEpisodesCount();
+        CheckEpisodesCount();
 
         x_noise = SampleGaussian(0f, 1f);
         z_noise = SampleGaussian(0f, 1f);
@@ -167,20 +167,22 @@ public class AgentController : Agent
         float cannon_base_rot = convertActionFromIntToFloat(actions.DiscreteActions[1]);
         
         // Per dimostrazione
-        //ExecuteActions_Demo(cannon_base_rot, cannon_elev, actions.DiscreteActions[2]);
+        ExecuteActions_Demo(cannon_base_rot, cannon_elev, actions.DiscreteActions[2]);
 
         // Per training
-        ExecuteActions_Training(cannon_base_rot, cannon_elev, actions.DiscreteActions[2]);
+        //ExecuteActions_Training(cannon_base_rot, cannon_elev, actions.DiscreteActions[2]);
         
         //AddReward(-1/max_step_episodes);
         
         
         float delta_angle_cannon_base = Mathf.Abs(Mathf.DeltaAngle(cannon_base.GetLocalYAngle(), cannon_base_target_angle));
         float delta_angle_cannon = Mathf.Abs(cannon_target_angle - cannon.transform.localEulerAngles.z);
-        AddReward(0.0001f * (180f - delta_angle_cannon_base)/180f);
-        AddReward(0.0001f * (45f - delta_angle_cannon)/45f);
+        //AddReward(0.0001f * (180f - delta_angle_cannon_base)/180f);
+        //AddReward(0.0001f * (45f - delta_angle_cannon)/45f);
         //AddReward(-0.0000005f * step_count >= 0.0015f ? 0.0015f : -0.0000005f * step_count);
-        
+
+        AddReward(-0.0001f * (delta_angle_cannon_base/180f));
+        AddReward(-0.0001f * (delta_angle_cannon/180f));
     }
     
     private void AddRewardDistance(){
@@ -268,7 +270,7 @@ public class AgentController : Agent
     }
 
     public void enemy_hit(GameObject other){
-        AddReward(1.0f);
+        AddReward(10.0f);
         enemy_spawner.RemoveEnemyFromList(other);
         //Debug.Log(enemy_spawner.enemies.Count);
         if(enemy_spawner.enemies.Count == 0){
@@ -280,6 +282,22 @@ public class AgentController : Agent
     void Update()
     {   
         /*
+        Vector3 bounds = plane.GetComponent<MeshRenderer>().localBounds.size;
+        float min_x = -1 * plane.transform.localScale.x * (bounds.x / 2) + boundary_limit;
+        float min_z = -1 * plane.transform.localScale.z * (bounds.z / 2) + boundary_limit;
+        float max_x = plane.transform.localScale.x * (bounds.x / 2) - boundary_limit;
+        float max_z = plane.transform.localScale.z * (bounds.z / 2) - boundary_limit;
+        float pos_x = Random.Range(min_x, max_x);
+        float pos_z = Random.Range(min_z, max_z);
+        Debug.DrawLine(new Vector3(min_x, 0, min_z), new Vector3(max_x, 0, min_z), Color.red);
+        Debug.DrawLine(new Vector3(min_x, 0, min_z), new Vector3(min_x, 0, max_z), Color.red);
+        Debug.DrawLine(new Vector3(min_x, 0, max_z), new Vector3(max_x, 0, max_z), Color.red);
+        Debug.DrawLine(new Vector3(max_x, 0, min_z), new Vector3(max_x, 0, max_z), Color.red);
+        for(int i = 0; i < 361 ; i++){
+            Debug.DrawRay(transform.localPosition, Quaternion.Euler(0, i, 0) * transform.forward * cannon.GetMaxDistance(), Color.blue);
+            Debug.DrawRay(transform.localPosition, Quaternion.Euler(0, i, 0) * transform.forward * 5, Color.green);
+        }
+        
         //Debug.Log(Time.deltaTime);
         Quaternion max_right = cannon_base_starting_rot * Quaternion.Euler(0, 25, 0);
         Quaternion max_left = cannon_base_starting_rot * Quaternion.Euler(0, -25, 0);

@@ -46,7 +46,7 @@ public class EnemySpawnerController : MonoBehaviour
         //Debug.Log("Old: " + spawnPos);
         CheckBounds(ref spawnPos);
         //Debug.Log("New: " + spawnPos);
-        spawnPos.y = 0.6f; //Over the plane
+        spawnPos.y = 0.52f; //Over the plane
         //spawnPos.y = -0.939f;
         //Debug.Log(spawnPos);
         Vector3 enemy_rot = new Vector3(0f, Random.Range(0f,360f), 0f);
