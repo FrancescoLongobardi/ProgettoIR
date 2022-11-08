@@ -164,4 +164,8 @@ public class CannonController : MonoBehaviour
     public float GetShootingCooldownLeft(){
         return ball_spawner_script.GetShootingCooldownLeft();
     }
+
+    public void ResetCooldown(){
+        ball_spawner_script.ResetCooldown();
+    }
 }

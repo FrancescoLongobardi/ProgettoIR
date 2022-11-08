@@ -44,9 +44,18 @@ public class LaunchProjectile : MonoBehaviour
 
     private IEnumerator ShootCooldown() {
         is_available = false;
+        shooting_cooldown_left = cooldown_cannon;
+        while(shooting_cooldown_left > 0){
+            shooting_cooldown_left -= Time.deltaTime;
+            if(shooting_cooldown_left < 0)
+                shooting_cooldown_left = 0;
+            yield return null;
+        }
+        /*
         for(shooting_cooldown_left = cooldown_cannon; shooting_cooldown_left > 0; shooting_cooldown_left -= Time.deltaTime){
             yield return null;
         }
+        */
         is_available = true;
     }
 
@@ -54,4 +63,7 @@ public class LaunchProjectile : MonoBehaviour
         return shooting_cooldown_left;
     }
     
+    public void ResetCooldown(){
+        shooting_cooldown_left = 0;
+    }
 }

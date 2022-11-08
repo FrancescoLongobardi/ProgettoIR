@@ -266,6 +266,7 @@ public class AgentController : Agent
         */
         AddReward(-1.0f);
         Debug.Log(GetCumulativeReward());
+        cannon.ResetCooldown();
         EndEpisode();
     }
 
@@ -275,6 +276,7 @@ public class AgentController : Agent
         //Debug.Log(enemy_spawner.enemies.Count);
         if(enemy_spawner.enemies.Count == 0){
             Debug.Log(GetCumulativeReward());
+            cannon.ResetCooldown();
             EndEpisode();
         }
     }
@@ -333,6 +335,7 @@ public class AgentController : Agent
             AddReward(-1.0f);
             Debug.Log(GetCumulativeReward());
             enemy_spawner.RemoveEnemyFromList(other.gameObject);
+            cannon.ResetCooldown();
             EndEpisode();
         }
     }
