@@ -19,12 +19,12 @@ public class AgentController : Agent
     private RayPerceptionSensorComponent3D raycast;
     private Vector3 cannon_base_offset = new Vector3(-0.3449993f, 0.2330005f, -0.01311016f); // Offset della cannon base dalla posizione dell'agente
     private int episodes_count = 0;     // Per dimostrazione
-    private int max_episodes = 100;     // Per dimostrazione
+    private int max_episodes = 5;     // Per dimostrazione
     private float z_noise, x_noise, speed_noise;
     private float cannon_base_target_angle;
     private float cannon_target_angle;
-    private int max_shots = 5;
-    private int num_shots = 0;
+    //private int max_shots = 5;
+    //private int num_shots = 0;
     //private StreamWriter writer;
     public override void Initialize()
     {
@@ -48,20 +48,21 @@ public class AgentController : Agent
     //Per dimostrazione
     /*
     private void CheckEpisodesCount(){
-        if(++episodes_count > max_episodes)
+        if(++episodes_count > max_episodes){
+            Debug.Log("Fatto");
             EditorApplication.isPlaying = false;
+        }
         Debug.Log("Episodio " + episodes_count);
-    }*/
-    
+    }
+    */
 
     public override void OnEpisodeBegin(){
         
         // Per dimostrazione
         //CheckEpisodesCount();
-        num_shots = 0;
-        x_noise = SampleGaussian(0f, 1f);
-        z_noise = SampleGaussian(0f, 1f);
-        speed_noise = SampleGaussian(0, 0.4f);
+        
+        //num_shots = 0;
+        cannon.ResetCooldown();
         //Debug.Log(episodes_count + " di " + max_episodes);
         shot = false;
         distance_offset = Random.Range(0f, (cannon.GetMaxDistance()*3)/4);
@@ -160,8 +161,10 @@ public class AgentController : Agent
     private void ExecuteActions_Training(float cannon_base_rot, float cannon_elev, int shoot){
         cannon_base.rotateCannonBase_training(cannon_base_rot);
         cannon.rotateCannon_training(cannon_elev);
-        if(shoot == 1)
-            FireProjectile();
+        if(shoot == 1 && !shot){
+            if(FireProjectile())
+                shot = true;
+        }
     }
     
     public override void OnActionReceived(ActionBuffers actions)
@@ -250,7 +253,7 @@ public class AgentController : Agent
 
             proj.SendMessage("Construct", parametersConstruct);
             //AddReward(-0.05f);
-            num_shots++;
+            //num_shots++;
             return true;
         }
         else
@@ -268,25 +271,35 @@ public class AgentController : Agent
         else
             penalty = (-0.03f * min_dist) >= -0.5f ? (-0.03f * min_dist) : -0.5f;
         */
-
+        /*
         AddReward(-1.0f/max_shots);
         Debug.Log("Enemy miss at shot "+num_shots+": "+GetCumulativeReward());
         if(num_shots == max_shots){
-            cannon.ResetCooldown();
             EndEpisode();
         }
+        */
+        AddReward(-1.0f);
+        EndEpisode();
     }
 
     public void enemy_hit(GameObject other){
+        /*
+        for(int i = 0; i < GetStoredActionBuffers().DiscreteActions.Array.Length; i++)
+            Debug.Log(GetStoredActionBuffers().DiscreteActions.Array[i]);
+        */
         AddReward(1.0f);
         enemy_spawner.RemoveEnemyFromList(other);
         //Debug.Log(enemy_spawner.enemies.Count);
         if(enemy_spawner.enemies.Count == 0){
-            Debug.Log("Enemy hit at shot "+num_shots+": "+ GetCumulativeReward());
-            cannon.ResetCooldown();
             EndEpisode();
         }
     }
+
+    void FixedUpdate(){
+        if(!shot)
+            RequestDecision();
+    }
+
 
     void Update()
     {   
