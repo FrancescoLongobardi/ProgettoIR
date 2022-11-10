@@ -19,7 +19,7 @@ public class AgentController : Agent
     private RayPerceptionSensorComponent3D raycast;
     private Vector3 cannon_base_offset = new Vector3(-0.3449993f, 0.2330005f, -0.01311016f); // Offset della cannon base dalla posizione dell'agente
     private int episodes_count = 0;     // Per dimostrazione
-    private int max_episodes = 5;     // Per dimostrazione
+    private int max_episodes = 30;     // Per dimostrazione
     private float z_noise, x_noise, speed_noise;
     private float cannon_base_target_angle;
     private float cannon_target_angle;
@@ -62,7 +62,7 @@ public class AgentController : Agent
         //CheckEpisodesCount();
         
         //num_shots = 0;
-        cannon.ResetCooldown();
+        //cannon.ResetCooldown();
         //Debug.Log(episodes_count + " di " + max_episodes);
         shot = false;
         distance_offset = Random.Range(0f, (cannon.GetMaxDistance()*3)/4);
@@ -188,7 +188,7 @@ public class AgentController : Agent
         //AddReward(-0.0000005f * step_count >= 0.0015f ? 0.0015f : -0.0000005f * step_count);
 
         AddReward(-0.0001f * (delta_angle_cannon_base/180f));
-        AddReward(-0.0001f * (delta_angle_cannon/180f));
+        AddReward(-0.0001f * (delta_angle_cannon/45f));
     }
     
     private void AddRewardDistance(){

@@ -22,6 +22,7 @@ public class LaunchProjectile : MonoBehaviour
         launched.GetComponent<Rigidbody>().velocity = transform.up * speed;*/        
     }
 
+    /* Decommentare questa per sparo con cooldown
     public GameObject Shoot(){
         if(is_available==false)
             return null;
@@ -29,6 +30,13 @@ public class LaunchProjectile : MonoBehaviour
         GameObject launched = Instantiate(projectile, transform.position, transform.rotation);
         launched.GetComponent<Rigidbody>().velocity = transform.up * speed;
         StartCoroutine(ShootCooldown()); 
+        return launched;
+    }
+    */
+
+    public GameObject Shoot(){   
+        GameObject launched = Instantiate(projectile, transform.position, transform.rotation);
+        launched.GetComponent<Rigidbody>().velocity = transform.up * speed;
         return launched;
     }
 

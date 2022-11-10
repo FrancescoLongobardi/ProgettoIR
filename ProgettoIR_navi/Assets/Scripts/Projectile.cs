@@ -17,8 +17,10 @@ public class Projectile : MonoBehaviour
             Destroy(this.gameObject);
         }
         */
-        if(transform.localPosition.y < 0)
+        if(transform.localPosition.y < 0){
+            agent.SetShot(false);
             Destroy(gameObject);
+        }
     }
 
     void Construct(Object[] parametersConstruct){
@@ -32,6 +34,7 @@ public class Projectile : MonoBehaviour
         if(other.gameObject.tag == "water"){
             Vector3 contact_point = other.contacts[0].point;
             agent.enemy_miss(find_nearest_enemy(contact_point));
+            //agent.SetShot(false);
             Destroy(gameObject);
  
         }
