@@ -11,10 +11,14 @@ public class Projectile : MonoBehaviour
 
     void Update()
     {
+        /*
         life_time -= Time.deltaTime;
         if(life_time < 0){
             Destroy(this.gameObject);
         }
+        */
+        if(transform.localPosition.y < 0)
+            Destroy(gameObject);
     }
 
     void Construct(Object[] parametersConstruct){

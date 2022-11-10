@@ -223,6 +223,10 @@ public class AgentController : Agent
         
     }
 
+    public void SetShot(bool value){
+        shot = value;
+    }
+
     int convertActionFromFloatToInt(float action){
         if (action == 0f)
             return 0;
