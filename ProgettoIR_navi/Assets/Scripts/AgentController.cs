@@ -112,7 +112,7 @@ public class AgentController : Agent
         //Enemy position and speed
         sensor.AddObservation(enemy_spawner.permanent_enemies[0].transform.localPosition.x /*+ x_noise*/);
         sensor.AddObservation(enemy_spawner.permanent_enemies[0].transform.localPosition.z /*+ z_noise*/);
-        sensor.AddObservation(enemy_spawner.permanent_enemies[0].GetComponent<EnemyController>().speed /*+ speed_noise*/);
+        //sensor.AddObservation(enemy_spawner.permanent_enemies[0].GetComponent<EnemyController>().speed /*+ speed_noise*/);
         //Agent rotations and cooldown
         sensor.AddObservation(transform.localEulerAngles.y);
         sensor.AddObservation(cannon_base.gameObject.transform.localEulerAngles.y);
@@ -145,6 +145,9 @@ public class AgentController : Agent
             0 - shoot/no shoot
     */
 
+    /*
+    /////////////////////////// Per sparo
+
     private void ExecuteActions_Demo(float cannon_base_rot, float cannon_elev, int shoot){
         cannon_base.rotateCannonBase(cannon_base_rot);
         cannon.rotateCannon(cannon_elev);
@@ -161,23 +164,40 @@ public class AgentController : Agent
         if(shoot == 1 && !shot)
             FireProjectile();
     }
-    
+    ///////////////////////////////////////
+    */
+
+    private void ExecuteActions_Demo(float cannon_base_rot, float cannon_elev){
+        cannon_base.rotateCannonBase(cannon_base_rot);
+        cannon.rotateCannon(cannon_elev);
+    }
+
+    private void ExecuteActions_Training(float cannon_base_rot, float cannon_elev){
+        cannon_base.rotateCannonBase_training(cannon_base_rot);
+        cannon.rotateCannon_training(cannon_elev);
+    }
+
     public override void OnActionReceived(ActionBuffers actions)
     {
         float cannon_elev = convertActionFromIntToFloat(actions.DiscreteActions[0]);
         float cannon_base_rot = convertActionFromIntToFloat(actions.DiscreteActions[1]);
         
         // Per dimostrazione
-        //ExecuteActions_Demo(cannon_base_rot, cannon_elev, actions.DiscreteActions[2]);
+        //ExecuteActions_Demo(cannon_base_rot, cannon_elev);
 
         // Per training
-        ExecuteActions_Training(cannon_base_rot, cannon_elev, actions.DiscreteActions[2]);
+        ExecuteActions_Training(cannon_base_rot, cannon_elev);
         
         //AddReward(-1/max_step_episodes);
         
         
         float delta_angle_cannon_base = Mathf.Abs(Mathf.DeltaAngle(cannon_base.GetLocalYAngle(), cannon_base_target_angle));
         float delta_angle_cannon = Mathf.Abs(cannon_target_angle - cannon.transform.localEulerAngles.z);
+
+        if(delta_angle_cannon_base < 0.01 && delta_angle_cannon < 0.01){
+            AddReward(1.0f);
+            EndEpisode();
+        }
         //AddReward(0.0001f * (180f - delta_angle_cannon_base)/180f);
         //AddReward(0.0001f * (45f - delta_angle_cannon)/45f);
         //AddReward(-0.0000005f * step_count >= 0.0015f ? 0.0015f : -0.0000005f * step_count);
@@ -206,7 +226,7 @@ public class AgentController : Agent
         discrete_action[0] = convertActionFromFloatToInt(cannon.CalculateInputForAimbot(enemy_spawner.enemies[0]));
         discrete_action[1] = convertActionFromFloatToInt(cannon_base.CalculateInputForAimbot(enemy_spawner.enemies[0], Get180Angle(transform.rotation.eulerAngles.y)));
 
-        
+        /* Per sparo
         if(cannon.CheckRotationCompleted() && cannon_base.CheckRotationCompleted() && !shot){
             discrete_action[2] = 1;
         }
@@ -215,6 +235,7 @@ public class AgentController : Agent
             discrete_action[2] = 0;
 
         }
+        */
         
     }
 
@@ -252,12 +273,12 @@ public class AgentController : Agent
         }
         else
             return false;
-        
     }
 
     public void enemy_miss(float min_dist){
+        
+        float penalty = (-0.1f * min_dist) >= -1f ? (-0.01f * min_dist) : -1f;
         /*
-        float penalty = (-0.01f * min_dist) >= -0.5f ? (-0.01f * min_dist) : -0.5f;
         if(min_dist < 5f)
             penalty = -0.01f * min_dist;
         else if(min_dist >= 5f && min_dist < 10f)
@@ -265,14 +286,15 @@ public class AgentController : Agent
         else
             penalty = (-0.03f * min_dist) >= -0.5f ? (-0.03f * min_dist) : -0.5f;
         */
-        AddReward(-1.0f);
+        AddReward(penalty);
+        //AddReward(-1.0f);
         Debug.Log(GetCumulativeReward());
         cannon.ResetCooldown();
         EndEpisode();
     }
 
     public void enemy_hit(GameObject other){
-        AddReward(10.0f);
+        AddReward(1.0f);
         enemy_spawner.RemoveEnemyFromList(other);
         //Debug.Log(enemy_spawner.enemies.Count);
         if(enemy_spawner.enemies.Count == 0){

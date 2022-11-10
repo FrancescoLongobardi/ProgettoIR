@@ -5,14 +5,20 @@ using Unity.MLAgents;
 
 public class Projectile : MonoBehaviour
 {
-    private float life_time = 5f;
+    //private float life_time = 5f;
     public AgentController agent;
     public EnemySpawnerController enemy_spawner;
 
     void Update()
     {
+        /*
         life_time -= Time.deltaTime;
         if(life_time < 0){
+            Destroy(this.gameObject);
+        }
+        */
+        if(transform.localPosition.y < 0){
+            agent.enemy_miss(find_nearest_enemy(transform.localPosition));
             Destroy(this.gameObject);
         }
     }
