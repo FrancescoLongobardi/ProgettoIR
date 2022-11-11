@@ -9,6 +9,7 @@ public class LaunchProjectile : MonoBehaviour
     public bool is_available=true;
     public float cooldown_cannon = 2f;
     public float shooting_cooldown_left;
+    public GameObject plane;
 
     void Start(){
         is_available=true;
@@ -35,7 +36,9 @@ public class LaunchProjectile : MonoBehaviour
     */
 
     public GameObject Shoot(){   
-        GameObject launched = Instantiate(projectile, transform.position, transform.rotation);
+        GameObject launched = Instantiate(projectile, plane.transform.parent, false);
+        //Debug.Log(transform.position+  "  "+  transform.localPosition+  " "+  plane.transform.parent.InverseTransformPoint(transform.position));
+        launched.transform.localPosition = plane.transform.parent.InverseTransformPoint(transform.position);
         launched.GetComponent<Rigidbody>().velocity = transform.up * speed;
         return launched;
     }

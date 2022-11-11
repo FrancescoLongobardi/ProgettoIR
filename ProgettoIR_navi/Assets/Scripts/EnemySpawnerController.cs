@@ -72,7 +72,7 @@ public class EnemySpawnerController : MonoBehaviour
     private void SpawnEnemies(){
         permanent_enemies = new List<GameObject>();
         for(int i = 0; i < n_enemies; i++){
-            GameObject en = Instantiate(enemy_prefab, transform.parent, true);
+            GameObject en = Instantiate(enemy_prefab, plane.transform.parent, false);
             en.transform.localPosition = new Vector3(0, 0.52f, 0);
             //en.transform.localPosition = new Vector3(0, -0.939f, 0);
             en.transform.localRotation = Quaternion.identity;
@@ -91,8 +91,8 @@ public class EnemySpawnerController : MonoBehaviour
             while(!ok_coords){
                 pos_x = Random.Range(min_x, max_x);
                 pos_z = Random.Range(min_z, max_z);
-                //enemy_pos = new Vector3(pos_x, plane.transform.localPosition.y + 0.51f, pos_z);
-                enemy_pos = new Vector3(pos_x, -0.939f, pos_z);
+                enemy_pos = new Vector3(pos_x, plane.transform.localPosition.y + 0.51f, pos_z);
+                //enemy_pos = new Vector3(pos_x, -0.939f, pos_z);
                 enemy_rot = new Vector3(0f, Random.Range(0f,360f), 0f);
                 bool ok_enemy = true;
                 for(int j = 0; j < i; j++){

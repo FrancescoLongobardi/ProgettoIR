@@ -46,7 +46,7 @@ public class AgentController : Agent
     }
 
     //Per dimostrazione
-    /*
+    
     private void CheckEpisodesCount(){
         if(++episodes_count > max_episodes){
             Debug.Log("Fatto");
@@ -54,12 +54,12 @@ public class AgentController : Agent
         }
         Debug.Log("Episodio " + episodes_count);
     }
-    */
+    
 
     public override void OnEpisodeBegin(){
         
         // Per dimostrazione
-        //CheckEpisodesCount();
+        CheckEpisodesCount();
         
         //num_shots = 0;
         //cannon.ResetCooldown();
@@ -180,16 +180,16 @@ public class AgentController : Agent
         
         //AddReward(-1f/MaxStep);
         
-        /*
+        
         float delta_angle_cannon_base = Mathf.Abs(Mathf.DeltaAngle(cannon_base.GetLocalYAngle(), cannon_base_target_angle));
         float delta_angle_cannon = Mathf.Abs(cannon_target_angle - cannon.transform.localEulerAngles.z);
         //AddReward(0.0001f * (180f - delta_angle_cannon_base)/180f);
         //AddReward(0.0001f * (45f - delta_angle_cannon)/45f);
         //AddReward(-0.0000005f * step_count >= 0.0015f ? 0.0015f : -0.0000005f * step_count);
-
+        
         AddReward(-0.0001f * (delta_angle_cannon_base/180f));
         AddReward(-0.0001f * (delta_angle_cannon/45f));
-        */
+        
     }
     
     private void AddRewardDistance(){
@@ -212,7 +212,10 @@ public class AgentController : Agent
         discrete_action[0] = convertActionFromFloatToInt(cannon.CalculateInputForAimbot(enemy_spawner.enemies[0]));
         discrete_action[1] = convertActionFromFloatToInt(cannon_base.CalculateInputForAimbot(enemy_spawner.enemies[0], Get180Angle(transform.rotation.eulerAngles.y)));
 
-        
+        if (Input.GetKey(KeyCode.W))
+        {
+            discrete_action[2] = 1;
+        }
         if(cannon.CheckRotationCompleted() && cannon_base.CheckRotationCompleted() && !shot){
             discrete_action[2] = 1;
         }

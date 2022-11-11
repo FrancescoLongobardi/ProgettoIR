@@ -4,15 +4,12 @@ using UnityEngine;
 
 public class CannonBaseController : MonoBehaviour
 {
-    private GameObject cannon;
+    public GameObject cannon;
     public float horizontalInput;
     public float rotationSpeed = 10f;
     // Start is called before the first frame update
     private float target_angle = float.NaN;
 
-    void Start(){
-        cannon = GameObject.Find("Cannon");
-    }
 
     // Update is called once per frame
     /*

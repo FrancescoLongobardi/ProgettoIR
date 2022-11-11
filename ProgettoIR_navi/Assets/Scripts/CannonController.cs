@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CannonController : MonoBehaviour
 {
-    private GameObject ball_spawner;
+    public GameObject ball_spawner;
     public float verticalInput;
     private const float max_elevation = 45f;
     private const float min_elevation = 117f;
@@ -14,7 +14,7 @@ public class CannonController : MonoBehaviour
     private float target_angle = float.NaN;
 
     void Start(){
-        ball_spawner = GameObject.Find("FirePoint");
+        //ball_spawner = gameObject.transform.Find("FirePoint").gameObject;
         ball_spawner_script = ball_spawner.GetComponent<LaunchProjectile>();
     }
 
