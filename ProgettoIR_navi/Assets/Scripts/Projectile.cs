@@ -19,6 +19,7 @@ public class Projectile : MonoBehaviour
         */
         if(transform.localPosition.y < 0){
             agent.SetShot(false);
+            agent.enemy_miss(find_nearest_enemy(transform.localPosition));
             Destroy(gameObject);
         }
     }
@@ -47,7 +48,7 @@ public class Projectile : MonoBehaviour
     float find_nearest_enemy(Vector3 contact_point){
         float min = float.MaxValue;
         for(int i = 0; i < enemy_spawner.enemies.Count; i++){
-            float dist = Vector3.Distance(enemy_spawner.enemies[i].transform.position, contact_point);
+            float dist = Vector3.Distance(enemy_spawner.enemies[i].transform.localPosition, contact_point);
             if(dist < min)
                 min = dist;
         }

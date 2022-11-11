@@ -180,7 +180,7 @@ public class AgentController : Agent
         
         //AddReward(-1f/MaxStep);
         
-        
+        /*
         float delta_angle_cannon_base = Mathf.Abs(Mathf.DeltaAngle(cannon_base.GetLocalYAngle(), cannon_base_target_angle));
         float delta_angle_cannon = Mathf.Abs(cannon_target_angle - cannon.transform.localEulerAngles.z);
         //AddReward(0.0001f * (180f - delta_angle_cannon_base)/180f);
@@ -189,6 +189,7 @@ public class AgentController : Agent
 
         AddReward(-0.0001f * (delta_angle_cannon_base/180f));
         AddReward(-0.0001f * (delta_angle_cannon/45f));
+        */
     }
     
     private void AddRewardDistance(){
@@ -267,7 +268,7 @@ public class AgentController : Agent
 
     public void enemy_miss(float min_dist){
         
-        float penalty = (-0.1f * min_dist) >= -1.0f ? (-0.1f * min_dist) : -1.0f;
+        float penalty = (-0.02f * min_dist) >= -1.0f ? (-0.02f * min_dist) : -1.0f;
         /*
         if(min_dist < 5f)
             penalty = -0.01f * min_dist;
@@ -283,6 +284,7 @@ public class AgentController : Agent
             EndEpisode();
         }
         */
+        Debug.Log(min_dist);
         AddReward(penalty);
         Debug.Log(GetCumulativeReward());
         EndEpisode();
