@@ -173,10 +173,10 @@ public class AgentController : Agent
         float cannon_base_rot = convertActionFromIntToFloat(actions.DiscreteActions[1]);
         
         // Per dimostrazione
-        //ExecuteActions_Demo(cannon_base_rot, cannon_elev, actions.DiscreteActions[2]);
+        ExecuteActions_Demo(cannon_base_rot, cannon_elev, actions.DiscreteActions[2]);
 
         // Per training
-        ExecuteActions_Training(cannon_base_rot, cannon_elev, actions.DiscreteActions[2]);
+        //ExecuteActions_Training(cannon_base_rot, cannon_elev, actions.DiscreteActions[2]);
         
         //AddReward(-1f/MaxStep);
         
