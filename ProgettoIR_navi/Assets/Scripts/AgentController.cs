@@ -266,8 +266,9 @@ public class AgentController : Agent
     }
 
     public void enemy_miss(float min_dist){
+        
+        float penalty = (-0.1f * min_dist) >= -1.0f ? (-0.1f * min_dist) : -1.0f;
         /*
-        float penalty = (-0.01f * min_dist) >= -0.5f ? (-0.01f * min_dist) : -0.5f;
         if(min_dist < 5f)
             penalty = -0.01f * min_dist;
         else if(min_dist >= 5f && min_dist < 10f)
@@ -282,7 +283,8 @@ public class AgentController : Agent
             EndEpisode();
         }
         */
-        AddReward(-1.0f);
+        AddReward(penalty);
+        Debug.Log(GetCumulativeReward());
         EndEpisode();
     }
 
@@ -291,7 +293,8 @@ public class AgentController : Agent
         for(int i = 0; i < GetStoredActionBuffers().DiscreteActions.Array.Length; i++)
             Debug.Log(GetStoredActionBuffers().DiscreteActions.Array[i]);
         */
-        AddReward(1.0f);
+        AddReward(3.0f);
+        Debug.Log(GetCumulativeReward());
         enemy_spawner.RemoveEnemyFromList(other);
         //Debug.Log(enemy_spawner.enemies.Count);
         if(enemy_spawner.enemies.Count == 0){
