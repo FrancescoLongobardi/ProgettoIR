@@ -19,7 +19,7 @@ public class AgentController : Agent
     private RayPerceptionSensorComponent3D raycast;
     private Vector3 cannon_base_offset = new Vector3(-0.3449993f, 0.2330005f, -0.01311016f); // Offset della cannon base dalla posizione dell'agente
     private int episodes_count = 0;     // Per dimostrazione
-    private int max_episodes = 30;     // Per dimostrazione
+    private int max_episodes = 50;     // Per dimostrazione
     private float z_noise, x_noise, speed_noise;
     private float cannon_base_target_angle;
     private float cannon_target_angle;
@@ -46,7 +46,7 @@ public class AgentController : Agent
     }
 
     //Per dimostrazione
-    
+    /*
     private void CheckEpisodesCount(){
         if(++episodes_count > max_episodes){
             Debug.Log("Fatto");
@@ -54,12 +54,12 @@ public class AgentController : Agent
         }
         Debug.Log("Episodio " + episodes_count);
     }
-    
+    */
 
     public override void OnEpisodeBegin(){
         
         // Per dimostrazione
-        CheckEpisodesCount();
+        //CheckEpisodesCount();
         
         //num_shots = 0;
         //cannon.ResetCooldown();
@@ -173,14 +173,14 @@ public class AgentController : Agent
         float cannon_base_rot = convertActionFromIntToFloat(actions.DiscreteActions[1]);
         
         // Per dimostrazione
-        ExecuteActions_Demo(cannon_base_rot, cannon_elev, actions.DiscreteActions[2]);
+        //ExecuteActions_Demo(cannon_base_rot, cannon_elev, actions.DiscreteActions[2]);
 
         // Per training
-        //ExecuteActions_Training(cannon_base_rot, cannon_elev, actions.DiscreteActions[2]);
+        ExecuteActions_Training(cannon_base_rot, cannon_elev, actions.DiscreteActions[2]);
         
-        //AddReward(-1f/MaxStep);
+        AddReward(-1f/MaxStep);
         
-        
+        /*
         float delta_angle_cannon_base = Mathf.Abs(Mathf.DeltaAngle(cannon_base.GetLocalYAngle(), cannon_base_target_angle));
         float delta_angle_cannon = Mathf.Abs(cannon_target_angle - cannon.transform.localEulerAngles.z);
         //AddReward(0.0001f * (180f - delta_angle_cannon_base)/180f);
@@ -189,6 +189,7 @@ public class AgentController : Agent
         
         AddReward(-0.0001f * (delta_angle_cannon_base/180f));
         AddReward(-0.0001f * (delta_angle_cannon/45f));
+        */
         
     }
     
@@ -301,10 +302,12 @@ public class AgentController : Agent
         AddReward(3.0f);
         Debug.Log(GetCumulativeReward());
         enemy_spawner.RemoveEnemyFromList(other);
-        //Debug.Log(enemy_spawner.enemies.Count);
+        Debug.Log(enemy_spawner.enemies.Count);
+        
         if(enemy_spawner.enemies.Count == 0){
             EndEpisode();
         }
+        
     }
 
     void FixedUpdate(){
