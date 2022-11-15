@@ -704,14 +704,14 @@
     <Reference Include="Unity.Barracuda.iOSBLAS">
         <HintPath>C:\Progetti Unity\ProgettoIR\ProgettoIR_navi\Library\ScriptAssemblies\Unity.Barracuda.iOSBLAS.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Barracuda.BurstBLAS">
-        <HintPath>C:\Progetti Unity\ProgettoIR\ProgettoIR_navi\Library\ScriptAssemblies\Unity.Barracuda.BurstBLAS.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.Barracuda.ONNX">
         <HintPath>C:\Progetti Unity\ProgettoIR\ProgettoIR_navi\Library\ScriptAssemblies\Unity.Barracuda.ONNX.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VSCode.Editor">
         <HintPath>C:\Progetti Unity\ProgettoIR\ProgettoIR_navi\Library\ScriptAssemblies\Unity.VSCode.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Barracuda.BurstBLAS">
+        <HintPath>C:\Progetti Unity\ProgettoIR\ProgettoIR_navi\Library\ScriptAssemblies\Unity.Barracuda.BurstBLAS.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
         <HintPath>C:\Progetti Unity\ProgettoIR\ProgettoIR_navi\Library\ScriptAssemblies\Unity.TextMeshPro.Editor.dll</HintPath>
@@ -727,6 +727,9 @@
     </Reference>
     <Reference Include="Unity.Barracuda">
         <HintPath>C:\Progetti Unity\ProgettoIR\ProgettoIR_navi\Library\ScriptAssemblies\Unity.Barracuda.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Sysroot.Linux_x86_64">
+        <HintPath>C:\Progetti Unity\ProgettoIR\ProgettoIR_navi\Library\ScriptAssemblies\Unity.Sysroot.Linux_x86_64.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline">
         <HintPath>C:\Progetti Unity\ProgettoIR\ProgettoIR_navi\Library\ScriptAssemblies\Unity.Timeline.dll</HintPath>
@@ -764,20 +767,20 @@
     <Reference Include="UnityEngine.UI">
         <HintPath>C:\Progetti Unity\ProgettoIR\ProgettoIR_navi\Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Services.Core">
-        <HintPath>C:\Progetti Unity\ProgettoIR\ProgettoIR_navi\Library\ScriptAssemblies\Unity.Services.Core.dll</HintPath>
+    <Reference Include="Unity.VisualScripting.Core">
+        <HintPath>C:\Progetti Unity\ProgettoIR\ProgettoIR_navi\Library\ScriptAssemblies\Unity.VisualScripting.Core.dll</HintPath>
     </Reference>
     <Reference Include="Unity.EditorCoroutines.Editor">
         <HintPath>C:\Progetti Unity\ProgettoIR\ProgettoIR_navi\Library\ScriptAssemblies\Unity.EditorCoroutines.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.VisualScripting.Core">
-        <HintPath>C:\Progetti Unity\ProgettoIR\ProgettoIR_navi\Library\ScriptAssemblies\Unity.VisualScripting.Core.dll</HintPath>
     </Reference>
     <Reference Include="Unity.ML-Agents.CommunicatorObjects">
         <HintPath>C:\Progetti Unity\ProgettoIR\ProgettoIR_navi\Library\ScriptAssemblies\Unity.ML-Agents.CommunicatorObjects.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Mathematics">
         <HintPath>C:\Progetti Unity\ProgettoIR\ProgettoIR_navi\Library\ScriptAssemblies\Unity.Mathematics.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Services.Core">
+        <HintPath>C:\Progetti Unity\ProgettoIR\ProgettoIR_navi\Library\ScriptAssemblies\Unity.Services.Core.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Services.Core.Analytics">
         <HintPath>C:\Progetti Unity\ProgettoIR\ProgettoIR_navi\Library\ScriptAssemblies\Unity.Services.Core.Analytics.dll</HintPath>
@@ -794,6 +797,9 @@
     <Reference Include="Unity.Timeline.Editor">
         <HintPath>C:\Progetti Unity\ProgettoIR\ProgettoIR_navi\Library\ScriptAssemblies\Unity.Timeline.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.Toolchain.Win-x86_64-Linux-x86_64">
+        <HintPath>C:\Progetti Unity\ProgettoIR\ProgettoIR_navi\Library\ScriptAssemblies\Unity.Toolchain.Win-x86_64-Linux-x86_64.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Mathematics.Editor">
         <HintPath>C:\Progetti Unity\ProgettoIR\ProgettoIR_navi\Library\ScriptAssemblies\Unity.Mathematics.Editor.dll</HintPath>
     </Reference>
@@ -808,6 +814,9 @@
     </Reference>
     <Reference Include="Unity.VisualScripting.State">
         <HintPath>C:\Progetti Unity\ProgettoIR\ProgettoIR_navi\Library\ScriptAssemblies\Unity.VisualScripting.State.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.SysrootPackage.Editor">
+        <HintPath>C:\Progetti Unity\ProgettoIR\ProgettoIR_navi\Library\ScriptAssemblies\Unity.SysrootPackage.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.ML-Agents.Editor">
         <HintPath>C:\Progetti Unity\ProgettoIR\ProgettoIR_navi\Library\ScriptAssemblies\Unity.ML-Agents.Editor.dll</HintPath>
