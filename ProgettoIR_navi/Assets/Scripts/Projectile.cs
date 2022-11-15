@@ -33,9 +33,11 @@ public class Projectile : MonoBehaviour
     void OnCollisionEnter(Collision other)
     {   
         if(other.gameObject.tag == "water"){
+            /*
             Vector3 contact_point = other.contacts[0].point;
             Vector3 local_point = agent.plane.transform.InverseTransformPoint(contact_point);
-            agent.enemy_miss(find_nearest_enemy(local_point));
+            */
+            agent.enemy_miss(find_nearest_enemy(transform.localPosition));
             agent.SetShot(false);
             Destroy(gameObject);
  
@@ -53,6 +55,8 @@ public class Projectile : MonoBehaviour
             if(dist < min)
                 min = dist;
         }
+
+        Debug.DrawRay(contact_point, (enemy_spawner.enemies[0].transform.localPosition - contact_point).normalized * min);
         return min;
     }
 }

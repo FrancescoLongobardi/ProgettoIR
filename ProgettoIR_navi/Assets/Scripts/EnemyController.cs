@@ -6,13 +6,10 @@ public class EnemyController : MonoBehaviour
 {   
     private float min_x, min_z, max_x, max_z;
     public float speed = 0f;
-    private int direction;
-    // Start is called before the first frame update
+
     void Start()
     {
-        int[] dirs = {1, -1};
-        //speed = Random.Range(4f, 7f);
-        direction = dirs[Random.Range(0, 2)];
+        
     }
 
     void Construct(float[] boundaries){
@@ -35,7 +32,7 @@ public class EnemyController : MonoBehaviour
             transform.localPosition += direction * transform.forward * Time.deltaTime * speed;
         }
         */
-
+        transform.localPosition += transform.forward * Time.deltaTime * speed;
     }
 
 

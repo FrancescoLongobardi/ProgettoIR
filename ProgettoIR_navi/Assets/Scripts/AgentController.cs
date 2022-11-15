@@ -66,7 +66,8 @@ public class AgentController : Agent
         //Debug.Log(episodes_count + " di " + max_episodes);
         shot = false;
         distance_offset = Random.Range(0f, (cannon.GetMaxDistance()*3)/4);
-        RandomAgentPositionTraining();
+        //RandomAgentPositionTraining();
+        AgentPositionForCurriculum();
         cannon_base.transform.localRotation =  Quaternion.Euler(0f, -90f, 0f);
         cannon.transform.localRotation = Quaternion.Euler(0f, 90f, 90f);
         //Debug.Log(cannon_base.transform.localRotation.eulerAngles);
@@ -77,9 +78,10 @@ public class AgentController : Agent
         */
 
         //raycast.RayLength
-        enemy_spawner.SpawnForDemonstration(transform.localPosition + cannon_base_offset, cannon_base.transform.localRotation, cannon.GetMaxDistance(), -180f, 180f);
-        cannon_base_target_angle = cannon_base.CalculateAndGetTargetAngle(enemy_spawner.enemies[0], Get180Angle(transform.rotation.eulerAngles.y));
-        cannon_target_angle = cannon.CalculateAndGetTargetAngle(enemy_spawner.enemies[0]);
+        //enemy_spawner.SpawnForDemonstration(transform.localPosition + cannon_base_offset, cannon_base.transform.localRotation, cannon.GetMaxDistance(), -180f, 180f);
+        enemy_spawner.SpawnForCurriculum(transform.localPosition + cannon_base_offset, cannon_base.transform.localRotation, cannon.GetMaxDistance(), -180f, 180f);
+        //cannon_base_target_angle = cannon_base.CalculateAndGetTargetAngle(enemy_spawner.enemies[0], Get180Angle(transform.rotation.eulerAngles.y));
+        //cannon_target_angle = cannon.CalculateAndGetTargetAngle(enemy_spawner.enemies[0]);
         //enemy_spawner.SpawnForTraining();
     }
 
@@ -93,6 +95,10 @@ public class AgentController : Agent
         Vector3 direction = (enemy_pos - transform.localPosition).normalized;
         direction.y = 0;
         return Quaternion.FromToRotation(transform.forward, direction).eulerAngles.y;
+    }
+
+    void AgentPositionForCurriculum(){
+        transform.localPosition = new Vector3(0.0f, 0.22f, 0.0f);
     }
 
     void RandomAgentPositionTraining(){

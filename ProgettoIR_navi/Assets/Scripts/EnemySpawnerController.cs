@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.MLAgents;
 using UnityEngine;
 
 public class EnemySpawnerController : MonoBehaviour
@@ -15,6 +16,8 @@ public class EnemySpawnerController : MonoBehaviour
     private const float min_distance = 5f;
     private float boundary_limit = 3;
     public bool spawned = false;
+
+    
     void Start(){
         Vector3 bounds = plane.GetComponent<MeshRenderer>().localBounds.size;
         min_x = -1 * plane.transform.localScale.x * (bounds.x / 2) + boundary_limit;
@@ -35,6 +38,22 @@ public class EnemySpawnerController : MonoBehaviour
         pos.x = Mathf.Clamp(pos.x, min_x, max_x);
         pos.z = Mathf.Clamp(pos.z, min_z, max_z);
         //Debug.Log("Dopo: " + pos);
+    }
+
+    public void SpawnForCurriculum(Vector3 cannonPosition, Quaternion cannon_base_rotation, float max_range, float angle1, float angle2){
+        enemies.Clear();
+        Quaternion randAng = Quaternion.Euler(0, Random.Range(angle1, angle2), 0);
+        randAng = cannon_base_rotation * randAng;
+        float randomRange = Random.Range(40f, max_range);
+        Vector3 spawnPos = cannonPosition + randAng * Vector3.forward * randomRange;
+        spawnPos.y = 0.52f; //Over the plane
+        Vector3 dir = cannonPosition - spawnPos;
+        Quaternion rotation = Quaternion.LookRotation(dir.normalized, Vector3.up);
+        permanent_enemies[0].transform.localPosition = spawnPos;
+        permanent_enemies[0].transform.localRotation = rotation;
+        permanent_enemies[0].SetActive(true);
+        permanent_enemies[0].GetComponent<EnemyController>().speed = Academy.Instance.EnvironmentParameters.GetWithDefault("enemy_speed", 1f);
+        enemies.Add(permanent_enemies[0]);
     }
 
     public void SpawnForDemonstration(Vector3 cannonPosition, Quaternion cannon_base_rotation, float max_range, float angle1, float angle2){
