@@ -32,7 +32,7 @@ public class EnemyController : MonoBehaviour
             transform.localPosition += direction * transform.forward * Time.deltaTime * speed;
         }
         */
-        //transform.localPosition += transform.forward * Time.deltaTime * speed;
+        transform.localPosition += transform.forward * Time.deltaTime * speed;
     }
 
 

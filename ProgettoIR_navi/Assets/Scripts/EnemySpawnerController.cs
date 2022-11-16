@@ -44,7 +44,7 @@ public class EnemySpawnerController : MonoBehaviour
         enemies.Clear();
         Quaternion randAng = Quaternion.Euler(0, Random.Range(angle1, angle2), 0);
         randAng = cannon_base_rotation * randAng;
-        float randomRange = Random.Range(40f, max_range);
+        float randomRange = Random.Range(10f, max_range);
         Vector3 spawnPos = cannonPosition + randAng * Vector3.forward * randomRange;
         spawnPos.y = 0.52f; //Over the plane
         Vector3 dir = cannonPosition - spawnPos;
@@ -52,7 +52,7 @@ public class EnemySpawnerController : MonoBehaviour
         permanent_enemies[0].transform.localPosition = spawnPos;
         permanent_enemies[0].transform.localRotation = rotation;
         permanent_enemies[0].SetActive(true);
-        permanent_enemies[0].GetComponent<EnemyController>().speed = Academy.Instance.EnvironmentParameters.GetWithDefault("enemy_speed", 1f);
+        permanent_enemies[0].GetComponent<EnemyController>().speed = Academy.Instance.EnvironmentParameters.GetWithDefault("enemy_speed", 0f);
         enemies.Add(permanent_enemies[0]);
     }
 
