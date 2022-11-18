@@ -23,6 +23,8 @@ public class AgentController : Agent
     private float z_noise, x_noise, speed_noise;
     private float cannon_base_target_angle;
     private float cannon_target_angle;
+    GameObject proj;
+
     //private int max_shots = 5;
     //private int num_shots = 0;
     //private StreamWriter writer;
@@ -260,7 +262,7 @@ public class AgentController : Agent
     }
 
     bool FireProjectile(){
-        GameObject proj = cannon_base.Shoot();
+        proj = cannon_base.Shoot();
         
         if(proj != null){
             Object[] parametersConstruct = new Object[2];
@@ -380,6 +382,7 @@ public class AgentController : Agent
             SetReward(-1.0f);
             Debug.Log(GetCumulativeReward());
             enemy_spawner.RemoveEnemyFromList(other.gameObject);
+            Destroy(proj);
             //cannon.ResetCooldown();
             EndEpisode();
         }
