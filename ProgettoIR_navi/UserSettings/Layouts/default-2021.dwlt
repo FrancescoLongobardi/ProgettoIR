@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1521.6
     height: 766.4
   m_ShowMode: 4
-  m_Title: Hierarchy
+  m_Title: Scene
   m_RootView: {fileID: 4}
   m_MinSize: {x: 875, y: 371}
   m_MaxSize: {x: 10000, y: 10000}
@@ -74,7 +74,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 49
+  controlID: 59
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -171,7 +171,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 200}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 0
-  controlID: 71
+  controlID: 57
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -196,7 +196,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 200}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 72
+  controlID: 118
 --- !u!114 &9
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -273,7 +273,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 124
+  controlID: 58
 --- !u!114 &12
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -492,8 +492,8 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: -25600
-    y: -25569.6
+    x: 7.2000003
+    y: 80.8
     width: 209.4
     height: 347.8
   m_ViewDataDictionary: {fileID: 0}
@@ -503,9 +503,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: a4e5ffff
+      m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 1ce9ffff74e9ffff2ef1ffff36fbffff
+      m_ExpandedIDs: 16d0ffff6ed0ffff28d8ffff36fbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -569,22 +569,21 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SkipHidden: 0
     m_SearchArea: 1
-    m_Folders:
-    - Assets/Scripts
+    m_Folders: []
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 0
   m_StartGridSize: 64
   m_LastFolders: []
   m_LastFoldersGridSize: -1
-  m_LastProjectPath: "C:\\Users\\gpepp\\Desktop\\Universit\xE0\\ProgettoIR\\ProgettoIR_navi"
+  m_LastProjectPath: C:\Users\gpepp\Desktop\Universita\ProgettoIR\ProgettoIR_navi
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 406e0000
     m_LastClickedID: 28224
-    m_ExpandedIDs: 00000000346000003660000038600000
+    m_ExpandedIDs: 000000003460000036600000386000003a600000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -609,24 +608,24 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_AssetTreeState:
-    scrollPos: {x: 0, y: 0}
+    scrollPos: {x: 0, y: 55.399963}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: ffffffff0000000034600000366000003860000080600000
+    m_ExpandedIDs: ffffffff000000003460000036600000386000003a600000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: AgentController
-      m_OriginalName: AgentController
+      m_Name: 
+      m_OriginalName: 
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 8872
+      m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 0
+      m_OriginalEventType: 11
       m_IsRenamingFilename: 1
       m_ClientGUIView: {fileID: 10}
     m_SearchString: 
@@ -893,9 +892,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 317.7329, y: -319.1588, z: 0.4086914}
+    m_Target: {x: 2.64639, y: -15.791861, z: -21.68737}
     speed: 2
-    m_Value: {x: 317.7329, y: -319.1588, z: 0.4086914}
+    m_Value: {x: 2.64639, y: -15.791861, z: -21.68737}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -942,13 +941,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: -0.03301872, y: -0.86736125, z: 0.49305755, w: -0.05811024}
+    m_Target: {x: 0.053082183, y: 0.9252505, z: -0.34796, w: 0.14125805}
     speed: 2
-    m_Value: {x: -0.033107717, y: -0.8666691, z: 0.49438563, w: -0.05806388}
+    m_Value: {x: 0.052039728, y: 0.92569965, z: -0.34812883, w: 0.13848609}
   m_Size:
-    m_Target: 925.7317
+    m_Target: 243.44812
     speed: 2
-    m_Value: 925.0379
+    m_Value: 232.9647
   m_Ortho:
     m_Target: 0
     speed: 2
