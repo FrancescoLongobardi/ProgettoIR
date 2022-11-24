@@ -41,11 +41,11 @@ public class EnemySpawnerController : MonoBehaviour
     }
 
     public void SpawnForCurriculum(Vector3 cannonPosition, Quaternion cannon_base_rotation, float max_range, float angle1, float angle2){
-        enemies.Clear();
+        enemies = new List<GameObject>();
+        //enemies.Clear();
         Quaternion randAng = Quaternion.Euler(0, Random.Range(angle1, angle2), 0);
         randAng = cannon_base_rotation * randAng;
         float randomRange = Random.Range(30f, max_range);
-        Debug.Log(randomRange);
         Vector3 spawnPos = cannonPosition + randAng * Vector3.forward * randomRange;
         spawnPos.y = 0.52f; //Over the plane
         Vector3 dir = cannonPosition - spawnPos;
@@ -55,6 +55,8 @@ public class EnemySpawnerController : MonoBehaviour
         permanent_enemies[0].SetActive(true);
         permanent_enemies[0].GetComponent<EnemyController>().speed = Academy.Instance.EnvironmentParameters.GetWithDefault("enemy_speed", Random.Range(0.0f, 5.0f));
         enemies.Add(permanent_enemies[0]);
+        //Debug.Log(enemies.Count);
+        //Debug.Log(enemies[0].transform.localPosition);
     }
 
     public void SpawnForDemonstration(Vector3 cannonPosition, Quaternion cannon_base_rotation, float max_range, float angle1, float angle2){

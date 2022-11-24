@@ -2,12 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.MLAgents;
+using UnityEditor;
 
 public class Projectile : MonoBehaviour
 {
     private float life_time = 5f;
     public AgentController agent;
     public EnemySpawnerController enemy_spawner;
+    private bool hit = false;
+
+    void Start(){
+        hit = false;
+    }
 
     void Update()
     {
@@ -32,17 +38,20 @@ public class Projectile : MonoBehaviour
 
     void OnCollisionEnter(Collision other)
     {   
-        if(other.gameObject.tag == "water"){
+        if(other.gameObject.tag == "water" && !hit){
             /*
             Vector3 contact_point = other.contacts[0].point;
             Vector3 local_point = agent.plane.transform.InverseTransformPoint(contact_point);
             */
-            agent.enemy_miss(find_nearest_enemy(transform.localPosition));
+            hit = true;
             agent.SetShot(false);
+            Vector3 ball_pos = transform.localPosition;
             Destroy(gameObject);
- 
+            agent.enemy_miss(find_nearest_enemy(ball_pos));
         }
-        else if(other.gameObject.tag == "enemy"){
+        else if(other.gameObject.tag == "enemy" && !hit){
+            hit = true;
+            Debug.Log("avvvv");
             Destroy(gameObject);
             agent.enemy_hit(other.gameObject);
         }
@@ -55,8 +64,14 @@ public class Projectile : MonoBehaviour
             if(dist < min)
                 min = dist;
         }
-
-        Debug.DrawRay(contact_point, (enemy_spawner.enemies[0].transform.localPosition - contact_point).normalized * min);
+        /*
+        if(min>10f){
+            Debug.Log(contact_point);
+            Debug.Log("Posizione più vicina: " + enemy_spawner.enemies[0].transform.localPosition);
+            Debug.DrawRay(contact_point, (enemy_spawner.enemies[0].transform.localPosition - contact_point).normalized * min);
+            EditorApplication.isPaused = true;
+        }
+        */
         return min;
     }
 }

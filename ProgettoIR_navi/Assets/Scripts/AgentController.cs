@@ -303,6 +303,7 @@ public class AgentController : Agent
         else
             SetReward(-1.0f);
         Debug.Log(GetCumulativeReward());
+        enemy_spawner.RemoveEnemyFromList(enemy_spawner.enemies[0]);
         EndEpisode();
     }
 

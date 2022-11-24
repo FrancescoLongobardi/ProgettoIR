@@ -20,7 +20,7 @@ public class EnemyController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         /*
         Vector3 newPos = transform.localPosition + direction * transform.forward * Time.deltaTime * speed;
