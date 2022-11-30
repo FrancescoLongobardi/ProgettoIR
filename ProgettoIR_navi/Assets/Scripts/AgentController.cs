@@ -19,7 +19,7 @@ public class AgentController : Agent
     private RayPerceptionSensorComponent3D raycast;
     private Vector3 cannon_base_offset = new Vector3(-0.3449993f, 0.2330005f, -0.01311016f); // Offset della cannon base dalla posizione dell'agente
     private int episodes_count = 0;     // Per dimostrazione
-    private int max_episodes = 100;     // Per dimostrazione
+    private int max_episodes = 50;     // Per dimostrazione
     private float z_noise, x_noise, speed_noise;
     private float cannon_base_target_angle;
     private float cannon_target_angle;
@@ -54,27 +54,27 @@ public class AgentController : Agent
     }
 
     //Per dimostrazione
-    /*
+    
     private void CheckEpisodesCount(){
         if(++episodes_count > max_episodes){
-            Debug.Log("hit/n_episodes = " + (float)hit_count / (float)max_episodes);
+            Debug.Log("hit/n_episodes = " + (float)hit_count);
             if(miss_count != 0){
-                Debug.Log("Mean distance: " + mean_dist_miss / miss_count);
+                Debug.Log("Mean distance: " + mean_dist_miss);
                 Debug.Log("Minimum distance: " + min_dist_miss);
                 Debug.Log("Maximum distance: " + max_dist_miss);
             }
-            Debug.Log("Mean reward: " + mean_reward / max_episodes);
+            Debug.Log("Mean reward: " + mean_reward);
 
             EditorApplication.isPlaying = false;
         }
         Debug.Log("Episodio " + episodes_count);
     }
-    */
+    
 
     public override void OnEpisodeBegin(){
         
         // Per dimostrazione
-        //CheckEpisodesCount();
+        CheckEpisodesCount();
         
         //num_shots = 0;
         //cannon.ResetCooldown();
