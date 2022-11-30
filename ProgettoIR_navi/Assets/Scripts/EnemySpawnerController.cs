@@ -53,7 +53,7 @@ public class EnemySpawnerController : MonoBehaviour
         permanent_enemies[0].transform.localPosition = spawnPos;
         permanent_enemies[0].transform.localRotation = rotation;
         permanent_enemies[0].SetActive(true);
-        permanent_enemies[0].GetComponent<EnemyController>().speed = Academy.Instance.EnvironmentParameters.GetWithDefault("enemy_speed", Random.Range(0.0f, 5.0f));
+        permanent_enemies[0].GetComponent<EnemyController>().speed = Academy.Instance.EnvironmentParameters.GetWithDefault("enemy_speed", Random.Range(0f, 5f));
         enemies.Add(permanent_enemies[0]);
         //Debug.Log(enemies.Count);
         //Debug.Log(enemies[0].transform.localPosition);

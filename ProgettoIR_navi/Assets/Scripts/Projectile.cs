@@ -51,7 +51,6 @@ public class Projectile : MonoBehaviour
         }
         else if(other.gameObject.tag == "enemy" && !hit){
             hit = true;
-            Debug.Log("avvvv");
             Destroy(gameObject);
             agent.enemy_hit(other.gameObject);
         }
@@ -64,14 +63,12 @@ public class Projectile : MonoBehaviour
             if(dist < min)
                 min = dist;
         }
-        /*
-        if(min>10f){
-            Debug.Log(contact_point);
-            Debug.Log("Posizione più vicina: " + enemy_spawner.enemies[0].transform.localPosition);
-            Debug.DrawRay(contact_point, (enemy_spawner.enemies[0].transform.localPosition - contact_point).normalized * min);
-            EditorApplication.isPaused = true;
-        }
-        */
+
+        //Debug.Log(contact_point);
+        //Debug.Log("Posizione più vicina: " + enemy_spawner.enemies[0].transform.localPosition);
+        Debug.DrawRay(contact_point, (enemy_spawner.enemies[0].transform.localPosition - contact_point).normalized * min);
+        //EditorApplication.isPaused = true;
+
         return min;
     }
 }

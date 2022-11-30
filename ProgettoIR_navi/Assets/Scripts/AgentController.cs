@@ -19,11 +19,17 @@ public class AgentController : Agent
     private RayPerceptionSensorComponent3D raycast;
     private Vector3 cannon_base_offset = new Vector3(-0.3449993f, 0.2330005f, -0.01311016f); // Offset della cannon base dalla posizione dell'agente
     private int episodes_count = 0;     // Per dimostrazione
-    private int max_episodes = 500;     // Per dimostrazione
+    private int max_episodes = 100;     // Per dimostrazione
     private float z_noise, x_noise, speed_noise;
     private float cannon_base_target_angle;
     private float cannon_target_angle;
     GameObject proj;
+    private int hit_count = 0;
+    private float min_dist_miss = float.MaxValue;
+    private float max_dist_miss = 0f;
+    private float mean_dist_miss = 0f;
+    private float mean_reward = 0f;
+    private int miss_count = 0;
 
     //private int max_shots = 5;
     //private int num_shots = 0;
@@ -51,7 +57,14 @@ public class AgentController : Agent
     /*
     private void CheckEpisodesCount(){
         if(++episodes_count > max_episodes){
-            Debug.Log("Fatto");
+            Debug.Log("hit/n_episodes = " + (float)hit_count / (float)max_episodes);
+            if(miss_count != 0){
+                Debug.Log("Mean distance: " + mean_dist_miss / miss_count);
+                Debug.Log("Minimum distance: " + min_dist_miss);
+                Debug.Log("Maximum distance: " + max_dist_miss);
+            }
+            Debug.Log("Mean reward: " + mean_reward / max_episodes);
+
             EditorApplication.isPlaying = false;
         }
         Debug.Log("Episodio " + episodes_count);
@@ -177,7 +190,7 @@ public class AgentController : Agent
     
     public override void OnActionReceived(ActionBuffers actions)
     {
-        float cannon_elev = convertActionFromIntToFloat(actions.DiscreteActions[0]);
+        float cannon_elev = -convertActionFromIntToFloat(actions.DiscreteActions[0]);
         float cannon_base_rot = convertActionFromIntToFloat(actions.DiscreteActions[1]);
         
         
@@ -208,10 +221,8 @@ public class AgentController : Agent
             AddReward(0.005f/dist);
     }
 
-    public override void Heuristic(in ActionBuffers actionsOut)
-    {
-        
-       // ActionSegment<float> continous_action = actionsOut.ContinuousActions;
+    private void Aimbot(in ActionBuffers actionsOut){
+        // ActionSegment<float> continous_action = actionsOut.ContinuousActions;
         ActionSegment<int> discrete_action = actionsOut.DiscreteActions;
         discrete_action[0] = 0;
         discrete_action[1] = 0;
@@ -222,10 +233,7 @@ public class AgentController : Agent
         discrete_action[0] = convertActionFromFloatToInt(cannon.CalculateInputForAimbot(enemy_spawner.enemies[0]));
         discrete_action[1] = convertActionFromFloatToInt(cannon_base.CalculateInputForAimbot(enemy_spawner.enemies[0], Get180Angle(transform.rotation.eulerAngles.y)));
 
-        if (Input.GetKey(KeyCode.W))
-        {
-            discrete_action[2] = 1;
-        }
+
         if(cannon.CheckRotationCompleted() && cannon_base.CheckRotationCompleted() && !shot){
             discrete_action[2] = 1;
         }
@@ -234,7 +242,28 @@ public class AgentController : Agent
             discrete_action[2] = 0;
 
         }
-        
+    }
+
+    public override void Heuristic(in ActionBuffers actionsOut)
+    {
+        //Aimbot(actionsOut);
+        //Debug.Log(Input.GetAxis("Vertical"));
+        ActionSegment<int> discrete_action = actionsOut.DiscreteActions;
+        discrete_action[0] = ConvertInputToInt(Input.GetAxis("Vertical"));
+        discrete_action[1] = ConvertInputToInt(Input.GetAxis("Horizontal"));
+
+        if (Input.GetKey(KeyCode.Space))
+        {
+            discrete_action[2] = 1;
+        }
+    }
+
+    private int ConvertInputToInt(float input){
+        if(input > 0)
+            return 1;
+        else if(input < 0)
+            return 2;
+        else return 0;
     }
 
     public void SetShot(bool value){
@@ -297,12 +326,24 @@ public class AgentController : Agent
             EndEpisode();
         }
         */
-        Debug.Log(min_dist);
-        if(GetCumulativeReward() - penalty > -1.0f)
+
+        miss_count++;
+
+        if(min_dist < min_dist_miss)
+            min_dist_miss = min_dist;
+
+        if(min_dist > max_dist_miss)
+            max_dist_miss = min_dist;
+        
+        mean_dist_miss += min_dist;
+
+        //Debug.Log(min_dist);
+        if(GetCumulativeReward() + penalty > -1.0f)
             AddReward(penalty);
         else
             SetReward(-1.0f);
-        Debug.Log(GetCumulativeReward());
+        //Debug.Log(GetCumulativeReward());
+        mean_reward += GetCumulativeReward();
         enemy_spawner.RemoveEnemyFromList(enemy_spawner.enemies[0]);
         EndEpisode();
     }
@@ -312,11 +353,13 @@ public class AgentController : Agent
         for(int i = 0; i < GetStoredActionBuffers().DiscreteActions.Array.Length; i++)
             Debug.Log(GetStoredActionBuffers().DiscreteActions.Array[i]);
         */
+        hit_count++;
         AddReward(3.0f);
         Debug.Log(GetCumulativeReward());
         enemy_spawner.RemoveEnemyFromList(other);
         
         if(enemy_spawner.enemies.Count == 0){
+            mean_reward += GetCumulativeReward();
             EndEpisode();
         }
         
@@ -385,6 +428,7 @@ public class AgentController : Agent
             enemy_spawner.RemoveEnemyFromList(other.gameObject);
             Destroy(proj);
             //cannon.ResetCooldown();
+            mean_reward += GetCumulativeReward();
             EndEpisode();
         }
     }

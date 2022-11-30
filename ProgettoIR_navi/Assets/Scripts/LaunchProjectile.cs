@@ -40,6 +40,7 @@ public class LaunchProjectile : MonoBehaviour
         //Debug.Log(transform.position+  "  "+  transform.localPosition+  " "+  plane.transform.parent.InverseTransformPoint(transform.position));
         launched.transform.localPosition = plane.transform.parent.InverseTransformPoint(transform.position);
         launched.GetComponent<Rigidbody>().velocity = transform.up * speed;
+        launched.transform.rotation = Quaternion.LookRotation(transform.up, Vector3.up);
         return launched;
     }
 
