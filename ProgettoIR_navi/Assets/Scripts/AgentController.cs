@@ -30,6 +30,7 @@ public class AgentController : Agent
     private float mean_dist_miss = 0f;
     private float mean_reward = 0f;
     private int miss_count = 0;
+    private int n_step = 0;
 
     //private int max_shots = 5;
     //private int num_shots = 0;
@@ -64,7 +65,7 @@ public class AgentController : Agent
                 Debug.Log("Maximum distance: " + max_dist_miss);
             }
             Debug.Log("Mean reward: " + mean_reward);
-
+            Debug.Log("n_step: " + n_step);
             EditorApplication.isPlaying = false;
         }
         Debug.Log("Episodio " + episodes_count);
@@ -344,6 +345,7 @@ public class AgentController : Agent
             SetReward(-1.0f);
         //Debug.Log(GetCumulativeReward());
         mean_reward += GetCumulativeReward();
+        n_step += StepCount;
         enemy_spawner.RemoveEnemyFromList(enemy_spawner.enemies[0]);
         EndEpisode();
     }
@@ -360,6 +362,7 @@ public class AgentController : Agent
         
         if(enemy_spawner.enemies.Count == 0){
             mean_reward += GetCumulativeReward();
+            n_step += StepCount;
             EndEpisode();
         }
         
@@ -429,6 +432,7 @@ public class AgentController : Agent
             Destroy(proj);
             //cannon.ResetCooldown();
             mean_reward += GetCumulativeReward();
+            n_step += StepCount;
             EndEpisode();
         }
     }
