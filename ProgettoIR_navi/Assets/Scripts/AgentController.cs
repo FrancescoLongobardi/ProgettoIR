@@ -213,21 +213,21 @@ public class AgentController : Agent
 
     public override void Heuristic(in ActionBuffers actionsOut)
     {
-        ActionSegment<float> continous_action = actionsOut.ContinuousActions;
+        ActionSegment<float> continuous_action = actionsOut.ContinuousActions;
         ActionSegment<int> discrete_action = actionsOut.DiscreteActions;
-        continous_action[0] = 0;
-        continous_action[1] = CalculateInputForAgentRotation();
-        continous_action[2] = 0;
-        continous_action[3] = 0;
+        continuous_action[0] = 0;
+        continuous_action[1] = CalculateInputForAgentRotation();
+        continuous_action[2] = 0;
+        continuous_action[3] = 0;
         //Debug.Log(movement_finished);
         //Debug.Log(CheckRotationCompleted()+ " "+ Get360Angle(GetYAngle()) + " " +Get360Angle(target_angle)+ " "+ Mathf.DeltaAngle(Get360Angle(GetYAngle()), Get360Angle(target_angle)));
         //Debug.Log(movement_finished + " " + CheckRotationCompleted() + " " + (Vector3.Distance(transform.localPosition + cannon_base_offset, enemy_spawner.enemies[0].transform.localPosition) > cannon.GetMaxDistance()-distance_offset));
         if(movement_finished == false && CheckRotationCompleted() && Vector3.Distance(transform.localPosition + cannon_base_offset, enemy_spawner.enemies[0].transform.localPosition) > cannon.GetMaxDistance()-distance_offset){
-            continous_action[0] = 1;
+            continuous_action[0] = 1;
         }
 
         if(movement_finished == false && CheckRotationCompleted() && Vector3.Distance(transform.localPosition + cannon_base_offset, enemy_spawner.enemies[0].transform.localPosition) <= cannon.GetMaxDistance()-distance_offset){
-            continous_action[0] = 0;
+            continuous_action[0] = 0;
             float angle = CalculateShipRotationAngle(enemy_spawner.enemies[0]);
             angle = Get360Angle(angle);
             //Debug.Log(angle);
@@ -235,12 +235,12 @@ public class AgentController : Agent
             target_angle = Random.Range(GetYAngle() + angle - 24, GetYAngle() + angle + 24);
             target_angle = Get360Angle(target_angle);
             movement_finished = true;
-            continous_action[1] = CalculateInputForAgentRotation();
+            continuous_action[1] = CalculateInputForAgentRotation();
         }
 
         if(movement_finished && CheckRotationCompleted()){
-            continous_action[2] = cannon.CalculateInputForAimbot(enemy_spawner.enemies[0]);
-            continous_action[3] = cannon_base.CalculateInputForAimbot(enemy_spawner.enemies[0], Get180Angle(transform.rotation.eulerAngles.y));
+            continuous_action[2] = cannon.CalculateInputForAimbot(enemy_spawner.enemies[0]);
+            continuous_action[3] = cannon_base.CalculateInputForAimbot(enemy_spawner.enemies[0], Get180Angle(transform.rotation.eulerAngles.y));
         }
 
         if(cannon.CheckRotationCompleted() && cannon_base.CheckRotationCompleted() && CheckRotationCompleted() && movement_finished){
